@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.ws.rs.Priorities;
 import javax.ws.rs.client.ClientRequestContext;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.ivyteam.ivy.data.cache.IDataCacheEntry;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.rest.client.FeatureConfig;
+import ch.ivyteam.ivy.rest.client.RestClientFactoryConstants;
 
 /**
  * Feature to make sure, that we have the DocuWare cookies.
@@ -68,6 +70,9 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
         .param("RedirectToMyselfInCaseOfError", "false");
 
       String logonUrl = getLogonUrl(reqContext, config);
+      if (logonUrl == null) {
+
+      }
       Ivy.log().info("DocuWare logon via URL {0}", logonUrl);
       Response response = logon(reqContext, form, logonUrl);
       Ivy.log().info("DocuWare logon returned with status {0}", response.getStatusInfo());
@@ -79,7 +84,6 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
     requestHook(reqContext);
   }
 
-  @SuppressWarnings("restriction")
   private String getLogonUrl(ClientRequestContext reqContext, FeatureConfig config) {
     String logonUrl = config.read(Property.LOGONURL).orElse(null);
     if (StringUtils.isNotBlank(logonUrl) && !logonUrl.trim().equalsIgnoreCase("AUTO")) {
@@ -91,29 +95,18 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
       throw new IllegalStateException("The variable 'docuware-connector.host' is missing or undefined!");
     }
     try {
-      // Note: this API is not public and will probably change in future Ivy versions.
-      var externalRestWebServiceCall = (ch.ivyteam.ivy.rest.client.internal.ExternalRestWebServiceCall) reqContext
-        .getProperty(ch.ivyteam.ivy.rest.client.internal.ExternalRestWebServiceCall.class.getCanonicalName());
-      if (externalRestWebServiceCall == null) {
-        return null;
-      }
-      // String host = Ivy.var().get("docuware-connector.host");
-      return externalRestWebServiceCall.getWebTarget()
+      UUID clientId = UUID.fromString(config.readMandatory(RestClientFactoryConstants.PROPERTY_CLIENT_ID));
+      var logon = Ivy.rest().client(clientId)
         .resolveTemplate("host", host)
         .path(ACCOUNT_LOGON_PATH)
-        .getUri()
-        .toString();
+        .getUri();
+      return logon.toString();
     } catch (Throwable t) {
       String message = String.format(
         "Could not determine DocuWare target URL automatically, please set it in REST client property '%s'. Put there the same URL as used for the client.",
         Property.LOGONURL);
-      Ivy.log().error(message, t);
-      reqContext.abortWith(Response.status(Response.Status.PRECONDITION_FAILED)
-        .type(MediaType.TEXT_PLAIN)
-        .entity(message)
-        .build());
+      throw new IllegalStateException(message, t);
     }
-    return null;
   }
 
   protected Response logon(ClientRequestContext reqContext, Form form, String target) {
