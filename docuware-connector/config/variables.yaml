@@ -9,6 +9,7 @@ Variables:
   
   docuware-connector:
   
+    # your docuware instance: e.g. 'acme.docuware.cloud'
     host: ''
     
     username: 
