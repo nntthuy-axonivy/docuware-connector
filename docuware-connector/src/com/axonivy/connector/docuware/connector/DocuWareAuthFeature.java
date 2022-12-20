@@ -35,7 +35,7 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
 
   private static final String ACCOUNT_LOGON_PATH = "Account/Logon";
 
-  private interface Property {
+  public interface Property {
     String USERNAME = "UserName";
     String PASSWORD = "Password";
     String HOSTID = "HostId";
@@ -86,6 +86,10 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
       return logonUrl;
     }
 
+    String host = reqContext.getUri().getHost();
+    if (StringUtils.isBlank(host)) {
+      throw new IllegalStateException("The variable 'docuware-connector.host' is missing or undefined!");
+    }
     try {
       // Note: this API is not public and will probably change in future Ivy versions.
       var externalRestWebServiceCall = (ch.ivyteam.ivy.rest.client.internal.ExternalRestWebServiceCall) reqContext
@@ -94,7 +98,6 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
         return null;
       }
       // String host = Ivy.var().get("docuware-connector.host");
-      String host = reqContext.getUri().getHost();
       return externalRestWebServiceCall.getWebTarget()
         .resolveTemplate("host", host)
         .path(ACCOUNT_LOGON_PATH)
