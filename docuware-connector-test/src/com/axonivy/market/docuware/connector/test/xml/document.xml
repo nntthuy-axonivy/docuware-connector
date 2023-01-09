@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/standard.xslt"?>
+<Document xmlns:s="http://dev.docuware.com/schema/public/services" TotalPages="2" Id="66" Title="sample20" LastModified="2022-12-02T12:58:10Z" CreatedAt="2022-12-02T12:58:10Z" FileSize="3028" SectionCount="1" VersionStatus="Initial" xmlns="http://dev.docuware.com/schema/public/services/platform">
+    <Fields>
+        <Field FieldName="DWDOCID" FieldLabel="Document ID" ReadOnly="true">
+            <Int>66</Int>
+        </Field>
+        <Field FieldName="DWDOCSIZE" FieldLabel="Document size" ReadOnly="true">
+            <Int>3028</Int>
+        </Field>
+        <Field FieldName="DWSTOREUSER" FieldLabel="Stored by" ReadOnly="true">
+            <String>AXONIVYH</String>
+        </Field>
+        <Field FieldName="DWSTOREDATETIME" FieldLabel="Stored on" ReadOnly="true">
+            <DateTime>2022-12-02T12:58:10Z</DateTime>
+        </Field>
+        <Field FieldName="DWEXTENSION" FieldLabel="File type" ReadOnly="true">
+            <String>.pdf</String>
+        </Field>
+        <Field FieldName="DWMODUSER" FieldLabel="Modified by" ReadOnly="true">
+            <String>AXONIVYH</String>
+        </Field>
+        <Field FieldName="DWMODDATETIME" FieldLabel="Modified on" ReadOnly="true">
+            <DateTime>2022-12-02T12:58:10Z</DateTime>
+        </Field>
+        <Field FieldName="DWSECTIONCOUNT" FieldLabel="Section count" ReadOnly="true">
+            <Int>1</Int>
+        </Field>
+        <Field FieldName="DWPAGECOUNT" FieldLabel="Section count" ReadOnly="true">
+            <Int>1</Int>
+        </Field>
+        <Field FieldName="DOCUMENTTYPE" FieldLabel="DocumentType">
+            <String>ARCHIVE</String>
+        </Field>
+        <Field FieldName="EMPLOYEE_NAME" FieldLabel="Employee Name" IsNull="true" />
+        <Field FieldName="EMPLOYEE_NO" FieldLabel="Employee No.">
+            <String>11002018</String>
+        </Field>
+        <Field FieldName="ACCESS_LEVEL" FieldLabel="Access Level">
+            <String>3</String>
+        </Field>
+        <Field FieldName="PROCESSING_STATUS" FieldLabel="Processing Status">
+            <String>NEW</String>
+        </Field>
+        <Field FieldName="COMMENTS" FieldLabel="Comments" IsNull="true" />
+        <Field FieldName="ORIGIN" FieldLabel="Origin" IsNull="true" />
+        <Field FieldName="CATEGORY" FieldLabel="Category" IsNull="true" />
+        <Field FieldName="DOCUMENT_NUMBER" FieldLabel="Document Number" IsNull="true" />
+        <Field FieldName="EMPLOYEE_STATUS" FieldLabel="Employee Status" IsNull="true" />
+        <Field FieldName="ARCHIVING_USER" FieldLabel="Archiving User" IsNull="true" />
+        <Field FieldName="ARCHIVED_BY" FieldLabel="Archived By" IsNull="true" />
+        <Field FieldName="SCANNED_BY" FieldLabel="Scanned By" IsNull="true" />
+        <Field FieldName="LAST_VIEW_USER" FieldLabel="Last View User" IsNull="true" />
+        <Field FieldName="LAST_EDIT_USER" FieldLabel="Last Edit User" IsNull="true" />
+        <Field FieldName="OPCO" FieldLabel="OpCo">
+            <String>NPO</String>
+        </Field>
+        <Field FieldName="DELETED" FieldLabel="Deleted" IsNull="true" />
+        <Field FieldName="DATE_ON_DOCUMENT" FieldLabel="Date on Document" IsNull="true" />
+        <Field FieldName="DATE_OF_SIGNATURE" FieldLabel="Date of Signature" IsNull="true" />
+        <Field FieldName="START_DATE" FieldLabel="Start Date" IsNull="true" />
+        <Field FieldName="RETIREE_DATE" FieldLabel="Retiree Date" IsNull="true" />
+        <Field FieldName="ARCHIVING_DATE" FieldLabel="Archiving Date" IsNull="true" />
+        <Field FieldName="LAST_VIEW_DATE" FieldLabel="Last View Date" IsNull="true" />
+        <Field FieldName="LAST_EDIT_DATE" FieldLabel="Last Edit Date" IsNull="true" />
+        <Field FieldName="ARCHIVE_DESTINATION" FieldLabel="Archive Destination" IsNull="true" />
+        <Field FieldName="FILELOCATION" FieldLabel="Filelocation" IsNull="true" />
+        <Field FieldName="FILENAME" FieldLabel="Filename" IsNull="true" />
+        <Field FieldName="AUTOINDEX" FieldLabel="Autoindex" IsNull="true" />
+        <Field FieldName="DWDISK" FieldLabel="Disk number" ReadOnly="true">
+            <Int>1</Int>
+        </Field>
+        <Field FieldName="DWDISKNO" FieldLabel="Disk number" ReadOnly="true">
+            <Int>1</Int>
+        </Field>
+    </Fields>
+    <Flags />
+    <Version Major="1" Minor="0" />
+    <s:Links>
+        <s:Link rel="self" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66" />
+        <s:Link rel="fields" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Fields" />
+        <s:Link rel="clippedDocuments" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Operations/ClippedDocuments?docId=66" />
+        <s:Link rel="sections" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Sections?docid=66" />
+        <s:Link rel="thumbnail" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Thumbnail?annotations=True&amp;v=384957205" />
+        <s:Link rel="thumbnailWithoutAnnotation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Thumbnail?annotations=False&amp;v=384957205" />
+        <s:Link rel="lowQualityImage" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Image?v=384957205" />
+        <s:Link rel="annotationAsSvg" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/AnnotationAsImage?format=Svg&amp;v=384957205" />
+        <s:Link rel="deepZoomImage" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Rendering/66-84/Pages/0/woa/dz.dzi" />
+        <s:Link rel="deepZoomImageWithAnnotation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Rendering/66-84/Pages/0/wa/dz.dzi" />
+        <s:Link rel="fileDownload" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/FileDownload" />
+        <s:Link rel="content" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Data" />
+        <s:Link rel="lock" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Lock" />
+        <s:Link rel="rights" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Rights" />
+        <s:Link rel="processDocumentAction" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Operations/ProcessDocumentAction?docId=66" />
+        <s:Link rel="positions" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Positions" />
+        <s:Link rel="contentDivideOperation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Operations/ContentDivide?docId=66" />
+        <s:Link rel="textAnnotation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/TextAnnotation" />
+        <s:Link rel="checksumStatus" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/ChecksumStatus" />
+        <s:Link rel="xmlDSigContent" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/XmlDSigContent" />
+        <s:Link rel="appProperties" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/DocumentApplicationProperties" />
+        <s:Link rel="documentLinks" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/DocumentLinks" />
+        <s:Link rel="latestVersion" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/LatestVersion" />
+        <s:Link rel="annotation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Annotation" />
+        <s:Link rel="versionHistory" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Query/Documents?q=dmVyc2lvbjs2Ng%3d%3d" />
+        <s:Link rel="checkoutDocument" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/CheckoutDocument" />
+        <s:Link rel="checkoutToFileSystem" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/CheckOutToFileSystem" />
+        <s:Link rel="checkInFromFileSystem" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/CheckInFromFileSystem" />
+        <s:Link rel="workflowHistory" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/WorkflowHistory" />
+        <s:Link rel="downloadAsArchive" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Archiving/ArchiveDocument?id=66" />
+        <s:Link rel="auditInformation" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/DocumentAuditInformation" />
+    </s:Links>
+    <Sections>
+        <Section Id="66-84" ContentType="application/pdf" PageCount="2" FileSize="3028" OriginalFileName="sample20.pdf" ContentModified="1900-01-01T00:00:00Z">
+            <SignatureStatus>Allow_Signature_Stamps</SignatureStatus>
+            <SignatureStatus>Allow_Annotations</SignatureStatus>
+            <SignatureStatus>Allow_Stamps</SignatureStatus>
+            <Pages />
+            <Thumbnails />
+            <s:Links>
+                <s:Link rel="self" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Sections/66-84" />
+                <s:Link rel="thumbnail" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/Thumbnail?annotations=False&amp;v=384957205" />
+                <s:Link rel="annotationAsSvg" href="/DocuWare/Platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66/AnnotationAsImage?format=Svg&amp;v=384957205" />
+            </s:Links>
+        </Section>
+    </Sections>
+    <ContentType>application/pdf</ContentType>
+</Document>

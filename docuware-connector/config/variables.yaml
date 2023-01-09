@@ -26,3 +26,5 @@ Variables:
     # Only set this value, if the automatic determination does not work.
     logonurl: ''
     
+    filecabinetid: ''
+    

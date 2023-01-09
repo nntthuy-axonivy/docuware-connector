@@ -1,0 +1,307 @@
+{
+  "format" : "10.0.0",
+  "id" : "1851611E5B63DEE0",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.market.docuware.connector.DownloadServiceData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "getDocument",
+      "config" : {
+        "callSignature" : "getDocument",
+        "input" : {
+          "params" : [
+            { "name" : "documentId", "type" : "String" }
+          ],
+          "map" : {
+            "out.documentId" : "param.#documentId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+          ],
+          "map" : {
+            "result.document" : "in.#document",
+            "result.error" : "in.#error"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : { "id" : "f4", "to" : "f3" }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 592, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "initialize",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
+            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 }
+      },
+      "connect" : { "id" : "f6", "to" : "f5" }
+    }, {
+      "id" : "f5",
+      "type" : "RestClientCall",
+      "name" : "get document",
+      "config" : {
+        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "statusErrorCode" : "ivy:error:rest:client",
+        "responseMapping" : {
+          "out.document" : "result"
+        },
+        "templateParams" : {
+          "DocumentId" : "in.documentId",
+          "FileCabinetId" : "in.configuration.fileCabinetId"
+        },
+        "resultType" : "com.docuware.dev.schema._public.services.platform.Document"
+      },
+      "visual" : {
+        "at" : { "x" : 456, "y" : 64 },
+        "icon" : "res:/webContent/icons/docuware.png"
+      },
+      "boundaries" : [ {
+          "id" : "f14",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 496, "y" : 98 }
+          },
+          "connect" : { "id" : "f15", "to" : "f1" }
+        } ],
+      "connect" : { "id" : "f2", "to" : "f1" }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "initialize",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
+            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 264 }
+      },
+      "connect" : { "id" : "f18", "to" : "f17" }
+    }, {
+      "id" : "f12",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 592, "y" : 256 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "CallSubStart",
+      "name" : "downloadFile(String)",
+      "config" : {
+        "callSignature" : "downloadFile",
+        "input" : {
+          "params" : [
+            { "name" : "documentId", "type" : "String" }
+          ],
+          "map" : {
+            "out.documentId" : "param.#documentId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "file", "type" : "File" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+          ],
+          "map" : {
+            "result.file" : "in.#file",
+            "result.error" : "in.#error"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 88, "y" : 264 }
+      },
+      "connect" : { "id" : "f9", "to" : "f8" }
+    }, {
+      "id" : "f17",
+      "type" : "RestClientCall",
+      "name" : "download file",
+      "config" : {
+        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}/FileDownload",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "method" : "GET",
+        "queryParams" : {
+          "targetFileType" : "",
+          "keepAnnotations" : ""
+        },
+        "statusErrorCode" : "ivy:error:rest:client",
+        "clientCode" : [
+          "import com.axonivy.connector.docuware.connector.DocuWareService;",
+          "import com.axonivy.connector.docuware.connector.DocuWareDownloadResult;",
+          "",
+          "",
+          "DocuWareDownloadResult result = DocuWareService.downloadFile(client, in.configuration, in.downloadFolder);",
+          "",
+          "in.file = result.#file;",
+          "in.error = result.#error;"
+        ],
+        "templateParams" : {
+          "DocumentId" : "in.#documentId",
+          "FileCabinetId" : "in.configuration.fileCabinetId"
+        },
+        "resultType" : "[B",
+        "responseCode" : [
+          "import org.apache.commons.lang3.StringUtils;",
+          "import com.axonivy.connector.docuware.connector.DocuWareService;",
+          "",
+          "String filename = DocuWareService.getFilenameFromResponseHeader(response);",
+          "",
+          "in.file = new File(filename, true);",
+          "in.file.createNewFile();",
+          "in.file.writeBinary(result);"
+        ]
+      },
+      "visual" : {
+        "at" : { "x" : 456, "y" : 264 },
+        "icon" : "res:/webContent/icons/docuware.png"
+      },
+      "boundaries" : [ {
+          "id" : "f19",
+          "type" : "ErrorBoundaryEvent",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.error" : "error"
+              }
+            }
+          },
+          "visual" : {
+            "at" : { "x" : 488, "y" : 304 }
+          },
+          "connect" : { "id" : "f20", "to" : "f12" }
+        } ],
+      "connect" : { "id" : "f11", "to" : "f12" }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "getDocument(String,DocuWareEndpointConfiguration)",
+      "config" : {
+        "callSignature" : "getDocument",
+        "input" : {
+          "params" : [
+            { "name" : "documentId", "type" : "String" },
+            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
+          ],
+          "map" : {
+            "out.configuration" : "param.configuration",
+            "out.documentId" : "param.#documentId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+          ],
+          "map" : {
+            "result.document" : "in.#document",
+            "result.error" : "in.#error"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : { "id" : "f16", "to" : "f13" }
+    }, {
+      "id" : "f13",
+      "type" : "Script",
+      "name" : "initialize",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
+            "",
+            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      },
+      "connect" : { "id" : "f21", "to" : "f5", "via" : [ { "x" : 336, "y" : 152 }, { "x" : 336, "y" : 64 } ] }
+    }, {
+      "id" : "f22",
+      "type" : "CallSubStart",
+      "name" : "downloadFile(String,DocuWareEndpointConfiguration)",
+      "config" : {
+        "callSignature" : "downloadFile",
+        "input" : {
+          "params" : [
+            { "name" : "documentId", "type" : "String" },
+            { "name" : "configration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
+          ],
+          "map" : {
+            "out.configuration" : "param.configration",
+            "out.documentId" : "param.#documentId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "file", "type" : "File" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+          ],
+          "map" : {
+            "result.file" : "in.#file",
+            "result.error" : "in.#error"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 368 }
+      },
+      "connect" : { "id" : "f24", "to" : "f23" }
+    }, {
+      "id" : "f23",
+      "type" : "Script",
+      "name" : "initialize",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
+            "",
+            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 368 }
+      },
+      "connect" : { "id" : "f25", "to" : "f17", "via" : [ { "x" : 336, "y" : 368 }, { "x" : 336, "y" : 264 } ] }
+    } ]
+}
