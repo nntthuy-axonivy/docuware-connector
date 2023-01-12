@@ -852,7 +852,6 @@
         "output" : {
           "map" : {
             "out" : "in",
-            "out.document" : "result.document",
             "out.error" : "result.error"
           }
         }
