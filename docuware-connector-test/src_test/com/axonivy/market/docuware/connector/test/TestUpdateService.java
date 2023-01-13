@@ -22,32 +22,38 @@ import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest
 public class TestUpdateService extends TestDocuWareConnector {
-		
-	private static final int DOCUMENT_ID = 1; 	
-	private static final BpmElement testeeUpdate = BpmProcess.path("UpdateService").elementName("updateDocument");
-	private static final BpmElement testeeUpdate_2 = BpmProcess.path("UpdateService").elementName("updateDocument(Integer, List<DocuWareProperty>, DocuWareEndpointConfiguration)");
 
+  private static final int DOCUMENT_ID = 1;
+  private static final BpmElement testeeUpdate = BpmProcess.path("UpdateService")
+          .elementName("updateDocument");
+  private static final BpmElement testeeUpdate_2 = BpmProcess.path("UpdateService")
+          .elementName("updateDocument(Integer, List<DocuWareProperty>, DocuWareEndpointConfiguration)");
 
-	@Test
-	public void updateDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)  throws IOException {
-		prepareRestClient(app, fixture);
-		List<DocuWareProperty> propertyList = prepareDocuWareProperties();
-		ExecutionResult result = bpmClient.start().subProcess(testeeUpdate).withParam("documentId", String.valueOf(DOCUMENT_ID)).withParam("indexFields", propertyList).execute();	
-		UpdateServiceData data = result.data().last();
-		assertThat(data.getDocumentIndexFields()).isNotNull();
-		assertThat(data.getDocumentIndexFields().getField()).isNotEmpty();
-	}
-	
+  @Test
+  public void updateDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
+          throws IOException {
+    prepareRestClient(app, fixture);
+    List<DocuWareProperty> propertyList = prepareDocuWareProperties();
+    ExecutionResult result = bpmClient.start().subProcess(testeeUpdate)
+            .withParam("documentId", String.valueOf(DOCUMENT_ID)).withParam("indexFields", propertyList)
+            .execute();
+    UpdateServiceData data = result.data().last();
+    assertThat(data.getDocumentIndexFields()).isNotNull();
+    assertThat(data.getDocumentIndexFields().getField()).isNotEmpty();
+  }
 
-	@Test
-	public void updateDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)  throws IOException {
-		prepareRestClient(app, fixture);
-		List<DocuWareProperty> propertyList = prepareDocuWareProperties();
-		DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
-		ExecutionResult result = bpmClient.start().subProcess(testeeUpdate_2).withParam("documentId", String.valueOf(DOCUMENT_ID)).withParam("indexFields", propertyList).withParam("configuration", configuration).execute();	
-		UpdateServiceData data = result.data().last();	
-		assertThat(data.getDocumentIndexFields()).isNotNull();
-		assertThat(data.getDocumentIndexFields().getField()).isNotEmpty();
-	}
-	
+  @Test
+  public void updateDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session,
+          AppFixture fixture,
+          IApplication app) throws IOException {
+    prepareRestClient(app, fixture);
+    List<DocuWareProperty> propertyList = prepareDocuWareProperties();
+    DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
+    ExecutionResult result = bpmClient.start().subProcess(testeeUpdate_2)
+            .withParam("documentId", String.valueOf(DOCUMENT_ID)).withParam("indexFields", propertyList)
+            .withParam("configuration", configuration).execute();
+    UpdateServiceData data = result.data().last();
+    assertThat(data.getDocumentIndexFields()).isNotNull();
+    assertThat(data.getDocumentIndexFields().getField()).isNotEmpty();
+  }
 }
