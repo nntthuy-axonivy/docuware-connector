@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:dotnetTypes="http://dev.docuware.com/types" xmlns="http://dev.docuware.com/settings/interop" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/settings/interop" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="DWSystemVariableName">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="CurrentUserShortName" />
+      <xs:enumeration value="CurrentUserLongName" />
+      <xs:enumeration value="CurrentDate" />
+      <xs:enumeration value="CurrentDateTime" />
+      <xs:enumeration value="CurrentUserEmail" />
+      <xs:enumeration value="Clipboard" />
+      <xs:enumeration value="ImportDirectoryName" />
+      <xs:enumeration value="ImportParentDirectoryName" />
+      <xs:enumeration value="FileName" />
+      <xs:enumeration value="FileExtension" />
+      <xs:enumeration value="FileNameWithExtension" />
+      <xs:enumeration value="FileModificationDateTime" />
+      <xs:enumeration value="FileCreationDateTime" />
+      <xs:enumeration value="DocumentSplitNumber" />
+      <xs:enumeration value="CurrentUserRole" />
+      <xs:enumeration value="CurrentUserGroup" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

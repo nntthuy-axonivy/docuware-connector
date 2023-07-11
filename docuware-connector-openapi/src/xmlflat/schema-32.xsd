@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:common="http://dev.docuware.com/settings/common" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-22.xsd" namespace="http://dev.docuware.com/public/intellix" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-33.xsd" />
+  <xs:include schemaLocation="schema-40.xsd" />
+  <xs:complexType name="BatchUpdateSource" abstract="true">
+    <xs:annotation>
+      <xs:documentation>The base for defining a sequence of documents to be updated.</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="BatchUpdateDialogExpressionSource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:BatchUpdateSource">
+        <xs:sequence>
+          <xs:element name="Expression" type="t:DialogExpression">
+            <xs:annotation>
+              <xs:documentation>A dialog expression which is used to get the documents to be updated.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BatchUpdateDocumentsSource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:BatchUpdateSource">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="Id" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>The ids of the documents to be updated.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BatchUpdateProcessData">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.batchupdateprocessdata+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="t:DocumentIndexField">
+        <xs:annotation>
+          <xs:documentation>The fields which are updated.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="StoreDialogId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the dialog to be used to update fields which are hidden inside the store dialog.
+          </xs:documentation>
+          <xs:documentation>
+            Ignore this field if the update is not triggered by a dialog.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BatchSize" nillable="true" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>The number of documents which are updated within a update chunk.</xs:documentation>
+          <xs:documentation>If the value is missing then the server decides the size of chunks. The server might choose a different chunk size than requested by this property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="true" name="BreakOnError" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            If this attribute is set to <c>true</c> then the update is stopped on the first document which fails to be updated.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BatchUpdateProcess">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.batchupdateprocess+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A class which contains data for batch update processes.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Source" type="t:BatchUpdateSource">
+        <xs:annotation>
+          <xs:documentation>
+            The source of the items to be updated.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Data" type="t:BatchUpdateProcessData">
+        <xs:annotation>
+          <xs:documentation>The data which is used to specify the updated data and update process control.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BatchAppendKeywordValues">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.batchappendkeywordvalues+xml</ann:ContentType>
+        <ann:IntroducedIn>Moose</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Contract for batch append of keywords to multiple documents.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="DocId" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>The ids of the documents to be updated.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Keyword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The keywords to be appended.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="FieldName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains the internal name of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="BreakOnError" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          If this attribute is set to <c>true</c> then the update is stopped on the first document which fails to be updated.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StoreDialogId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+          The id of the dialog to be used to update fields which are hidden inside the store dialog.
+        </xs:documentation>
+        <xs:documentation>
+          Ignore this field if the update is not triggered by a dialog.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="BatchAppendKeywordValues" type="t:BatchAppendKeywordValues" />
+  <xs:element name="BatchUpdateProcess" type="t:BatchUpdateProcess" />
+  <xs:element name="BatchUpdateProcessData" type="t:BatchUpdateProcessData" />
+</xs:schema>

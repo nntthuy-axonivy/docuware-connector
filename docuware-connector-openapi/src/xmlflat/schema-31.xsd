@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types"
+  xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform"
+  elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:simpleType name="FileCabinetFieldScope">
+    <xs:annotation>
+      <xs:documentation>The scope of the file cabinet field.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="User">
+        <xs:annotation>
+          <xs:documentation>User defined field.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="System">
+        <xs:annotation>
+          <xs:documentation>System field.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="FileCabinetField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FileCabinetFieldBase">
+        <xs:sequence>
+          <xs:element name="TableFieldColumns" type="t:TableFieldColumns">
+            <xs:annotation>
+              <xs:documentation>Only relevant for fields with "Table" DWFieldType. Columns of the table field.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="false" name="UsedAsDocumentName" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field is used as document name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FileCabinetFieldBase">
+    <xs:annotation>
+      <xs:documentation>Base file cabinet field definition</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FixedEntry" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Fixed value of the field.If it's null the field has no fixed value. Not relevant for fields with "Table" DWFieldType.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FieldInfoText" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Description of the field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="User" name="Scope" type="t:FileCabinetFieldScope">
+      <xs:annotation>
+        <xs:documentation>Gets whether the field is a user or a system field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Length" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Length of the field (only for text fields).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DBFieldName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the database column for the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DisplayName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Label (display name) of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="DropLeadingZero" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+					Determines whether the system will automatically remove any leading zeros. If both the Remove leading spaces and Remove leading zeros options are enabled, both leading spaces and zeros are removed: _07896 becomes 7896.
+				</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="DropLeadingBlanks" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+					Determines whether the system will automatically remove any leading spaces. If both the Remove leading spaces and Remove leading zeros options are enabled, both leading spaces and zeros are removed: _07896 becomes 7896.
+				</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="NotEmpty" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Obsolete since Lobster. Use the same property on dialog field and stamp form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Precision" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The number of decimal places that can be entered after the decimal point of a numeric and decimal fields.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FileCabinetFields">
+    <xs:annotation>
+      <xs:documentation>List of file cabinet fields.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Field" type="t:FileCabinetField">
+        <xs:annotation>
+          <xs:documentation>List of file cabinet fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TableFieldColumns">
+    <xs:annotation>
+      <xs:documentation>List of file cabinet fields.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="TableFieldColumn" type="t:FileCabinetFieldBase">
+        <xs:annotation>
+          <xs:documentation>List of table field columns.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

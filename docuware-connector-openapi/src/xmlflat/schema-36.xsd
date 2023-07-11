@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" id="CFSContract" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="CFSTableNames">
+    <xs:restriction base="xs:Name">
+      <xs:enumeration value="Environment_Server" />
+      <xs:enumeration value="Environment_Client" />
+      <xs:enumeration value="Environment_DocuWare_General" />
+      <xs:enumeration value="DocuWare_FileCabinet" />
+      <xs:enumeration value="DocuWare_DocumentTray" />
+      <xs:enumeration value="DocuWare_User" />
+      <xs:enumeration value="DocuWare_FileCabinet_Dialog_Search" />
+      <xs:enumeration value="DocuWare_FileCabinet_Dialog_Store" />
+      <xs:enumeration value="DocuWare_List" />
+      <xs:enumeration value="DocuWare_FileCabinet_Dialog_Tasklist" />
+      <xs:enumeration value="Installation_App" />
+      <xs:enumeration value="DocuWare_Desktop" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

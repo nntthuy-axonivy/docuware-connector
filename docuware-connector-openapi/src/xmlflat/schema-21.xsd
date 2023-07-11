@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:t="http://dev.docuware.com/schema/public/services" xmlns="http://dev.docuware.com/schema/public/services" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="schema-2.xsd" />
+  <xs:simpleType name="LogMessageLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Debug" />
+      <xs:enumeration value="Info" />
+      <xs:enumeration value="Warning" />
+      <xs:enumeration value="Error" />
+      <xs:enumeration value="Critical" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="LogMessage">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.logging.logmessage+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Message" type="xs:string" />
+      <xs:element minOccurs="0" name="Exception" type="xs:string" />
+      <xs:element minOccurs="0" name="StackTrace" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="Machine" type="xs:string" />
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required" />
+    <xs:attribute name="User" type="xs:string" />
+    <xs:attribute default="Info" name="Level" type="t:LogMessageLevel" />
+    <xs:attribute default="1" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The number of occurrences of this message. This is useful if you want to filter messages which occure many times and flood your log.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="GroupId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>In case this message is representing a group you can use this attribute to mark the group id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="LogMessages">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.logging.logmessages+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Message" type="t:LogMessage" />
+      <xs:element ref="t:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:LogMessages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:LogMessages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:LogMessages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:LogMessages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LogMessageGroup">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.logging.logmessagegroup+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Group" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Something which identifies a group of log messages.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="Info" name="Level" type="t:LogMessageLevel" />
+    <xs:attribute name="Count" type="xs:int" use="required" />
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required" />
+  </xs:complexType>
+  <xs:complexType name="LogMessageGroups">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.logging.logmessagegroups+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Message" type="t:LogMessageGroup" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LogMessages" type="t:LogMessages" />
+  <xs:element name="LogMessageGroups" type="t:LogMessageGroups" />
+</xs:schema>

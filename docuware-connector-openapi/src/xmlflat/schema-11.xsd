@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:interop="http://dev.docuware.com/settings/interop" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-6.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-12.xsd" />
+  <xs:include schemaLocation="schema-13.xsd" />
+  <xs:complexType name="OrganizationUser">
+    <xs:annotation>
+      <xs:documentation>Defines a user in specific organization</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="OrganizationId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Organization identity</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Info" type="t:UserInfo">
+        <xs:annotation>
+          <xs:documentation>Information related to a user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UserInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.userinfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Information related to a user</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="User" type="t:User">
+        <xs:annotation>
+          <xs:documentation>User details and settings</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LoginInfo" type="t:LoginInfo">
+        <xs:annotation>
+          <xs:documentation>Details about user login</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="validate" IntroducedIn="Dolphin">
+                <Invoke Verb="Post" IntroducedIn="Dolphin">
+                  <Accepts IntroducedIn="Dolphin">
+                    <SchemaType IntroducedIn="Dolphin">t:UserValidation</SchemaType>
+                  </Accepts>
+                  <Produces IntroducedIn="Dolphin">
+                    <ContentType IntroducedIn="Dolphin">text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserValidation" type="t:UserValidation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UserValidation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Dolphin">application/vnd.docuware.platform.uservalidation+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>User details needed for validation user login</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="Password" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Password to validate</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="LoginInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.logininfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Details abut user login</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="PasswordExpireNotification" type="xs:duration" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          Define the period of time when password will expire.
+          This parameter contains a time interval specification in the form:
+          [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
+          Elements in square brackets ([ and ]) are optional. One selection from the list of alternatives enclosed in braces ({ and }) and separated by vertical bars (|) is required.
+          For more details check http://msdn.microsoft.com/en-us/library/se73z7b9.aspx
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="BookedLicense" type="interop:DWProductTypes" use="required">
+      <xs:annotation>
+        <xs:documentation>License that is booked for the login</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ProductType" type="interop:DWProductTypes" use="required">
+      <xs:annotation>
+        <xs:documentation>Product type used for login</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Koala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="NewUser">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.createorganizationuser+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>User details.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The Name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DbName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The Database Name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Email" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The Email of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="NetworkId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The NetworkId of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Password" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The Password of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="User">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.user+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>User details and settings</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EMail" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The email address of the user.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" default="00000000-0000-0000-0000-000000000000" name="DefaultWebBasket" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Default Web Basket</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OutOfOffice" type="t:OutOfOffice">
+        <xs:annotation>
+          <xs:documentation>Out of office settings</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegionalSettings" type="t:RegionalSettings">
+        <xs:annotation>
+          <xs:documentation>Regional settings</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:User</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:User</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:User</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="defaultWebBasket">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:FileCabinet</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="groups">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Groups</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:AssignmentOperation</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="roles">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Roles</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:AssignmentOperation</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The ID of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The display name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FirstName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The first name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LastName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The last name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Salutation" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The salutation of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DBName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The databasename of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Active" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>The value indicates whether the user is active or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="NetworkId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The networkId of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Users">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.users+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a list of users</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="User" type="t:User">
+        <xs:annotation>
+          <xs:documentation>Defines a list of users</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OutOfOffice">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.outofoffice+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines when a user is out of office</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="IsOutOfOffice" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Flag which marks either user is in the office or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StartDateTime" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation>Start datetime after which user will not be in the office.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="EndDateTime" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation>Ending datetime after which user will be in the office.If not set user will be out of office for unlimited amount of time.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RegionalSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.regionalsettings+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines user locale</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Language" type="xs:string" />
+    <xs:attribute name="Culture" type="xs:string" />
+    <xs:attribute name="Calendar" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="User" type="t:User" />
+  <xs:element name="Users" type="t:Users" />
+  <xs:simpleType name="TokenUsage">
+    <xs:annotation>
+      <xs:documentation>Usage of the token.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Single">
+        <xs:annotation>
+          <xs:documentation>The token can be used to login only once</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Multi">
+        <xs:annotation>
+          <xs:documentation>The token can be used multiple times</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TokenDescription" type="t:TokenDescription" />
+  <xs:complexType name="TokenDescription">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.tokendescription+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a purpose of the token. Can define some restrictions</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TargetProducts" type="interop:DWProductTypes">
+        <xs:annotation>
+          <xs:documentation>The token can be used multiple times</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Usage" type="t:TokenUsage" use="required">
+      <xs:annotation>
+        <xs:documentation>Define the usage of the token.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Lifetime" type="xs:duration" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Lifetime of the token. After lifetime expires token cannot be used anymore. This parameter contains a time interval specification in the form:
+          [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
+          Elements in square brackets ([ and ]) are optional. One selection from the list of alternatives enclosed in braces ({ and }) and separated by vertical bars (|) is required.
+          For more details check http://msdn.microsoft.com/en-us/library/se73z7b9.aspx
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

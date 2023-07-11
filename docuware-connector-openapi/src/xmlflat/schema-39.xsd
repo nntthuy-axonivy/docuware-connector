@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:include schemaLocation="schema-25.xsd" />
+  <xs:complexType name="SelectListResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Select list values.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Value" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Select list values.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TypedValue" type="t:DocumentIndexFieldValue" />
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next" IntroducedIn="Eagle">
+                <Invoke IntroducedIn="Eagle">
+                  <Produces IntroducedIn="Eagle">
+                    <SchemaType IntroducedIn="Eagle">t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev" IntroducedIn="Eagle">
+                <Invoke IntroducedIn="Eagle">
+                  <Produces IntroducedIn="Eagle">
+                    <SchemaType IntroducedIn="Eagle">t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self" IntroducedIn="Eagle">
+                <Invoke IntroducedIn="Eagle">
+                  <Produces IntroducedIn="Eagle">
+                    <SchemaType IntroducedIn="Eagle">t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first" IntroducedIn="Eagle">
+                <Invoke IntroducedIn="Eagle">
+                  <Produces IntroducedIn="Eagle">
+                    <SchemaType IntroducedIn="Eagle">t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FieldValueStatistics">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Fox</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Value with statistics.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Value" type="t:DocumentIndexFieldValue">
+        <xs:annotation>
+          <xs:documentation>The value.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Count" type="xs:long" use="required">
+      <xs:annotation>
+        <xs:documentation>The number of times the value occurs in the documents.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FieldValueStatisticsResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Fox</ann:IntroducedIn>
+        <ann:ContentType>application/vnd.docuware.platform.fieldvaluestatisticsresult+xml</ann:ContentType>
+        <xs:documentation>List of grouped values with count for each value.</xs:documentation>
+        <ann:IntroducedIn>Fox</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:FieldValueStatistics" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SelectListResult" type="t:SelectListResult" />
+  <xs:element name="FieldValueStatisticsResult" type="t:FieldValueStatisticsResult" />
+</xs:schema>

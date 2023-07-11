@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:simpleType name="SortDirection">
+    <xs:annotation>
+      <xs:documentation>Define a sort direction</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation>Sorts a field in the default order.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Asc">
+        <xs:annotation>
+          <xs:documentation>Sorts a field in ascending order.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Desc">
+        <xs:annotation>
+          <xs:documentation>Sorts a field in descending order.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SortedField">
+    <xs:annotation>
+      <xs:documentation>Defines a sort by a field.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Field" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Field name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Asc" name="Direction" type="t:SortDirection">
+      <xs:annotation>
+        <xs:documentation>A sort direction</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SortedFieldsList">
+    <xs:annotation>
+      <xs:documentation>Defines a list of sorted fields.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OrderBy" type="t:SortedField">
+        <xs:annotation>
+          <xs:documentation>A list of sorted fields</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

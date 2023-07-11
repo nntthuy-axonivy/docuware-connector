@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/errors.xslt"?>
+<s:Error Uri="https://eu-docuware-dev.risenet.eu/docuware/platform/FileCabinets/e55dda62-4411-4751-8f14-348a499a1ab9/Documents/66" Method="DELETE" StatusCode="403" Status="Forbidden" xmlns:s="http://dev.docuware.com/schema/public/services">
+    <s:Message>Right "Delete documents" restricts the operation for user "ABC"</s:Message>
+    <s:Exception>RightException: Right "Delete documents" restricts the operation for user "AxonIvy_HumanRessources"</s:Exception>
+</s:Error>

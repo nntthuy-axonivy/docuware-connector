@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/standard.xslt"?>
+<Organizations xmlns:s="http://dev.docuware.com/schema/public/services" xmlns="http://dev.docuware.com/schema/public/services/platform">
+  <Organization Name="RCH" Id="7144" Guid="dc52f7cb-0a1b-47bf-bcb3-53da58e754b0">
+    <s:Links>
+      <s:Link rel="filecabinets" href="/DocuWare/Platform/FileCabinets" />
+      <s:Link rel="self" href="/DocuWare/Platform/Organization" />
+      <s:Link rel="users" href="/DocuWare/Platform/Organization/Users" />
+      <s:Link rel="dialogs" href="/DocuWare/Platform/Organization/Dialogs" />
+      <s:Link rel="roles" href="/DocuWare/Platform/Organization/Roles" />
+      <s:Link rel="groups" href="/DocuWare/Platform/Organization/Groups" />
+      <s:Link rel="substitutionLists" href="/DocuWare/Platform/Organization/SubstitutionLists" />
+      <s:Link rel="webSettings" href="/DocuWare/Platform/Organization/WebSettings" />
+      <s:Link rel="loginToken" href="/DocuWare/Platform/Organization/LoginToken" />
+      <s:Link rel="userInfo" href="/DocuWare/Platform/Organization/UserInfo" />
+      <s:Link rel="selectListInfos" href="/DocuWare/Platform/Organization/SelectLists" />
+      <s:Link rel="multiColSelectListInfos" href="/DocuWare/Platform/Organization/MultiColSelectLists" />
+      <s:Link rel="workflows" href="/DocuWare/Platform/Workflow/Workflows" />
+      <s:Link rel="controllerWorkflows" href="/DocuWare/Platform/Workflow/ControllerWorkflows" />
+      <s:Link rel="workflowRequests" href="/DocuWare/Platform/RequestsWorkflows" />
+    </s:Links>
+  </Organization>
+</Organizations>

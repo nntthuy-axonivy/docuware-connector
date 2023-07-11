@@ -1,12 +1,11 @@
 # DocuWare Connector
-Axon Ivy’s [DocuWare](https://start.docuware.com/) connector helps you to accelerate process automation initiatives by integrating DocuWare into your process application within no time.
+Axon Ivy’s [DocuWare](https://start.docuware.com/) connector helps you accelerate your process automation initiatives by integrating DocuWare with your process application in the shortest possible time.
 
 This connector:
 
--	**Only provides a very limited subset of DocuWare functions.**
 -	Is based on REST webservice technologies.
--	Provides access to some exemplary features of DocuWare.
--	Supports you with an easy-to-copy demo implementation to reduce your integration effort.
+-	Gives you access to sample DocuWare functionality
+-	reduces the integration effort to a minimum: Use the demo implementation, there you will find examples for the calls
 
 ## Demo
 
@@ -40,6 +39,3 @@ If your REST URL does not follow the predefined REST URL pattern of this connect
 
 Run `start.ivp` of the DocuWareDemo demo process to test your setup.
 
-## State of the Connector
-
-Currently, the connector only provides some very basic functionality shown in the Demo GUI. The connector would not be usable in real-live scenarios. It will be extended in future versions.

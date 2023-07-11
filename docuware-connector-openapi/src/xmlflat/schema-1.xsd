@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="UriTemplateParameter">
+    <xs:annotation>
+      <xs:documentation>Describes a parameter of an URI template.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="HtmlDescription">
+        <xs:annotation>
+          <xs:documentation>Describes the parameter.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any processContents="skip" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of this URI parameter.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsOptional" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets if the parameter can be ommitted.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DefaultValue" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets the default parameter in case the parameter is optional and the parameter has a default value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FurtherReading" type="xs:anyURI">
+      <xs:annotation>
+        <xs:documentation>Gets a link for further readings.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets the type of this parameter.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TypeDescriptionUri" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets the a link for further readings about this parameter's type.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TypeReference">
+    <xs:attribute name="TypeName" type="xs:string" use="required" />
+    <xs:attribute name="Uri" type="xs:anyURI" />
+  </xs:complexType>
+  <xs:complexType name="UriInvocation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AcceptedType" type="TypeReference" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProducedType" type="TypeReference" />
+      <xs:element minOccurs="0" name="Tag" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Application specific tag for the method.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="GET" name="Verb" />
+  </xs:complexType>
+  <xs:complexType name="UriTemplateDescription">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.uritemplatedescription+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Parameter" type="UriTemplateParameter" />
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Invoke" type="UriInvocation" />
+      <xs:element minOccurs="0" name="HtmlDescription">
+        <xs:annotation>
+          <xs:documentation>Describes the Uri.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any processContents="skip" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of this template.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UriPattern" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The URI template.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FurtherReading" type="xs:anyURI">
+      <xs:annotation>
+        <xs:documentation>Gets a link for further readings.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="UriTemplateDescriptions">
+    <xs:annotation>
+      <xs:documentation>A collection of uri templates.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.uritemplatedescriptions+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Template" type="UriTemplateDescription" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UriTemplates" type="UriTemplateDescriptions" />
+  <xs:element name="UriTemplate" type="UriTemplateDescription" />
+</xs:schema>

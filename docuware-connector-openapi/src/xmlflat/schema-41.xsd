@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/schema/public/services/annotations" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/annotations" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ContentTypeList">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ContentType">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="IntroducedIn" type="xs:string" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SchemaType">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:QName">
+                <xs:attribute name="IntroducedIn" type="xs:string" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ComplexType">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:any />
+            </xs:sequence>
+            <xs:attribute name="IntroducedIn" type="xs:string" />
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="IntroducedIn" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="QueryParamaterType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="String" />
+      <xs:enumeration value="Integer" />
+      <xs:enumeration value="Boolean" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="QueryParamater">
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute default="false" name="IsRequired" />
+    <xs:attribute default="String" name="Type" type="QueryParamaterType" />
+  </xs:complexType>
+  <xs:complexType name="QueryParamatersList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Parameter" type="QueryParamater" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="HttpMethod">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Get" />
+      <xs:enumeration value="Put" />
+      <xs:enumeration value="Post" />
+      <xs:enumeration value="Delete" />
+      <xs:enumeration value="Head" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="HttpMethodList">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Method" type="HttpMethod" />
+    </xs:sequence>
+    <xs:attribute default="false" name="IsComplete" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this is true than there are no other methods are expected than the specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="LinkInvoke">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Accepts" type="ContentTypeList" />
+      <xs:element minOccurs="0" name="Produces" type="ContentTypeList" />
+    </xs:sequence>
+    <xs:attribute default="Get" name="Verb" type="HttpMethod" />
+  </xs:complexType>
+  <xs:complexType name="LinkRelation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Invoke" type="LinkInvoke" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="IntroducedIn" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Relations" type="LinkRelations" />
+  <xs:complexType name="LinkRelations">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Relation" type="LinkRelation" />
+    </xs:sequence>
+    <xs:attribute default="false" name="IsComplete" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this is true than there are no other links are expected than the specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ContentType">
+    <xs:complexType mixed="true" />
+  </xs:element>
+</xs:schema>

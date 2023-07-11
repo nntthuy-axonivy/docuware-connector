@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:comm="http://dev.docuware.com/settings/common" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="WebFormControl" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Base class for web form fields</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ID" type="xs:string" />
+      <xs:element name="Label" type="xs:string" />
+      <xs:element name="Position" type="t:Position" />
+      <xs:element name="BehaviorID" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Position">
+    <xs:annotation>
+      <xs:documentation>Size and positioning of controls</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="x" type="xs:int" />
+      <xs:element name="y" type="xs:int" />
+      <xs:element name="width" type="xs:int" />
+      <xs:element name="height" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WebFormField" abstract="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormControl">
+        <xs:annotation>
+          <xs:documentation>Definition of the web form field</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element name="Value" type="xs:string" />
+          <xs:element name="Type" type="xs:string" />
+          <xs:element name="Hidden" type="xs:boolean" />
+          <xs:element name="Readonly" type="xs:boolean" />
+          <xs:element name="Required" type="xs:boolean" />
+          <xs:element name="Hint" type="xs:string" />
+          <xs:element name="ValidationID" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TextField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="FieldMaskErrorText" type="xs:string" />
+          <xs:element name="FieldMaskRegularExpression" type="xs:string" />
+          <xs:element name="FieldMaskSampleEditText" type="xs:string" />
+          <xs:element minOccurs="0" name="MinLength" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="MaxLength" nillable="true" type="xs:int" />
+          <xs:element name="PredefinedEntry" type="t:PredefinedEntryType" />
+          <xs:element name="PredefinedCustomEntry" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MultiLineTextField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="MinLength" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="MaxLength" nillable="true" type="xs:int" />
+          <xs:element name="PredefinedEntry" type="t:PredefinedEntryType" />
+          <xs:element name="PredefinedCustomEntry" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="NumberField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="ForceDecimalPlaces" type="xs:boolean" />
+          <xs:element name="DecimalPlaces" type="xs:int" />
+          <xs:element minOccurs="0" name="MinValue" nillable="true" type="xs:double" />
+          <xs:element minOccurs="0" name="MaxValue" nillable="true" type="xs:double" />
+          <xs:element name="PredefinedEntry" type="t:PredefinedEntryType" />
+          <xs:element minOccurs="0" name="PredefinedCustomEntry" nillable="true" type="xs:double" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DateField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="LocalValue" type="xs:string" />
+          <xs:element name="PredefinedEntry" type="t:PredefinedEntryType" />
+          <xs:element name="PredefinedCustomEntry" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RadioGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="Options" type="t:WebFormOptions" />
+          <xs:element name="Orientation" type="t:OrientationType" />
+          <xs:element name="NumberOfColumns" type="xs:int" />
+          <xs:element name="ColumnWidth" type="t:ColumnWidthType" />
+          <xs:element name="SortOrder" type="xs:string" />
+          <xs:element name="OptionsRows" type="t:WebFormOptionsRows" />
+          <xs:element name="PredefinedValue" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CheckGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="Options" type="t:WebFormOptions" />
+          <xs:element name="Orientation" type="t:OrientationType" />
+          <xs:element name="NumberOfColumns" type="xs:int" />
+          <xs:element name="ColumnWidth" type="t:ColumnWidthType" />
+          <xs:element name="SortOrder" type="xs:string" />
+          <xs:element name="OptionsRows" type="t:WebFormOptionsRows" />
+          <xs:element maxOccurs="unbounded" name="PredefinedValues" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DropDownList">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="Options" type="t:WebFormListOptions" />
+          <xs:element name="SortOrder" type="xs:string" />
+          <xs:element name="SelectListGuid" type="xs:string" />
+          <xs:element name="PredefinedValue" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Headline">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="FontSize" type="xs:double" />
+          <xs:element name="Alignment" type="t:AlignmentType" />
+          <xs:element name="Subtitle" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SignatureField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="Color" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AttachFileField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="FileTypes" type="xs:string" />
+          <xs:element name="MaxFileSize" type="xs:int" />
+          <xs:element name="MinFileCount" type="xs:int" />
+          <xs:element name="MaxFileCount" type="xs:int" />
+          <xs:element name="ShowFileInfo" type="xs:boolean" />
+          <xs:element maxOccurs="unbounded" name="AttachFileInfos" type="t:AttachFileInfo" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AttachFileInfo">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="FormattedSize" type="xs:string" />
+      <xs:element name="Source" type="t:FileSource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="FileSource">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FileSystem" />
+      <xs:enumeration value="DocTray" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="FixedText">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ImageField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="OriginalImageWidth" type="xs:int" />
+          <xs:element name="OriginalImageSize" type="xs:int" />
+          <xs:element name="Alignment" type="t:AlignmentType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AutoNumberField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="NumberGroupID" type="xs:int" />
+          <xs:element name="NumberGroupGuid" type="xs:string" />
+          <xs:element name="SourceFileCabinet" type="xs:string" />
+          <xs:element name="FontSize" type="xs:int" />
+          <xs:element name="FontColor" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SpacerField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:WebFormField">
+        <xs:sequence>
+          <xs:element name="DisplayLine" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="WebFormControls">
+    <xs:annotation>
+      <xs:documentation>List of web form fields</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="WebFormControl" type="t:WebFormControl" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Behaviors">
+    <xs:annotation>
+      <xs:documentation>List of behaviors</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Behavior" type="t:Behavior" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FieldValidations">
+    <xs:annotation>
+      <xs:documentation>List of field validations</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="FieldValidation" type="t:CustomFieldValidation" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WebFormOption">
+    <xs:annotation>
+      <xs:documentation>An option for a check box or radio group</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Label" type="xs:string" />
+    <xs:attribute name="Checked" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="WebFormOptions">
+    <xs:annotation>
+      <xs:documentation>List of options for a check box or radio group</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="WebFormOption" type="t:WebFormOption" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WebFormOptionsRows">
+    <xs:annotation>
+      <xs:documentation>List of options for a check box or radio group</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="WebFormOptions" type="t:WebFormOptions" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WebFormListOptions">
+    <xs:annotation>
+      <xs:documentation>List of options for a drop down</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="WebFormListOption" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubmissionOptions">
+    <xs:annotation>
+      <xs:documentation>Settings for post submission options</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SubmissionMessage" type="xs:string" />
+      <xs:element name="RedirectUrl" type="xs:string" />
+      <xs:element name="ShowReturnToForm" type="xs:boolean" />
+      <xs:element name="ShowLinkToStoredDocument" type="xs:boolean" />
+      <xs:element name="Redirect" type="xs:boolean" />
+      <xs:element name="RedirectImmediately" type="xs:boolean" />
+      <xs:element name="RedirectDelaySeconds" type="xs:int" />
+      <xs:element name="RedirectType" type="t:RedirectType" />
+      <xs:element name="ShowSubmissionMessage" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="RedirectType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ReturnToForm" />
+      <xs:enumeration value="URL" />
+      <xs:enumeration value="StoredDocument" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="FormInfoHeader">
+    <xs:annotation>
+      <xs:documentation>Simple Form object used for displaying form in web client's forms area</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Id of the form configuration used to retrieve full configuration</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="SanitizedName" type="xs:string" />
+      <xs:element name="Description" type="xs:string" />
+      <xs:element name="Usage" type="xs:boolean" />
+      <xs:element name="Admin" type="xs:boolean" />
+      <xs:element name="Active" type="xs:boolean" />
+      <xs:element name="Public" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FormInfo">
+    <xs:annotation>
+      <xs:documentation>Form object used for displaying form</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ConfigId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Id of the form configuration used to retrieve full configuration</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="Fields" type="t:WebFormControls">
+        <xs:annotation>
+          <xs:documentation>List of web form fields</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Behaviors" type="t:Behaviors">
+        <xs:annotation>
+          <xs:documentation>List of web form behaviors</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FieldValidations" type="t:FieldValidations">
+        <xs:annotation>
+          <xs:documentation>List of web form field validations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FormProperties" type="t:FormProperties">
+        <xs:annotation>
+          <xs:documentation>Form Properties</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SubmissionOptions" type="t:SubmissionOptions">
+        <xs:annotation>
+          <xs:documentation>Submission Options</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Public" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="CreateFormsFileResult">
+    <xs:attribute name="FilePath" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File path.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ContentType" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>the content type</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FormsInput">
+    <xs:annotation>
+      <xs:documentation>Input used to submit form and store in DocuWare</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FormInfo" type="t:FormInfo">
+        <xs:annotation>
+          <xs:documentation>Form information with configuration id and form fields with user input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HTML" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>String representing the HTML of the form</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="AlignmentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left" />
+      <xs:enumeration value="Center" />
+      <xs:enumeration value="Right" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="OrientationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Vertical" />
+      <xs:enumeration value="Horizontal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ColumnWidthType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Auto" />
+      <xs:enumeration value="Equal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PredefinedEntryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Custom" />
+      <xs:enumeration value="CurrentUserShortName" />
+      <xs:enumeration value="CurrentUserLongName" />
+      <xs:enumeration value="CurrentDate" />
+      <xs:enumeration value="CurrentDateTime" />
+      <xs:enumeration value="CurrentUserEmail" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="FormInfo" type="t:FormInfo" />
+  <xs:element name="CreateFormsFileResult" type="t:CreateFormsFileResult" />
+  <xs:element name="FormsInput" type="t:FormsInput" />
+  <xs:complexType name="FormProperties">
+    <xs:annotation>
+      <xs:documentation>Definition of Form Properties</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FormWidth" type="xs:int" />
+      <xs:element name="FormAlignment" type="t:AlignmentType" />
+      <xs:element name="WebPageBackgroundColor" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UploadTemplateInput">
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the uploaded template</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="UploadTemplateResult">
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the uploaded template</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TotalNumberOfPages" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Total Page Count</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="UploadTemplateInput" type="t:UploadTemplateInput" />
+  <xs:element name="UploadTemplateResult" type="t:UploadTemplateResult" />
+  <xs:complexType name="SaveTemplateInput">
+    <xs:annotation>
+      <xs:documentation>Save Template</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Templates" type="t:FormTemplates" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FormTemplate">
+    <xs:annotation>
+      <xs:documentation>Definition of the Save Template</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TemplateGUID" type="xs:string" />
+      <xs:element name="FileName" type="xs:string" />
+      <xs:element name="Zones" type="t:Zones" />
+      <xs:element name="ExcludedFileAttachments" type="t:ExcludedFileAttachments" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FormTemplates">
+    <xs:annotation>
+      <xs:documentation>Array of form templates</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Template" type="t:FormTemplate" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Zone">
+    <xs:annotation>
+      <xs:documentation>Definition of a Template Zone</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ZoneID" type="xs:int" />
+      <xs:element name="Type" type="xs:string" />
+      <xs:element name="PageNumber" type="xs:int" />
+      <xs:element name="X" type="xs:int" />
+      <xs:element name="Y" type="xs:int" />
+      <xs:element name="W" type="xs:int" />
+      <xs:element name="H" type="xs:int" />
+      <xs:element name="MappedWebFormFieldName" type="xs:string" />
+      <xs:element name="MappedWebFormFieldType" type="xs:string" />
+      <xs:element name="FillAreaName" type="xs:string" />
+      <xs:element name="SampleText" type="xs:string" />
+      <xs:element name="FontType" type="xs:string" />
+      <xs:element name="FontSize" type="xs:int" />
+      <xs:element name="FontColor" type="xs:string" />
+      <xs:element name="FontWeightBold" type="xs:boolean" />
+      <xs:element name="FontWeightItalic" type="xs:boolean" />
+      <xs:element name="FontWeightUnderlined" type="xs:boolean" />
+      <xs:element name="TextAlignment" type="t:AlignmentType" />
+      <xs:element name="OriginalImageWidth" type="xs:int" />
+      <xs:element name="WrapText" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Zones">
+    <xs:annotation>
+      <xs:documentation>Array of template Zones</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Zone" type="t:Zone" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ExcludedFileAttachments">
+    <xs:annotation>
+      <xs:documentation>Array of Excluded FileAttachments</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="ID" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SaveTemplateResult" />
+  <xs:element name="SaveTemplateInput" type="t:SaveTemplateInput" />
+  <xs:element name="SaveTemplateResult" type="t:SaveTemplateResult" />
+  <xs:complexType name="CopyTemplateInput">
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the template to copy</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CopyTemplateResult">
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the uploaded template</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="CopyTemplateInput" type="t:CopyTemplateInput" />
+  <xs:element name="CopyTemplateResult" type="t:CopyTemplateResult" />
+  <xs:complexType name="DeleteTemplatesInput">
+    <xs:sequence>
+      <xs:element name="TemplateGUIDS" type="t:TemplateGUIDS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TemplateGUIDS">
+    <xs:annotation>
+      <xs:documentation>Array of template Zones</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="TemplateGUID" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DeleteTemplatesResult" />
+  <xs:element name="DeleteTemplatesInput" type="t:DeleteTemplatesInput" />
+  <xs:element name="DeleteTemplatesResult" type="t:DeleteTemplatesResult" />
+  <xs:complexType name="GetTemplateImageInput">
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the uploaded template</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PageNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Page Number</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="GetTemplateImageResult">
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ImageDPI" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>ImageDPI</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="GetTemplateImageInput" type="t:GetTemplateImageInput" />
+  <xs:element name="GetTemplateImageResult" type="t:GetTemplateImageResult" />
+  <xs:complexType name="ExportConfigInput">
+    <xs:attribute name="ConfigGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the exported config</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OrganizationID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Org ID</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ExportConfigResult">
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ExportConfigInput" type="t:ExportConfigInput" />
+  <xs:element name="ExportConfigResult" type="t:ExportConfigResult" />
+  <xs:complexType name="ImportConfigInput">
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OrganizationID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Org ID</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ImportConfigResult">
+    <xs:attribute name="ConfigJSON" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>FormConfig as JSON</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ImportConfigInput" type="t:ImportConfigInput" />
+  <xs:element name="ImportConfigResult" type="t:ImportConfigResult" />
+  <xs:complexType name="ExportTemplateInput">
+    <xs:attribute name="ConfigGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the exported config</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TemplateGUID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>GUID for the exported template</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OrganizationID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Org ID</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ExportTemplateResult">
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ExportTemplateInput" type="t:ExportTemplateInput" />
+  <xs:element name="ExportTemplateResult" type="t:ExportTemplateResult" />
+  <xs:complexType name="ImportTemplateInput">
+    <xs:attribute name="FileName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File Name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileData" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Binary file data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OrganizationID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Org ID</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ImportTemplateResult">
+    <xs:attribute name="ConfigJSON" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Template Config as JSON</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ImportTemplateInput" type="t:ImportTemplateInput" />
+  <xs:element name="ImportTemplateResult" type="t:ImportTemplateResult" />
+  <xs:simpleType name="Operator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Equals" />
+      <xs:enumeration value="DoesNotEqual" />
+      <xs:enumeration value="Contains" />
+      <xs:enumeration value="DoesNotContain" />
+      <xs:enumeration value="LessThan" />
+      <xs:enumeration value="GreaterThan" />
+      <xs:enumeration value="LessThanOrEqual" />
+      <xs:enumeration value="GreaterThanOrEqual" />
+      <xs:enumeration value="IsEmpty" />
+      <xs:enumeration value="IsNotEmpty" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Continuation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="And" />
+      <xs:enumeration value="Or" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ComparisonType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FixedValue" />
+      <xs:enumeration value="WebFormField" />
+      <xs:enumeration value="CurrentDate" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BehaviorCondition">
+    <xs:annotation>
+      <xs:documentation>Definition of a behavior condition</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FormCondition">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValidationCondition">
+    <xs:annotation>
+      <xs:documentation>Definition of a validation condition</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FormCondition">
+        <xs:sequence>
+          <xs:element name="ComparisonType" type="t:ComparisonType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FormCondition">
+    <xs:annotation>
+      <xs:documentation>Definition of a condition</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FieldID" type="xs:string" />
+      <xs:element name="Operator" type="t:Operator" />
+      <xs:element name="Value" type="xs:string" />
+      <xs:element name="Continuation" type="t:Continuation" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BehaviorAction">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ToggleBehaviorAction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:BehaviorAction">
+        <xs:sequence>
+          <xs:element name="Enabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Behavior">
+    <xs:annotation>
+      <xs:documentation>Definition of a behavior for forms</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Conditions" type="t:BehaviorCondition" />
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="Description" type="xs:string" />
+      <xs:element name="BehaviorID" type="xs:string" />
+      <xs:element maxOccurs="unbounded" name="PassActions" type="t:BehaviorAction" />
+      <xs:element maxOccurs="unbounded" name="FailActions" type="t:BehaviorAction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CustomFieldValidation">
+    <xs:annotation>
+      <xs:documentation>Definition of a custom field validation for forms</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FieldType" type="xs:string" />
+      <xs:element maxOccurs="unbounded" name="Conditions" type="t:ValidationCondition" />
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="Description" type="xs:string" />
+      <xs:element name="FieldValidationID" type="xs:string" />
+      <xs:element name="ErrorMessage" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

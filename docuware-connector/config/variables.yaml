@@ -9,6 +9,7 @@ Variables:
   
   docuware-connector:
   
+    # your docuware instance: e.g. 'acme.docuware.cloud'
     host: ''
     
     username: 
@@ -24,4 +25,6 @@ Variables:
     # https://.../Acount/Logon
     # Only set this value, if the automatic determination does not work.
     logonurl: ''
+    
+    filecabinetid: ''
     

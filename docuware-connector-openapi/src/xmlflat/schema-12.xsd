@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:complexType name="Group">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.group+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a DocuWare group</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Group</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="users">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Users</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The role id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the group.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Active" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Is group active flag.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Groups">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.groups+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A collection of groups</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:Group">
+        <xs:annotation>
+          <xs:documentation>A collection of groups</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Group" type="t:Group" />
+  <xs:element name="Groups" type="t:Groups" />
+</xs:schema>

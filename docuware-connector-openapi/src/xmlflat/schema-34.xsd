@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:import schemaLocation="schema-29.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-7.xsd" />
+  <xs:include schemaLocation="schema-33.xsd" />
+  <xs:include schemaLocation="schema-37.xsd" />
+  <xs:include schemaLocation="schema-32.xsd" />
+  <xs:complexType name="FieldsList">
+    <xs:annotation>
+      <xs:documentation>Defines a list of fields</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>A list of fields</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentsQuery">
+    <xs:annotation>
+      <xs:documentation>Defines a query for documents.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.query+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" default="false" name="ForceRefresh" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Determine if result list is retrieved from the cache when ForceRefresh is set to false (default) or always a new one is executed when ForceRefresh is set to true.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Expression" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the query expression.</xs:documentation>
+          <xs:documentation>The query string contains the query in a proper expression. If the expression is missing then all documents match the query.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Fields" type="t:FieldsList">
+        <xs:annotation>
+          <xs:documentation> Gets or sets the fields which are returned by this query.</xs:documentation>
+          <xs:documentation>
+						Depending on the server's choice, there might be more fields included, like some system fields. If this field is <t:c>null</t:c> then all fields are returned.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="SortOrder" type="t:SortedFieldsList">
+        <xs:annotation>
+          <xs:documentation> Gets or sets the fields which are returned by this query.</xs:documentation>
+          <xs:documentation>
+						Depending on the server's choice, there might be more fields included, like some system fields. If this field is <t:c>null</t:c> then all fields are returned.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="result">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="dialogExpression">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DialogExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tableResult">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tableDialogExpression">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DialogExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="IdsResult">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="batchUpdate">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchUpdateProcess</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="ExcludeSystemFields" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Specifies whether the default system/additional fields should be returned.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IncludeSuggestions" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether Intellix suggetstions to be included.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="CalculateTotalCount" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates if total count of the documents should be calculated. If it is false the return value will be the number of requested items + 1 if there are more items available.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ExportQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.exportquery+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Settings" type="t:ExportSettings">
+        <xs:annotation>
+          <xs:documentation>
+            The id of the dialog to be used to update fields which are hidden inside the store dialog.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Source" type="t:DocumentsQuery">
+        <xs:annotation>
+          <xs:documentation>
+            The documents query that is executed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentsQuery" type="t:DocumentsQuery" />
+</xs:schema>

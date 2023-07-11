@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-28.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:complexType name="AnnotationRectangle">
+    <xs:annotation>
+      <xs:documentation>Define rectangular annotation.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Left" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The left coordinate of the rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Top" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The top coordinate of the rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Width" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The width of the rectangle in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Height" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The height of the rectangle in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AnnotationPoint">
+    <xs:annotation>
+      <xs:documentation>Define point of annotation.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="X" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The horizontal position in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Y" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The vertical position in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Annotation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Annotation element. Contains all annotations for a specific page in up to 5 layers</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="5" name="Layer" type="t:Layer">
+        <xs:annotation>
+          <xs:documentation>List of layers that contains annotations in a specific layer. Annotation can have up to 5 layers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Layer">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.layer+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Layer element. Contains annotations in a specific layer. Annotation can have up to 5 layers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element name="Delete" type="t:DeleteEntry" />
+        <xs:element name="Text" type="t:TextEntry" />
+        <xs:element name="Rect" type="t:RectEntry" />
+        <xs:element name="Line" type="t:LineEntry" />
+        <xs:element name="PolyLine" type="t:PolyLineEntry" />
+        <xs:element name="TextStamp" type="t:TextStampEntry" />
+        <xs:element name="BitmapStamp" type="t:BitmapStampEntry" />
+        <xs:element name="PolyLineStamp" type="t:PolyLineStampEntry" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:int" use="required" />
+  </xs:complexType>
+  <xs:complexType name="EntryBase">
+    <xs:annotation>
+      <xs:documentation>Base element for annotation entry.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Created" type="t:CreatedInfo">
+        <xs:annotation>
+          <xs:documentation>Info about creation of the annotation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>DEPRECATED! No longer used since 7.0. The type can be retrieved by the class name.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Rotation" type="t:RotationType">
+      <xs:annotation>
+        <xs:documentation>Rotaion of the annotation.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Transparent" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define if annotation is transparent.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="20" name="StrokeWidth" type="t:DistanceType">
+      <xs:annotation>
+        <xs:documentation>The thickness of the stroke in twips.</xs:documentation>
+        <xs:documentation>The default thickness is 1 pt = 20 twips</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Identity of the stamp.</xs:documentation>
+        <xs:documentation>Specified if updating already exisitng annotation</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DeleteEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.deleteentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Entry that delete annotation spcified by its Id</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TextEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.textentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Annotation that contains text</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase">
+        <xs:sequence>
+          <xs:element name="Font" type="t:Font">
+            <xs:annotation>
+              <xs:documentation>Specify the font of the text.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Value" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Text to be displayed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Location" type="t:AnnotationRectangle">
+            <xs:annotation>
+              <xs:documentation>Location of the annotation.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LineEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.lineentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Line/Arrow annotation</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase">
+        <xs:sequence>
+          <xs:element name="From" type="t:AnnotationPoint">
+            <xs:annotation>
+              <xs:documentation>Start point of the line.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="To" type="t:AnnotationPoint">
+            <xs:annotation>
+              <xs:documentation>End  point of the line.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="false" name="Arrow" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define a line with arror.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RectEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.rectentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Rectangle or Ellipse annotation</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase">
+        <xs:sequence>
+          <xs:element name="Location" type="t:AnnotationRectangle">
+            <xs:annotation>
+              <xs:documentation>Location of the annotation.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="true" name="Filled" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if rectangle is solid.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="Ellipse" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>True if annotation is elipse defined into rectangle.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PolyLineEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotation.polylineentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>PloyLine annotation. Conatins a single stroke of points.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase">
+        <xs:sequence>
+          <xs:element name="Stroke" type="t:Stroke">
+            <xs:annotation>
+              <xs:documentation>Sequence of points that define a PloyLine.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Stroke">
+    <xs:annotation>
+      <xs:documentation>Sequence of points that define a PloyLine.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="2" maxOccurs="unbounded" name="Point" type="t:AnnotationPoint">
+        <xs:annotation>
+          <xs:documentation>Sequence of points that define a PloyLine.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute fixed="false" name="_do_not_use" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="StampBase">
+    <xs:annotation>
+      <xs:documentation>Stamp base type. Inherited by 3 types: TextStamp, BitmapStamp, PolyLineStamp</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:EntryBase">
+        <xs:sequence>
+          <xs:element name="Location" type="t:AnnotationRectangle">
+            <xs:annotation>
+              <xs:documentation>Location of the stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" name="HeadFont" type="t:Font">
+            <xs:annotation>
+              <xs:documentation>Font of the header of the stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="No" name="Signature" type="t:StampSignatureType">
+          <xs:annotation>
+            <xs:documentation>Define the sigiture of the stamp.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="UserName" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Full user name of the person that has set the stamp.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="Visible" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if stamp is visible.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="Frame" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if stamp has visible frame.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="ShowUser" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if stamp show the user who placed the stamp.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="ShowDate" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if stamp show date when stamp is placed.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="ShowTime" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Define if stamp show the time when stamp is placed.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="SigScopeInfo" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Signature scope. Describes what is signed with this stamp.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="StampSignatureType">
+    <xs:annotation>
+      <xs:documentation>Signature wise stamps.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="No">
+        <xs:annotation>
+          <xs:documentation>Not a signature</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Simple">
+        <xs:annotation>
+          <xs:documentation>Simple signature - checksum only</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="XMLDSIG">
+        <xs:annotation>
+          <xs:documentation>Xml digital signature - certificate based</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TextStampEntry">
+    <xs:annotation>
+      <xs:documentation>Text stamp. Value contains the text.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:StampBase">
+        <xs:sequence>
+          <xs:element name="Font" type="t:Font">
+            <xs:annotation>
+              <xs:documentation>Font that is used for the text of the stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Value" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Text that stamp will show.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BitmapStampEntry">
+    <xs:annotation>
+      <xs:documentation>Bitmap stamp. Png encoded image.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:StampBase">
+        <xs:sequence>
+          <xs:element name="PngData" type="xs:base64Binary">
+            <xs:annotation>
+              <xs:documentation>Base 64 encoded data of the bitmap.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="DpiX" type="xs:int" use="required">
+          <xs:annotation>
+            <xs:documentation>Horizontal device point per inch of the image.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="DpiY" type="xs:int" use="required">
+          <xs:annotation>
+            <xs:documentation>Vertical device point per inch of the image.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PolyLineStampEntry">
+    <xs:annotation>
+      <xs:documentation>Tablet polyline stamp. Contains one or more strokes. Used as handwriting stamp</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:StampBase">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="Stroke" type="t:Stroke">
+            <xs:annotation>
+              <xs:documentation>Sequence of strokes of sequence of points that define a set of polylines.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="DistanceType">
+    <xs:annotation>
+      <xs:documentation>The distance between two point in twips (1/1440 inch).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int" />
+  </xs:simpleType>
+  <xs:complexType name="CreatedInfo">
+    <xs:annotation>
+      <xs:documentation>Info about creation of item.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="User" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the user who created this item.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Time" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>Timestamp when this item was created.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Font">
+    <xs:attribute name="FontName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Define name of the font.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Bold" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define bold text.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Italic" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define italic text.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Underlined" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define underlined text.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="StrikeThrough" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define striked text.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FontSize" type="t:DistanceType" use="required">
+      <xs:annotation>
+        <xs:documentation>The font size in twpis. E.g. a font of size 10pt has a value of 200.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Spacing" type="t:DistanceType">
+      <xs:annotation>
+        <xs:documentation>Character spacing in twips. Extra distance between characters. It may be negative.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="RotationType">
+    <xs:annotation>
+      <xs:documentation>Define rotation of item.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:enumeration value="0" />
+      <xs:enumeration value="90" />
+      <xs:enumeration value="180" />
+      <xs:enumeration value="270" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Annotation" type="t:Annotation" />
+</xs:schema>

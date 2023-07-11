@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" id="CFSModuleStatistics" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="schema-36.xsd" />
+  <xs:element name="CFSStatistic" type="CFSStatisticGeneral" />
+  <xs:complexType name="CFSStatisticGeneral">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="StatisticSpecific" type="CFSStatisticSpecific" />
+    </xs:sequence>
+    <xs:attribute name="CustomerID" type="xs:string" use="required" />
+    <xs:attribute name="ModuleName" type="xs:string" use="required" />
+    <xs:attribute name="CreatedAt" type="xs:dateTime" use="required" />
+  </xs:complexType>
+  <xs:complexType name="CFSStatisticSpecific">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="SpecificValue" type="CFSSpecificValue" />
+    </xs:sequence>
+    <xs:attribute name="Category" type="CFSTableNames" use="required" />
+    <xs:attribute name="ObjectID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The identifier of the instance to be monitored.
+          For a file cabinet this is the file cabinet id, for a device this is the device string.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CFSSpecificValue">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="ValueName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

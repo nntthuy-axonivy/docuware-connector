@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:interop="http://dev.docuware.com/settings/interop" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:complexType name="DocumentAuditQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentauditquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a query for requesting document auditing information</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="0" name="Start" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the starting position of the search.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="50" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the number of the returned items.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditInformation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentauditinformation+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines auditing information for a document.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Events" type="t:DocumentAuditEvent">
+        <xs:annotation>
+          <xs:documentation>Gets or sets a list of document auditing events.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AuditEvent">
+    <xs:annotation>
+      <xs:documentation>Define auditing information property</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the identity of the auditing event.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Event" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the event.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the type of the event.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the object that has been changed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="User" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the user who updated the object.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Date" type="xs:dateTime">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the date and time when the event is happened.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEvent">
+    <xs:annotation>
+      <xs:documentation>Define auditing information property</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="AuditEvent" type="t:AuditEvent">
+        <xs:annotation>
+          <xs:documentation>Define allowed operations when there is signature</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="auditEventInformation">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditEventInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventInformation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentauditeventinformation+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a list of audit event properties.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentAuditEventProperties" type="t:DocumentAuditEventProperty">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event properties.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentAuditEventTableProperties" type="t:DocumentAuditEventTableProperty">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table properties.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventProperty">
+    <xs:annotation>
+      <xs:documentation>Defines the description of auditing event property.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="PropertyName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the property that has been changed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OldValue" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the old value of the property.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="NewValue" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the new value of the property.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventTableProperty">
+    <xs:annotation>
+      <xs:documentation>Defines the description of auditing event table property.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Column" type="t:DocumentAuditEventTablePropertyColumn">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table property columns.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="OldValues" type="t:DocumentAuditEventTablePropertyValues">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table property rows.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="NewValues" type="t:DocumentAuditEventTablePropertyValues">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table property rows.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="PropertyName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the table property that has been changed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventTablePropertyColumn">
+    <xs:annotation>
+      <xs:documentation>Defines the description of auditing event table property column.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the column that has been changed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventTablePropertyValues">
+    <xs:annotation>
+      <xs:documentation>Defines the description of auditing event table property values.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Row" type="t:DocumentAuditEventTablePropertyRow">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table property rows.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuditEventTablePropertyRow">
+    <xs:annotation>
+      <xs:documentation>Defines the description of auditing event table property row.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Cell" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the list of audit event table property row cells.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentAuditInformation" type="t:DocumentAuditInformation" />
+  <xs:element name="DocumentAuditEventInformation" type="t:DocumentAuditEventInformation" />
+</xs:schema>

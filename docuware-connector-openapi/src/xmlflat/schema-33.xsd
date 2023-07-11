@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="schema-39.xsd" />
+  <xs:include schemaLocation="schema-37.xsd" />
+  <xs:complexType name="StringConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DateConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:date" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DateTimeConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IntConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DoubleConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BooleanConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DecimalConstant">
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FieldValueExpression">
+    <xs:attribute name="FieldName" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="SystemVariableExpression">
+    <xs:attribute name="VariableName" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="FunctionExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.functionexpression+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Parameter" type="AnyExpression" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="DialogExpressionOperation">
+    <xs:annotation>
+      <xs:documentation>Supported operations for dialog expression</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="And">
+        <xs:annotation>
+          <xs:documentation>All conditions must be fulfilled.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Or">
+        <xs:annotation>
+          <xs:documentation>At least one condition must be fulfilled.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AnyExpression">
+    <xs:choice>
+      <xs:element name="StringConstant" type="StringConstant" />
+      <xs:element name="DateConstant" type="DateConstant" />
+      <xs:element name="DateTimeConstant" type="DateTimeConstant" />
+      <xs:element name="IntConstant" type="IntConstant" />
+      <xs:element name="DoubleConstant" type="DoubleConstant" />
+      <xs:element name="DecimalConstant" type="DecimalConstant" />
+      <xs:element name="BooleanConstant" type="BooleanConstant" />
+      <xs:element name="FieldValueExpression" type="FieldValueExpression" />
+      <xs:element name="SystemVariableExpression" type="SystemVariableExpression" />
+      <xs:element name="FunctionExpression" type="FunctionExpression" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="DialogExpressionCondition">
+    <xs:annotation>
+      <xs:documentation>Condition for specific database name (field)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="2" name="Value" nillable="true" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Specifies the value or the expression of the dialog field.</xs:documentation>
+          <xs:documentation>If a single value is specified then a exact search (or wild card search) is performed.</xs:documentation>
+          <xs:documentation>If two values are specified then the condition denotes a range search.</xs:documentation>
+          <xs:documentation>
+						In case of two values where the first one is <c>null</c> a "less or equal than" search is performed.
+						If the second value is <c>null</c> a "greater or equal than" search is performed.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DBName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+					Gets or sets the database name which provides the value checked against the condition. In case this is a table field ColumnName is expected to have proper name for table field column.
+			</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ColumnName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+					Used when DBName is a table field. Gets or sets the column's database name which provides the value checked against the condition.
+				</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MultiColumnSelectListExpressionCondition">
+    <xs:annotation>
+      <xs:documentation>Condition for specific field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="DialogExpressionCondition">
+        <xs:attribute name="Type" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of the field</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ResultListQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.resultlistquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Base query definition for a result list</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SortOrder" type="SortedFieldsList">
+        <xs:annotation>
+          <xs:documentation> Gets or sets the fields which are returned by this query.</xs:documentation>
+          <xs:documentation>
+						Depending on the server's choice, there might be more fields included, like some system fields. If this field is <c>null</c> then all fields are returned.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalResultFields" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Define addition result fields to retrieve</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FlagConditions" type="FlagConditions">
+        <xs:annotation>
+          <xs:documentation>Condition that filter documents by its flags</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="0" name="Start" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Start index of result document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Number of result documents to be retrieved in one block</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ExcludeDefaultSystemFields" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Specifies whether the default system/additional fields should be returned.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="WithoutLinks" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Specifies whether the links are filled in the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IncludeSuggestions" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether Intellix suggestions to be included.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="CalculateTotalCount" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates if total count of the documents should be calculated. If it is false the return value will be the number of requested items + 1 if there are more items available.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CsvExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.csvexpression+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query csv file.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DialogExpression" type="DialogExpression">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the conditions which are checked to obtain the search result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Delimiter" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the delimiter for cvs' values.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="IsUtc" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies whether the time values to be in Utc or Local.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DialogExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogexpression+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query definition for a dialog result list</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="ResultListQuery">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Condition" type="DialogExpressionCondition">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the conditions which are checked to obtain the search result.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalCabinets" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the additional cabinets to search in.</xs:documentation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CompleteCondition" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>FOR INTERNAL USE ONLY: Gets or sets an additional query string according to the DocuWare URL integration query syntax.</xs:documentation>
+              <xs:documentation>The query syntax is described at &lt;a href="http://help.docuware.com/en/#b62903t52746n68491"&gt;the documentation of the URL Creation Tool&lt;/a&gt;</xs:documentation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Impala</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Operation" type="DialogExpressionOperation" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies the operation between the conditions of the dialog expression.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="CompleteConditionInInvariantCulture" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>FOR INTERNAL USE ONLY: Gets or sets whether the additional query string defined in CompleteCondition should be parsed in invariant culture.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SelectListExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistexpression+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query definition for a select list</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DialogExpression" type="DialogExpression">
+        <xs:annotation>
+          <xs:documentation>The expression with already filled values.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ValuePrefix" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>A possible prefix of value of the field to be filled.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="FieldName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The database name of the dialog field to be filled.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Result will be returned on pages with that block size if specified. If set to default (0) select lists will be returned in one block using Limit parameter.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Start" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>First result to return if block size is specified</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Limit" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Limit the number of hits that are returned if no block size is specified</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Default" name="SortDirection" type="SortDirection">
+      <xs:annotation>
+        <xs:documentation>Define sort order of the select list</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ExcludeExternal" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether to return values from external select lists</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Gecko</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Typed" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this value is &lt;c&gt;true&lt;/c&gt;, then the response contains typed values. Otherwise each value is converted to a string using the agent's locale settings.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Impala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CountExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.countexpression+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>The expression for counting a documents.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DialogExpression" type="DialogExpression">
+        <xs:annotation>
+          <xs:documentation>The expression with already filled values.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="FieldName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+					The database name of the dialog field whose groups are to be counted. In case
+					you want only the number of hits matching the dialog expression just leave this field empty.
+				</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Limit" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>
+					Limit the count up to specified value. Used for optimization and currently affecting only general count (when FieldName is not specified)
+				</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FlagConditions">
+    <xs:annotation>
+      <xs:documentation>Filter documents with specific flags</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="false" name="IncludeCheckedOut" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Include documents which are checked out</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IncludeAppended" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Include documents which are appended</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FieldValueStatisticsExpression">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.fieldvaluestatisticsexpression+xml</ann:ContentType>
+        <ann:IntroducedIn>Fox</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>The expression for field statistics.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FieldName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The database name of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Limit" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Limit the number of hits that are returned.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="ResultListQuery" type="ResultListQuery" />
+  <xs:element name="DialogExpression" type="DialogExpression" />
+  <xs:element name="CsvExpression" type="CsvExpression" />
+  <xs:element name="CountExpression" type="CountExpression" />
+  <xs:element name="SelectListExpression" type="SelectListExpression" />
+  <xs:element name="FieldValueStatisticsExpression" type="FieldValueStatisticsExpression" />
+  <xs:element name="FunctionExpression" type="FunctionExpression" />
+</xs:schema>

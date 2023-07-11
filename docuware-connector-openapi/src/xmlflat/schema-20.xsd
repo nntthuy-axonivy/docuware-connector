@@ -1,0 +1,2886 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+  <xs:schema xmlns:tw="http://dev.docuware.com/schema/public/services/platform/workflow" 
+  xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform"
+  xmlns:types="http://dev.docuware.com/types" 
+  xmlns:common="http://dev.docuware.com/settings/common" 
+  xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" 
+  xmlns="http://dev.docuware.com/schema/public/services/platform/workflow"
+  elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform/workflow" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-25.xsd" namespace="http://dev.docuware.com/schema/public/services/platform" />
+  <xs:import schemaLocation="schema-37.xsd" namespace="http://dev.docuware.com/schema/public/services/platform" />
+  <xs:import schemaLocation="schema-23.xsd" namespace="http://dev.docuware.com/schema/public/services/platform" />
+  
+  <xs:complexType name="Workflows">
+    <xs:annotation>
+      <xs:documentation>List of workflows.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.workflows+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Workflow" type="tw:Workflow">
+        <xs:annotation>
+          <xs:documentation>List of workflows.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WorkflowTasksCount">
+    <xs:annotation>
+      <xs:documentation>Total tasks count in a workflow or requests</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Тhe total number of items.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Workflow">
+    <xs:annotation>
+      <xs:documentation>Model a workflow.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.workflow+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:Workflow</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tasks">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:TasksQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="count">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasksCount</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ColumnDefinition" type="tw:ColumnsDefinition">
+        <xs:annotation>
+          <xs:documentation>List of the visible columns of the workflow.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkflowBehaviorOptions" type="tw:WorkflowBehaviorOptions" />
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TaskCount" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Number of items of the query leading to this result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileCabinetId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the file cabinet which has been connected with this workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ResultListId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the resultList needed to get context menu functions</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WorkflowBehaviorOptions">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:attribute name="AllowReassign" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the reassign options is allowed in this workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AllowWorkflowHistory" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the workflow history options is allowed in this workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AllowMarkAsReadUnread" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the mark as read / unread options is allowed in this workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ColumnValues">
+    <xs:annotation>
+      <xs:documentation>Values in columns for a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:annotation>
+        <xs:documentation>List of values in columns.</xs:documentation>
+      </xs:annotation>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ColumnValue" type="tw:ColumnValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TaskFieldValueBase" abstract="true">
+    <xs:choice minOccurs="1">
+      <xs:element name="Int" type="xs:long" />
+      <xs:element name="Decimal" type="xs:decimal" />
+      <xs:element name="String" type="xs:string" />
+      <xs:element name="Date" type="xs:date" />
+      <xs:element name="DateTime" type="xs:dateTime" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="TaskFieldValue" final="extension">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:TaskFieldValueBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ColumnValue">
+    <xs:annotation>
+      <xs:documentation>A value in a column for a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" name="Value" type="tw:TaskFieldValue">
+        <xs:annotation>
+          <xs:documentation>Value of the column.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WorkflowTasks">
+    <xs:annotation>
+      <xs:documentation>List of workflow tasks.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Task" type="tw:WorkflowTask">
+        <xs:annotation>
+          <xs:documentation>List of tasks.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Total tasks count in the workflow.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TasksQuery">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Instances" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of instances ids.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SortOrder" type="tw:ColumnSortOrder">
+        <xs:annotation>
+          <xs:documentation>Sort order for the task list.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Start" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Start position of the search.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Count of the returned items.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="RemoveLinks" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the task links should be loaded.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WorkflowTask">
+    <xs:annotation>
+      <xs:documentation>A specific task from the result.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="TaskOperations" type="tw:TaskOperations">
+        <xs:annotation>
+          <xs:documentation>Operations which can be executed on the task.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ColumnValues" type="tw:ColumnValues">
+        <xs:annotation>
+          <xs:documentation>Values in columns.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Decisions" type="tw:Decisions">
+        <xs:annotation>
+          <xs:documentation>Decisions which can be taken for this task.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DefaultDecisionId" nillable="true" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Id indicating which decision id is the default one.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Task identity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="InstanceId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Instance identity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsRead" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the task is read</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AllowDecisionStamp" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether stamps are allowed for taking of the decisions.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ActivityDescription" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Description of the current activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Document id connected with the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ActivityType" type="tw:ActivityTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Current activity type.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="NodeId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Node id in the workflow definition.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowVersionId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Workflow version id which is used to trigger this instance.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LockDocument" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the document will be lock while the user is working with the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ReadStatus">
+    <xs:attribute name="IsRead" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="DecisionsStampSettings">
+    <xs:annotation>
+      <xs:documentation>Workflow decision stamps</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="StampsSettings" type="tw:WorkflowStampsSettings">
+        <xs:annotation>
+          <xs:documentation>Workflow stamps settings</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DecisionStamps" type="tw:DecisionStamps">
+        <xs:annotation>
+          <xs:documentation>Decisions which are present as stamps.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="WorkflowId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Workflow identifier</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="InstanceId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Instance identifier</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TaskId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Task identifier</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ActivityName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Current activity name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WorkflowStampsSettings">
+    <xs:annotation>
+      <xs:documentation>Stamp settings for a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InfoFontFamily" type="t:Font">
+        <xs:annotation>
+          <xs:documentation>Specify the font of the header of the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="StampFont" type="t:Font">
+        <xs:annotation>
+          <xs:documentation>Specify the font of the text.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="UseFrame" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the stamp has visible frame.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UseDate" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the stamp shows date when stamp is placed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UseTime" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the stamp shows the time when stamp is placed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsSignature" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the signature will be used for the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UseUserName" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether stamp shows the user who placed the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UseDecisionName" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the stamp contains the decision name.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UseActivityName" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the stamp contains the activity name.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TaskOperations">
+    <xs:annotation>
+      <xs:documentation>Operations on a workflow task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BaseTaskOperations" type="tw:BaseTaskOperations">
+        <xs:annotation>
+          <xs:documentation>Task operations available for all users.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExtendedControllerOperations" type="tw:ExtendedControllerOperations">
+        <xs:annotation>
+          <xs:documentation>Operations available for controllers of the task.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExtendedUserOperations" type="tw:ExtendedUserOperations">
+        <xs:annotation>
+          <xs:documentation>Operations available for common users of the task.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BaseTaskOperations">
+    <xs:annotation>
+      <xs:documentation>Operations available for all users.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTask</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="maintenanceSelf">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTask</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="reassignedTask">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:ReassignmentData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="history">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:InstanceHistory</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stampSettings">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:DecisionsStampSettings</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WorkflowDocumentHistory">
+    <xs:annotation>
+      <xs:documentation>A workflow history for a document.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InstanceHistory" type="tw:InstanceHistory">
+        <xs:annotation>
+          <xs:documentation>List of history for all instances.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Instance">
+    <xs:attribute name="Id" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ExtendedUserOperations">
+    <xs:annotation>
+      <xs:documentation>Operations available for common users of the task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="readStatus">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <ContentType>tw:ReadStatus</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ExtendedControllerOperations">
+    <xs:annotation>
+      <xs:documentation>Operations available for controllers of the task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="instance">
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Get">
+                  <Produces>
+                    <ContentType>tw:Instance</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ReassignmentData">
+    <xs:annotation>
+      <xs:documentation>Data to reassign a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReassignmentList" type="tw:AssignedItem">
+        <xs:annotation>
+          <xs:documentation>List of next assigned users, roles or substitution rules.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Subject" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Subject of the email which will be send to the new assigned users.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Body" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Body of the email which will be send to the new assigned users.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SendEmail" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether an email will be send to the new assigned users.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AssignedItem">
+    <xs:annotation>
+      <xs:documentation>An assigned item.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>User/role/substitution rule identifier.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ItemType" type="tw:AssignedItemTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ColumnsDefinition">
+    <xs:annotation>
+      <xs:documentation>A columns definition.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Column" type="tw:Column">
+        <xs:annotation>
+          <xs:documentation>Columns for a workflow.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Sort" type="tw:ColumnSortOrder">
+        <xs:annotation>
+          <xs:documentation>Sort order of columns for a workflow.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Column">
+    <xs:annotation>
+      <xs:documentation>A column for a workflow.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ColumnOptions" type="tw:ColumnOptions">
+        <xs:annotation>
+          <xs:documentation>Additional options specific for column type. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identifier of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ColumnValueType" type="tw:ColumnValueTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ColumnType" type="tw:ColumnTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the column as source.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ColumnSortOrder">
+    <xs:annotation>
+      <xs:documentation>A sort by a specific column.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ColumnId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Column identifier.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Direction" type="t:SortDirection" use="required">
+      <xs:annotation>
+        <xs:documentation>A sort direction.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ActivityTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GeneralTask">
+        <xs:annotation>
+          <xs:documentation>General task activity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ParallelTask">
+        <xs:annotation>
+          <xs:documentation>Parallel task activity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UserCredentials">
+        <xs:annotation>
+          <xs:documentation>User credentials activity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GeneralError">
+        <xs:annotation>
+          <xs:documentation>General error activity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="AssignedItemTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="User">
+        <xs:annotation>
+          <xs:documentation>User</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Role">
+        <xs:annotation>
+          <xs:documentation>Role</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SubstitutionRule">
+        <xs:annotation>
+          <xs:documentation>Substitution rule</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ColumnValueTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Text">
+        <xs:annotation>
+          <xs:documentation>Text column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Decimal">
+        <xs:annotation>
+          <xs:documentation>Decimal column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Date">
+        <xs:annotation>
+          <xs:documentation>Date column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DateTime">
+        <xs:annotation>
+          <xs:documentation>Date Time column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ColumnOptions">
+    <xs:choice minOccurs="1">
+      <xs:element name="TextColumn" type="tw:TextColumn" />
+      <xs:element name="NumberColumn" type="tw:NumberColumn" />
+      <xs:element name="DateColumn" type="tw:DateColumn" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="ColumnTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GlobalVariable">
+        <xs:annotation>
+          <xs:documentation>Global variable</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IndexField">
+        <xs:annotation>
+          <xs:documentation>File cabinet field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TaskState">
+        <xs:annotation>
+          <xs:documentation>System column - taskState</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ReceivedOn">
+        <xs:annotation>
+          <xs:documentation>System column - tasks received on</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ReminderDate">
+        <xs:annotation>
+          <xs:documentation>System column - reminder date</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ExpireDate">
+        <xs:annotation>
+          <xs:documentation>System column - expire date</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Instance">
+        <xs:annotation>
+          <xs:documentation>System column - instance id</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Version">
+        <xs:annotation>
+          <xs:documentation>System column - workflow version</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Activity">
+        <xs:annotation>
+          <xs:documentation>System column - activity name</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TaskUser">
+        <xs:annotation>
+          <xs:documentation>System column - task user</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="StartDate">
+        <xs:annotation>
+          <xs:documentation>System column - workflow start date</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LastErrorActivity">
+        <xs:annotation>
+          <xs:documentation>System column - last error activity</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LastErrorMessage">
+        <xs:annotation>
+          <xs:documentation>System column - last error message</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LastDecisionUser">
+        <xs:annotation>
+          <xs:documentation>System column - last decision user</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TextColumn">
+    <xs:annotation>
+      <xs:documentation>Additional options for a text column in a workflow</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Length" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Length of text in a text column</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="NumberColumn">
+    <xs:annotation>
+      <xs:documentation>Additional options for a numeric column in a workflow</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Precision" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Precision of number in a number column</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DateColumn">
+    <xs:annotation>
+      <xs:documentation>Additional options for a date or datetime column in a workflow</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="Decisions">
+    <xs:annotation>
+      <xs:documentation>Decisions which can be taken for a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Decision" type="tw:Decision">
+        <xs:annotation>
+          <xs:documentation>List of decisions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DecisionStamps">
+    <xs:annotation>
+      <xs:documentation>Decisions which are present as stamps.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DecisionStamp" type="tw:Decision">
+        <xs:annotation>
+          <xs:documentation>List of decisions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Decision">
+    <xs:annotation>
+      <xs:documentation>A workflow decision.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TaskFormField" type="tw:TaskFormField">
+        <xs:annotation>
+          <xs:documentation>List of workflow fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DecisionOperations" type="tw:DecisionOperations">
+        <xs:annotation>
+          <xs:documentation>Operations which can be executed on a decision.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Identifier of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Description" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Description of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Color" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Color of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DecisionOperations">
+    <xs:annotation>
+      <xs:documentation>Operations which can be executed on a decision.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BaseDecisionOperations" type="tw:BaseDecisionOperations">
+        <xs:annotation>
+          <xs:documentation>Base operations which can be executed on a decision.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExtendedDecisionOperations" type="tw:ExtendedDecisionOperations">
+        <xs:annotation>
+          <xs:documentation>Operations which can be executed on a decision only from form interface.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BaseDecisionOperations">
+    <xs:annotation>
+      <xs:documentation>Base operations which can be executed on a decision.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:Decision</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ExtendedDecisionOperations">
+    <xs:annotation>
+      <xs:documentation>Operations which can be executed on a decision only from form interface.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="confirm">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:ConfirmedData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stampBestPosition">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:StampPositionData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>common:DWPoint</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="FormTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Link">
+        <xs:annotation>
+          <xs:documentation>Link form</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Description">
+        <xs:annotation>
+          <xs:documentation>Description form</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Password">
+        <xs:annotation>
+          <xs:documentation>Password field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Text">
+        <xs:annotation>
+          <xs:documentation>Text field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Decimal">
+        <xs:annotation>
+          <xs:documentation>Decimal field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Date">
+        <xs:annotation>
+          <xs:documentation>Date field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DateTime">
+        <xs:annotation>
+          <xs:documentation>DateTime field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="User">
+        <xs:annotation>
+          <xs:documentation>User field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Role">
+        <xs:annotation>
+          <xs:documentation>Role field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SubstitutionRule">
+        <xs:annotation>
+          <xs:documentation>Substitution rule field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Keyword">
+        <xs:annotation>
+          <xs:documentation>Keyword field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Table">
+        <xs:annotation>
+          <xs:documentation>Table field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="HistoryFormTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Link">
+        <xs:annotation>
+          <xs:documentation>Link field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Description">
+        <xs:annotation>
+          <xs:documentation>Description field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Text">
+        <xs:annotation>
+          <xs:documentation>Text field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Decimal">
+        <xs:annotation>
+          <xs:documentation>Decimal field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Date">
+        <xs:annotation>
+          <xs:documentation>Date field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DateTime">
+        <xs:annotation>
+          <xs:documentation>DateTime field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="User">
+        <xs:annotation>
+          <xs:documentation>User field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Role">
+        <xs:annotation>
+          <xs:documentation>Role field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SubstitutionRule">
+        <xs:annotation>
+          <xs:documentation>Substitution rule field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Keyword">
+        <xs:annotation>
+          <xs:documentation>Keyword field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MultiUser">
+        <xs:annotation>
+          <xs:documentation>Multi user field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MultiRole">
+        <xs:annotation>
+          <xs:documentation>Multi role field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MultiSubstitutionRule">
+        <xs:annotation>
+          <xs:documentation>Multi substitution rule field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Table">
+        <xs:annotation>
+          <xs:documentation>Table field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TaskFormField" final="extension">
+    <xs:choice minOccurs="1">
+      <xs:element name="LinkForm" type="tw:LinkForm" />
+      <xs:element name="DescriptionFormField" type="tw:DescriptionFormField" />
+      <xs:element name="TextField" type="tw:TaskTextField" />
+      <xs:element name="Number" type="tw:TaskNumberField" />
+      <xs:element name="TaskDateTimeField" type="tw:TaskDateTimeField" />
+      <xs:element name="UserField" type="tw:UserField" />
+      <xs:element name="RoleField" type="tw:RoleField" />
+      <xs:element name="SubstitutionRuleField" type="tw:SubstitutionRuleField" />
+      <xs:element name="KeywordsField" type="tw:KeywordsField" />
+      <xs:element name="TableField" type="tw:TaskTableField" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="BaseForm">
+    <xs:annotation>
+      <xs:documentation>A base form.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FormFieldType" type="tw:FormTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Identifier of the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CommonFormField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:BaseForm">
+        <xs:sequence>
+          <xs:element name="PrefillValue" type="tw:WFFormFieldValue">
+            <xs:annotation>
+              <xs:documentation>Default value of the form field.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SelectListFilters" type="tw:SelectListFilter">
+            <xs:annotation>
+              <xs:documentation>Multi column condition used to filter the select list</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Mandatory" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field can be empty.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Description" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Description of the field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="HasSelectList" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field value can be selected from a select list.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="IsReadOnly" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field is read only.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="IsSelectListOnly" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>If this flag is true, no one can allocate a new entry for this field when confirming a task, unless this is contained in a selection list or empty.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="SelectListGuid" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Identifier of the select list.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="SelectListColumn" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Identifier of the select list column that will be used to populate the form field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="IsHiddenInStamp" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field can be showned in stamps.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SelectListFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ColumnName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Data source column name that will be used for filtering</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkflowFieldId" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>The form field Id that will be used for filtering</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TableSelectListFilter">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:SelectListFilter">
+        <xs:attribute name="TableFieldColumnName" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Column name of the table field that will be used for filtering</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MultiValueField">
+    <xs:annotation>
+      <xs:documentation>A multi value field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:CommonFormField">
+        <xs:attribute name="IsMultiselect" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field is multi select (value can be a range of values from a select list).</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="UserField">
+    <xs:annotation>
+      <xs:documentation>A user field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:MultiValueField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RoleField">
+    <xs:annotation>
+      <xs:documentation>A role field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:MultiValueField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SubstitutionRuleField">
+    <xs:annotation>
+      <xs:documentation>A substitution rule field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:MultiValueField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TaskTableField">
+    <xs:annotation>
+      <xs:documentation>A table field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:BaseForm">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Columns" type="tw:TaskTableColumn">
+            <xs:annotation>
+              <xs:documentation>Table field columns.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="InitialValues" type="tw:TaskTableFieldInitialValues">
+            <xs:annotation>
+              <xs:documentation>Table field prefilled values</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="FieldName" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>DbName of the table field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TaskTableFieldInitialValues">
+    <xs:sequence>
+      <xs:element name="DocumentIndexFieldTable" type="t:DocumentIndexFieldTable">
+        <xs:annotation>
+          <xs:documentation>Values to be prefilled in a table field</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="TaskTableFieldJoinType" type="tw:TaskTableFieldJoinTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Defines if the values should be prepended, appended or replaced</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="TaskTableFieldJoinTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Prepend">
+        <xs:annotation>
+          <xs:documentation>Insert before</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Append">
+        <xs:annotation>
+          <xs:documentation>Insert after</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Replace">
+        <xs:annotation>
+          <xs:documentation>Replace values</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TaskTableColumn" final="extension">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BaseData" type="tw:TaskTableColumnBase">
+        <xs:annotation>
+          <xs:documentation>Field mask a text field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FieldName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Field mask a text field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="IsHidden" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether the column can be showned in table field</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TaskTableColumnBase" final="extension">
+    <xs:choice minOccurs="1">
+      <xs:element name="TextField" type="tw:TaskTextField" />
+      <xs:element name="Number" type="tw:TaskTableNumberField" />
+      <xs:element name="DateTimeField" type="tw:TaskDateTimeField" />
+      <xs:element name="NumberField" type="tw:TaskNumberField" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="TaskTextField">
+    <xs:annotation>
+      <xs:documentation>A text field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:CommonFormField">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="FieldMask" type="tw:FieldMask">
+            <xs:annotation>
+              <xs:documentation>Field mask a text field.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Length" type="xs:int" use="required">
+          <xs:annotation>
+            <xs:documentation>Length of the field value.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TaskDateTimeField">
+    <xs:annotation>
+      <xs:documentation>A dateTime field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:CommonFormField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="KeywordsField">
+    <xs:annotation>
+      <xs:documentation>A keyword field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:TaskTextField" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TaskNumberField">
+    <xs:annotation>
+      <xs:documentation>A number field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:CommonFormField">
+        <xs:attribute name="Precision" type="xs:int" use="required">
+          <xs:annotation>
+            <xs:documentation>Precision of the field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TaskTableNumberField">
+    <xs:annotation>
+      <xs:documentation>A table number field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:TaskNumberField">
+        <xs:attribute name="PrefillWithBalance" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the column will be prefilled with splitbooking balance.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="BalanceField" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document index field that will be used for splitbooking balance.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LinkForm">
+    <xs:annotation>
+      <xs:documentation>A link form.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:BaseForm">
+        <xs:attribute name="Url" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Contains a web address.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LinkParameter">
+    <xs:annotation>
+      <xs:documentation>A link parameter.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Url" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains a web address.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains text, which appears to the user instead of the url.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DescriptionFormField">
+    <xs:annotation>
+      <xs:documentation>A description form.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:BaseForm">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LinkParameters" type="tw:LinkParameter">
+            <xs:annotation>
+              <xs:documentation>List of link parameters.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="DescriptionText" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>
+              Text of the description.
+              Consumer should replaces the format item or items in the specified string with the string representation of the corresponding LinkParameters as html links.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FieldMask">
+    <xs:annotation>
+      <xs:documentation>A text field mask.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ErrorText" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Error message to display if the input does not match the mask definition.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="RegularExpression" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Regular expression for limiting the input options for the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SampleEditText" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Sample entry that matches the mask definition.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ConfirmedData">
+    <xs:annotation>
+      <xs:documentation>Data which is sent when a user confirm a task.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConfirmedFields" type="tw:ConfirmedField">
+        <xs:annotation>
+          <xs:documentation>List of confirmed fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StampPositionData">
+    <xs:annotation>
+      <xs:documentation>Data which is sent when you want to get the best position for a workflow stamp</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:ConfirmedData">
+        <xs:sequence>
+          <xs:element name="SectionId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>ID of the section to set stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Page" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Number of the page to set stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StampConfirmedData">
+    <xs:annotation>
+      <xs:documentation>Data which is sent when a user confirm a task using a stamp.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:ConfirmedData">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Position" type="t:AnnotationPoint">
+            <xs:annotation>
+              <xs:documentation>Start point of the stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Section" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Number of the section to set stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Page" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Number of the page to set stamp.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Layer" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Layer where the stamp have to be placed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ConfirmedField">
+    <xs:annotation>
+      <xs:documentation>Value of form field</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" name="Value" type="tw:WFFormFieldValue">
+        <xs:annotation>
+          <xs:documentation>Form field value casted to the form field value type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Identifier of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="HistorySteps">
+    <xs:annotation>
+      <xs:documentation>List of history steps for an instance.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HistoryStep" type="tw:HistoryStep" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Info" type="tw:HistoryStepInfo">
+        <xs:annotation>
+          <xs:documentation>Additional information for the history step according to the type of the step.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="StepNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Sequential received number of the step.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StepDate" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>Creation date and time of the history step.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ActivityName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ActivityType" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Type of the activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StepType" type="tw:StepTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the history step.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="HistoryStepInfo" final="extension">
+    <xs:annotation>
+      <xs:documentation>Additional information for the history step according to the type of the step.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:HistoryStepInfoBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HistoryStepInfoBase" abstract="true">
+    <xs:choice minOccurs="1">
+      <xs:element name="ErrorHistoryStep" type="tw:ErrorHistoryStep" />
+      <xs:element name="TimeoutHistoryStep" type="tw:TimeoutHistoryStep" />
+      <xs:element name="StopHistoryStep" type="tw:StopHistoryStep" />
+      <xs:element name="EndHistoryStep" type="tw:EndHistoryStep" />
+      <xs:element name="StartHistoryStep" type="tw:StartHistoryStep" />
+      <xs:element name="DecisionHistoryStep" type="tw:DecisionHistoryStep" />
+      <xs:element name="ReassignHistoryStep" type="tw:ReassignHistoryStep" />
+      <xs:element name="AssignDataHistoryStep" type="tw:AssignDataHistoryStep" />
+      <xs:element name="EmailHistoryStep" type="tw:EmailHistoryStep" />
+      <xs:element name="AssignToHistoryStep" type="tw:AssignToHistoryStep" />
+      <xs:element name="OutOfOfficeHistoryStep" type="tw:OutOfOfficeHistoryStep" />
+      <xs:element name="ConditionHistoryStep" type="tw:ConditionHistoryStep" />
+      <xs:element name="WebServiceHistoryStep" type="tw:WebServiceHistoryStep" />
+      <xs:element name="GeneralErrorDecisionHistoryStep" type="tw:GeneralErrorDecisionHistoryStep" />
+      <xs:element name="RequestDecisionHistoryStep" type="tw:RequestDecisionHistoryStep" />
+      <xs:element name="RequestStartHistoryStep" type="tw:RequestStartHistoryStep" />
+      <xs:element name="RequestEndHistoryStep" type="tw:RequestEndHistoryStep" />
+      <xs:element name="WaitHistoryStep" type="tw:WaitHistoryStep" />
+      <xs:element name="EventHistoryStep" type="tw:EventHistoryStep" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ErrorHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Error exit.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ErrorMessage" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Error message which cause error exit.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FullErrorMessage" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Contains full error message.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OutputName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the error exit.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TimeoutHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Time out exit.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="OutputName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the time out exit of the activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="StopHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Stop workflow operation.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who stopped the instance.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocumentUserVersion" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document user version when the instance is stopped.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="EndHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for End activity.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="DocumentUserVersion" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document user version when the instance is finished.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="StartHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Start activity.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="DocumentUserVersion" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document user version when the instance is triggered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DecisionHistoryStep">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InputFields" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of fields which has been confirmed.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Assignments" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of assignments which has been executed in this step.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FileCabinetAssignments" type="tw:FileCabinetHistoryField">
+        <xs:annotation>
+          <xs:documentation>List of file cabinet assignments which has been executed in this step.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DocumentUserVersion" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document user version when the task is confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who confirmed the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DecisionName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the decision which has been confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="GeneralErrorDecisionHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for General error.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who confirmed the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DecisionName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the decision which has been confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FormFieldListValue">
+    <xs:annotation>
+      <xs:documentation>List of strings</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StringItem" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of strings</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WFFormFieldValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentIndexFieldValueBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HistoryField">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="Value" type="tw:WFFormFieldValue">
+        <xs:annotation>
+          <xs:documentation>Value of the field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Options" type="tw:HistoryFieldOptions">
+        <xs:annotation>
+          <xs:documentation>Additional options specific for field type. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" name="AssignmentType" type="tw:AssignmentType">
+        <xs:annotation>
+          <xs:documentation>Assignment destination type specific for field. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Label" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Тhe label of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="tw:HistoryFormTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the history form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FileCabinetHistoryField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tw:HistoryField">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="FileCabinetName" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>File cabinet name</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" name="DocId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Document id</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HistoryFieldOptions">
+    <xs:choice minOccurs="1">
+      <xs:element name="TextHistoryFieldOptions" type="tw:TextHistoryFieldOptions" />
+      <xs:element name="NumericHistoryFieldOptions" type="tw:NumericHistoryFieldOptions" />
+      <xs:element name="TableHistoryFieldOptions" type="tw:TableHistoryFieldOptions" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="AssignmentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GlobalVariable">
+        <xs:annotation>
+          <xs:documentation>Global variable</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IndexField">
+        <xs:annotation>
+          <xs:documentation>Index field</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PDFFormField">
+        <xs:annotation>
+          <xs:documentation>PDF form filed</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FileCabinetField">
+        <xs:annotation>
+          <xs:documentation>File cabinet filed</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TableHistoryFieldOptions">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TableColumnsDefinitions" type="tw:TableColumnsDefinition">
+        <xs:annotation>
+          <xs:documentation>List of columns of the table field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TextTableColumnOptions">
+    <xs:annotation>
+      <xs:documentation>Additional options for a text column in a table field</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Length" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Length of text in a text column</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="NumberTableColumnOptions">
+    <xs:annotation>
+      <xs:documentation>Additional options for a numeric column in a table field</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Precision" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Precision of number in a number column</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DateTableColumnOptions">
+    <xs:annotation>
+      <xs:documentation>Additional options for a date or datetime column in a table field</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="TableColumnOptions">
+    <xs:choice minOccurs="1">
+      <xs:element name="TextTableColumnOptions" type="tw:TextTableColumnOptions" />
+      <xs:element name="NumberTableColumnOptions" type="tw:NumberTableColumnOptions" />
+      <xs:element name="DateTableColumnOptions" type="tw:DateTableColumnOptions" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="TableColumnsDefinition">
+    <xs:annotation>
+      <xs:documentation>A common column options for a table field.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ColumnOptions" type="tw:TableColumnOptions">
+        <xs:annotation>
+          <xs:documentation>Additional options specific for column type. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identifier of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ColumnValueType" type="tw:TableColumnValueTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>Type of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Mandatory" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether the column can be empty.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="TableColumnValueTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Text">
+        <xs:annotation>
+          <xs:documentation>Text column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Decimal">
+        <xs:annotation>
+          <xs:documentation>Decimal column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Date">
+        <xs:annotation>
+          <xs:documentation>Date column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DateTime">
+        <xs:annotation>
+          <xs:documentation>Date Time column</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TextHistoryFieldOptions">
+    <xs:attribute name="Length" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Length of the field value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="NumericHistoryFieldOptions">
+    <xs:attribute name="Precision" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Precision of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ReassignHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Reassign operation.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RecipientsName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of names of the new assigned users.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Subject" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Subject of the email</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SendMail" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether emails are sent to the new assigned users.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who reassigned the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AssignDataHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Assign data activity.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Fields" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of assignments fields. The label is destination field name. The "Value" property is assigned value in it.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FileCabinetFields" type="tw:FileCabinetHistoryField">
+        <xs:annotation>
+          <xs:documentation>List of assignments file cabinet fields. The label is destination field name. The "Value" property is assigned value in it.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EmailHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Email activity.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Recipients" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of recipient names who received the email.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Cc" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of CC recipient names who received the email.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Subject" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Subject of the email.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AssignToHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Assign to activity.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AssignedUsers" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of new assigned user names.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OutOfOfficeHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Out of office exit.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="NewUser" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>User name of the new assigned user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OutOfOfficeUser" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>User name of the user who went out of office.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestDecisionHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for confirmed decision in request.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InputFields" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of fields which has been confirmed.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DocumentUserVersion" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document user version when the task is confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who confirmed the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DecisionName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the decision which has been confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestStartHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for trigger a request.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="RequestText" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Request text.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who triggered the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestEndHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for finish a request.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="UserName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the user who finish the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WaitHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for wait activity.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Status" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Status of the wait activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="EventHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Event activity.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FCName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the file cabinet in which the event activity waits in.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Document Id that caused the event activity to trigger.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Status" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Status of the event activity.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ConditionHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Condition activity.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="OutputName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Output name of the exit.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WebServiceHistoryStep">
+    <xs:annotation>
+      <xs:documentation>A history step for Web Service activity.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Parameters" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of parameters sent to the web service method.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Results" type="tw:HistoryField">
+        <xs:annotation>
+          <xs:documentation>List of assignments from result of the web service method to Global variables.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Method" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the method which is called.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="StepTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DecisionHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Confirmed decision history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GeneralErrorDecisionHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Confirmed general error history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ReassignHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Reassign task history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AssignDataHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Assign data history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AssignToHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Assign to history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ConditionHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Condition history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EmailHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Email history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WebServiceHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Web service history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="StartHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Start history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TaskInProgressHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Task in progress history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="StopHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Stop workflow history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EndHistoryStep">
+        <xs:annotation>
+          <xs:documentation>End history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ErrorHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Error exit history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TimeoutHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Time out history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OutOfOfficeHistotyStep">
+        <xs:annotation>
+          <xs:documentation>Out of office history step</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RequestDecisionHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Confirmed decision history step from request.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RequestStartHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Start history step from request.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RequestEndHistoryStep">
+        <xs:annotation>
+          <xs:documentation>End history step from request.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WaitHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Wait history step for workflow wait activity.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EventHistoryStep">
+        <xs:annotation>
+          <xs:documentation>Event history step for workflow wait activity.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="InstanceHistory">
+    <xs:annotation>
+      <xs:documentation>List of history steps for an instance.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:InstanceHistory</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HistorySteps" type="tw:HistorySteps">
+        <xs:annotation>
+          <xs:documentation>List of history steps.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Instance id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Workflow id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Workflow name.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Version" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Workflow version number.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowRequest" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>True if it is history for workflow request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WorkflowRequests">
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="myTasks">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:TasksQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="myTasksCount">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasksCount</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="createdWorkflows">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:TasksQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="createdWorkflowsCount">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowTasksCount</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RequestTasks">
+    <xs:annotation>
+      <xs:documentation>A list of request tasks for a common user.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:RequestTasks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Task" type="tw:RequestTask">
+        <xs:annotation>
+          <xs:documentation>List of request tasks.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Total number of items.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestTask">
+    <xs:annotation>
+      <xs:documentation>A request task for a common user.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:RequestTask</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="readStatus">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <ContentType>tw:ReadStatus</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="history">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:InstanceHistory</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Decisions" type="tw:RequestDecision">
+        <xs:annotation>
+          <xs:documentation>List of request decisions.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Task identifier.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Request identifier.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Document id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FcGuid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File cabinet id of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CreateDate" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>Creation date of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Owner" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the initiator of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocumentName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsRead" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the task is read.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Description" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Description of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestDecision">
+    <xs:annotation>
+      <xs:documentation>A request decision for a common user.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:RequestDecision</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="confirm">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:RequestConfirmedData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Sequential order number of the decision in the request. Decision identifier.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestConfirmedData">
+    <xs:annotation>
+      <xs:documentation>A confirmation data for a request.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="DecisionId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Decision id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Comment" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Value of a field comment in the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="OwnWorkflows">
+    <xs:annotation>
+      <xs:documentation>List of requests for the initiator.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Workflow" type="tw:OwnWorkflow">
+        <xs:annotation>
+          <xs:documentation>List of requests created by current user.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Total number of items.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="OwnWorkflow">
+    <xs:annotation>
+      <xs:documentation>A workflow\instance for the initiator of the request.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:OwnWorkflow</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="history">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:InstanceHistory</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TakenDecision" type="tw:RequestDataDecision">
+        <xs:annotation>
+          <xs:documentation>List of confirmed requests.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identifier of the request (instance id) .</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Document id which is used for start of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FcGuid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File cabinet id of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CreateDate" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>Creation date of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="WorkflowName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocumentName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestSettings">
+    <xs:annotation>
+      <xs:documentation> Data to trigger new request. </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Decisions" type="tw:RequestDecisionSettings">
+        <xs:annotation>
+          <xs:documentation>List of decision settings.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AssignedItem" type="tw:AssignedItem">
+        <xs:annotation>
+          <xs:documentation>List of assigned users, roles or substitution rules.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the request</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Description" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Description of the request</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="IsSequence" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether request should be confirmed in sequence.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsAny" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether request should be confirmed by all users.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocId" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Document id</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FcGuid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains file cabinet id of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DocumentName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Name of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StampDocument" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether an automatic stamp should be placed when a user confirms the request.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestDataDecision">
+    <xs:annotation>
+      <xs:documentation>Taken decision visible in the initiator view.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="UserName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the user who confirmed the task.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DecisionName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains decision name which has been confirmed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Comment" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Value of comment field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RequestDecisionSettings">
+    <xs:annotation>
+      <xs:documentation>Decision in the request when we create it.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Sequential order number of the decision in the request</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Label of the decision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="IsActive" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the decision is active.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,1667 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:import schemaLocation="schema-28.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-29.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-7.xsd" />
+  <xs:include schemaLocation="schema-33.xsd" />
+  <xs:include schemaLocation="schema-34.xsd" />
+  <xs:complexType name="DialogInfo">
+    <xs:annotation>
+      <xs:documentation>General properties of any dialog.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType IntroducedIn="Dolphin">text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="assignedDialog">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="count">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:CountResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:CountExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:CountResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="selectList">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="storeDocument">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Document</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="transfer">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FileCabinetTransferInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentsTransferInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="createUserDefinedSearch">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:UserDefinedSearchInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="clientSideValidation">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The id of the dialog</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileCabinetId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The id of the file cabinet</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileCabinetName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the file cabinet</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DisplayName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The display name of the dialog</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsForMobile" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets if this dialog is a available for mobile client</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AssignedDialogId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The id of the assigned dialog (result list for search dialogs, info dialog for result dialogs, etc.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsDefault" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets if this dialog is a default dialog.</xs:documentation>
+        <xs:documentation>This flag can be used by the client to display a dialog in favour of the other dialogs. It can be used to display the initial dialog in case there is more than one dialog which can be displayed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="t:DialogTypes" use="required">
+      <xs:annotation>
+        <xs:documentation>The type of the dialog.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="LogicalOperator">
+    <xs:attribute name="DefaultOperator" type="t:DialogExpressionOperation" use="required">
+      <xs:annotation>
+        <xs:documentation>If the option cannot be set in the dialog, the value defined here is always used for the search query</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Show" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>If this option is enabled, the option can be set in the search dialog, and users can select either the AND or OR logical operator for their search query</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ViewerDialogModes">
+    <xs:annotation>
+      <xs:documentation>Mode in which the viewer is opened to display a document</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EditMode">
+        <xs:annotation>
+          <xs:documentation>Document is opened for editing and is locked for other users until it's closed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AdHocEditMode">
+        <xs:annotation>
+          <xs:documentation>Document is opened for editing and is locked only while editing.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ReadOnly">
+        <xs:annotation>
+          <xs:documentation>Document is opened as read-only.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ViewerDialog">
+    <xs:attribute default="AdHocEditMode" name="Mode" type="t:ViewerDialogModes">
+      <xs:annotation>
+        <xs:documentation>The mode in which the viewer is open to display a document from the result list</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="MarkFulltextSearchHits" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the occurrences that match the fulltext search are highlighted in the displayed document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Dialog">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialog+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogInfo">
+        <xs:sequence>
+          <xs:element name="Fields" type="t:DialogFields">
+            <xs:annotation>
+              <xs:documentation>The fields of this dialog.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Query" type="t:DocumentsQuery">
+            <xs:annotation>
+              <xs:documentation>The query defined by this dialog.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Properties" type="t:DialogProperties">
+            <xs:annotation>
+              <xs:documentation>Dialog properties specific for dialog type.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="false" name="HasValidation" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>A value indicating whether the dialog has configured client side validation.This option is available only for store and info dialogs, for other dialog types it is always false.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DialogProperties">
+    <xs:annotation>
+      <xs:documentation>Specific properties for each dialog type</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="DialogPropertiesSearch">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogsearch+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Dialog properties specific for Search Dialog</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogProperties">
+        <xs:sequence>
+          <xs:element name="LogicalOperator" type="t:LogicalOperator">
+            <xs:annotation>
+              <xs:documentation>The logical operator used for the search conditions</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DialogPropertiesResultList">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogresultlist+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Dialog properties specific for Result List</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogProperties">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Functions" type="t:ResultDialogFunction">
+            <xs:annotation>
+              <xs:documentation>Functions available for the result list (Print document, Display document, etc.)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ViewerDialog" type="t:ViewerDialog">
+            <xs:annotation>
+              <xs:documentation>Viewer properties</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="SortOrder" type="t:SortedFieldsList">
+            <xs:annotation>
+              <xs:documentation>Sort order for the result list.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="DefaultListTextLetterCase" type="t:LetterCase" use="required">
+          <xs:annotation>
+            <xs:documentation>Letter case to be used to display the hits in the result list</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="DisplayFirstDocument" type="xs:boolean" use="required">
+          <xs:annotation>
+            <xs:documentation>Determines whether the web client automatically displays the first document in the result list in the viewer.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="ShowCheckedOutDocumens" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the result list can show documents that are currently checked out.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DialogPropertiesTaskList">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogtasklist+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Dialog properties specific for Task lists</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogPropertiesResultList">
+        <xs:sequence>
+          <xs:element name="Conditions" type="t:DialogExpression">
+            <xs:annotation>
+              <xs:documentation>The search conditions of the dialog.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="ConditionString" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The search conditions of the dialog as string.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Gecko</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="Private" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the task list is private for the user that created it (by user defined search)</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="true" name="AutoRefresh" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the task list is automatically refreshed.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="AutoRefreshPeriod" type="xs:int" use="optional">
+          <xs:annotation>
+            <xs:documentation>Determines the refresh period if the task list is automatically refreshed.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Porcupine</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DialogPropertiesTreeView">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Dolphin">application/vnd.docuware.platform.dialogtreeview+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Dialog properties specific for Tree list</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogProperties">
+        <xs:sequence>
+          <xs:element ref="svc:Links">
+            <xs:annotation>
+              <xs:appinfo>
+                <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+                  <Relation Name="storeDialog" IntroducedIn="Dolphin">
+                    <Invoke IntroducedIn="Dolphin">
+                      <Produces IntroducedIn="Dolphin">
+                        <SchemaType IntroducedIn="Dolphin">t:Dialog</SchemaType>
+                      </Produces>
+                    </Invoke>
+                  </Relation>
+                </Relations>
+              </xs:appinfo>
+              <xs:appinfo>
+                <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="false" name="StoreDialogId" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the store dialog to be used for storing documents in the tree view.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Icon" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Gets a string which represents an icon name identifier.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Impala</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="DialogTypes">
+    <xs:annotation>
+      <xs:documentation>Types of dialogs.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown">
+        <xs:annotation>
+          <xs:documentation>Unknown type.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Search">
+        <xs:annotation>
+          <xs:documentation>Search dialog.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Store">
+        <xs:annotation>
+          <xs:documentation>Store dialog.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ResultList">
+        <xs:annotation>
+          <xs:documentation>Result list.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ResultTree">
+        <xs:annotation>
+          <xs:documentation>Tree view.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="InfoDialog">
+        <xs:annotation>
+          <xs:documentation>Info dialog.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TaskList">
+        <xs:annotation>
+          <xs:documentation>Task list(result list with predefiened conditions).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="RequestDialogQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.requestdialogquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Array of dialog types.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DialogTypes" type="t:DialogTypes">
+        <xs:annotation>
+          <xs:documentation>Array of document types.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="LetterCase">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation>As in the database</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UpperCase">
+        <xs:annotation>
+          <xs:documentation>Upper case letters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LowerCase">
+        <xs:annotation>
+          <xs:documentation>Lower case letters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ResultDialogFunctionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="StartNewRetrieval">
+        <xs:annotation>
+          <xs:documentation>
+						Function for initiating a new search. The search dialog contains the search terms used in the last search.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LinkSearch">
+        <xs:annotation>
+          <xs:documentation>
+						Function for displaying documents linked to a document selected in the result list. It opens a dialog listing all the link definitions for that document. When you select one of these definitions, the linked documents are displayed.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DisplayDocument">
+        <xs:annotation>
+          <xs:documentation>
+						Function for displaying the document in the Viewer.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DisplayInfoBox">
+        <xs:annotation>
+          <xs:documentation>
+						Function for opening the infobox for a highlighted document. This allows you to view and modify all database entries for the document as well as the contents of the system fields - such as store date and DocID.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PrintSelectedDocument">
+        <xs:annotation>
+          <xs:documentation>
+						Function for printing documents that are selected in the result list.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DeleteSelectedDocument">
+        <xs:annotation>
+          <xs:documentation>
+						Function for deleting documents selected in the result list.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CopyToBasket">
+        <xs:annotation>
+          <xs:documentation>
+						Function that allows you to place a copy of the selected documents in the selected basket / document tray in Windows Client or Web Client.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Versions">
+        <xs:annotation>
+          <xs:documentation>
+						Function that allows you to show or hide checked-out documents Checked-out documents can only be viewed by other users. No overlays can be shown, and no stamps added.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AppendFromBasket">
+        <xs:annotation>
+          <xs:documentation>
+						Function that allows you to attach selected documents from the selected basket / document tray to a document or database entry in the result list.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DownloadAsOriginal">
+        <xs:annotation>
+          <xs:documentation>
+						The function for downloading a document in the original format from a result list.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DownloadAsPDFWithoutAnno">
+        <xs:annotation>
+          <xs:documentation>
+						The function for downloading a document from a result list in PDF format without annotations.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DownloadAsPDFWithAnno">
+        <xs:annotation>
+          <xs:documentation>
+						The function for downloading a document from a result list in PDF format with annotations.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendAsOriginal">
+        <xs:annotation>
+          <xs:documentation>
+						The function for sending a document in the original format from a result list as an email attachment.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendAsPDFWithoutAnno">
+        <xs:annotation>
+          <xs:documentation>
+						The function for sending a document from a result list in PDF format without annotations as an email attachment.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendAsPDFWithAnno">
+        <xs:annotation>
+          <xs:documentation>
+						The function for sending a document from a result list in PDF format with annotations as an email attachment.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendAsHyperlink">
+        <xs:annotation>
+          <xs:documentation>
+						The function for sending a document from a result list as a hyperlink in an email.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendResultList">
+        <xs:annotation>
+          <xs:documentation>
+						The function for sending a currently open result list by email. A hyperlink is inserted in the email with the search query on which the current result list is based.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EMailReply">
+        <xs:annotation>
+          <xs:documentation>
+						The function for creating a reply email to an email that is stored in DocuWare. If this function is used in the result list, the email client, e.g. Outlook, opens with a normal reply email.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EMailReplyAll">
+        <xs:annotation>
+          <xs:documentation>
+						The function for creating a reply email to all parties for an email that is stored in DocuWare. If this function is used in the result list, the email client, e.g. Outlook, opens with a normal reply-to-all email.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EMailForward">
+        <xs:annotation>
+          <xs:documentation>
+						The function for forwarding an email that is stored in DocuWare. If this function is used in the result list, the email client, e.g. Outlook, opens with a normal forward email.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ShowInSeparateViewer">
+        <xs:annotation>
+          <xs:documentation>
+						The function for opening the documents of a result list in different viewers. A new Viewer is opened for each document when you want to view the document. This makes it easy to compare documents with each other.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EditDocument">
+        <xs:annotation>
+          <xs:documentation>
+						The function for editing documents in the original program and saving the changes back to the archived document.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ShowWorkflowHistory">
+        <xs:annotation>
+          <xs:documentation>
+						Function for displaying the workflow tracking which is linked to the document.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ExportToCSV">
+        <xs:annotation>
+          <xs:documentation>
+						Function for exporting the document to CSV.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CreateREQUEST">
+        <xs:annotation>
+          <xs:documentation>
+						Functions for storing the documents in a DocuWare Request.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ChangeIndexOfMultipleDocuments">
+        <xs:annotation>
+          <xs:documentation>
+						Function for selecting several documents, calling up an index field and editing the entry for all selected documents.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CheckOutToBasket">
+        <xs:annotation>
+          <xs:documentation>
+						The function for checking out a document from the file cabinet to a basket / document tray and editing it there. During this time, the document is locked in the file cabinet, but can be viewed in read-only mode.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CheckOutToFileSystem">
+        <xs:annotation>
+          <xs:documentation>
+						The function for checking out a document from the file cabinet to a Windows file system and editing it there. During this time, the document is locked in the file cabinet, but can be viewed in read-only mode.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ChangeDocumentStatus">
+        <xs:annotation>
+          <xs:documentation>
+						The function for setting the status of a document version from, e.g. "Out of Date" or "In Progress" to "Up to Date".
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ShowVersionHistory">
+        <xs:annotation>
+          <xs:documentation>
+						The function for displaying all versions of a document.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CopyIntoAnotherFileCabinet">
+        <xs:annotation>
+          <xs:documentation>
+						Function that allows you to copy a selected document into a different file cabinet.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SendREQUEST">
+        <xs:annotation>
+          <xs:documentation>
+            Functions for sending a DocuWare Request.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ResultDialogFunction">
+    <xs:annotation>
+      <xs:documentation>Function of result list</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Type" type="t:ResultDialogFunctionType" use="required">
+      <xs:annotation>
+        <xs:documentation>The type of the result dialog function.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="InToolBar" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this option is enabled, the result list contains an icon you can use to access the function</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AsButton" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this option is enabled, the result list contains a button with which to call the function</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="DynamicValueType">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CurrentDate">
+        <xs:annotation>
+          <xs:documentation>Current date.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CurrentDateTime">
+        <xs:annotation>
+          <xs:documentation>Current date including the time.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CurrentTime">
+        <xs:annotation>
+          <xs:documentation>Current time.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Gecko</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AutoNumber">
+        <xs:annotation>
+          <xs:documentation>Auto incrementing number.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DialogField">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DialogFieldBase">
+        <xs:sequence>
+          <xs:element name="DialogTableFieldColumns" type="t:DialogTableFieldColumns">
+            <xs:annotation>
+              <xs:documentation>Only relevant for fields with "Table" DWFieldType. Columns of the table field.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute default="false" name="UsedAsDocumentName" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field is used as document name.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="IsHierarchy" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Determines whether the field is part of the hierarchy structure of tree view result dialog (only for tree view result dialogs, for other types it's always false).</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DialogFieldBase">
+    <xs:annotation>
+      <xs:documentation>Base dialog field definition</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Mask" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Mask(regular expression) for limiting the input options for the field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MaskErrorText" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Error message to display if the input does not match the mask definition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SampleEditText" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Sample entry that matches the mask definition.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="2" name="PrefillValue" type="t:DocumentIndexFieldValue">
+        <xs:annotation>
+          <xs:documentation>The default value of the field(s). If DynamicPrefillValue is not empty this property should be ignored.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="2" name="DynamicPrefillValue" type="t:DynamicValueType">
+        <xs:annotation>
+          <xs:documentation>Dynamic (CurrentDate, CurrentDatetime, etc.) default value of the field(s).If this element is not empty PrefilValue shoud be ignored.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="SelectListInfos" type="t:SelectListInfos">
+        <xs:annotation>
+          <xs:documentation>Gets a list with information for all assigned select lists.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="simpleSelectList">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DBFieldName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of field in the file cabinet.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DlgLabel" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Label (display name) of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Locked" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the value of the field cannot be changed by the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ReadOnly" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the field is read only, considering Locked property and user rights(Modify Right for info dialog, Write Right for store dialog)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="NotEmpty" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the field can be empty, considering NotEmpty in Field settings and Field may be empty Right</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Visible" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the field is visible.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="-1" name="Length" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Length of the field (for text fields).</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Precision" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The precision of this dialog field. This is derived from the file cabinet fields precision.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AllowExtendedSearch" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Use extended search</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AllowFiltering" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Allow extended filtering.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="SelectListOnly" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>(Only relevant for store and info dialogs)If this flag is true, no one can allocate a new entry for this field when storing a document, unless this is contained in a selection list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Standard" name="SelectListType" type="t:SelectListType">
+      <xs:annotation>
+        <xs:documentation>Type of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AssignedInternalSelectList" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>A value indicating whether the internal select list is assigned.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SequenceId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The unique identifier of the sequence.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="SelectListsAssigned" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>A value indicating whether the any select list is assigned.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="SelectListType">
+    <xs:annotation>
+      <xs:documentation>Type of the select list</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Standard">
+        <xs:annotation>
+          <xs:documentation>Standard select list.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Multifield">
+        <xs:annotation>
+          <xs:documentation>Multi-field select list.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DialogFields">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogfields+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of dialog fields.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="t:DialogField">
+        <xs:annotation>
+          <xs:documentation>
+						List of dialog fields.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DialogTableFieldColumns">
+    <xs:annotation>
+      <xs:documentation>List of columns of dialog table field.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DialogTableFieldColumn" type="t:DialogFieldBase">
+        <xs:annotation>
+          <xs:documentation>
+            List of columns of dialog table field.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SelectListInfos">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistinfos+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of select list information objects.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SelectLists" type="t:SelectListInfo">
+        <xs:annotation>
+          <xs:documentation>
+						List of select lists information.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SelectListInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistinfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Select list information object.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="values">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListValuesQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="contains">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListValuesToCheck</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:AreValuesInSelectListsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Guid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The guid of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Kind" type="t:SelectListKind" use="required">
+      <xs:annotation>
+        <xs:documentation>The Kind of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SelectListValuesResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistvaluesresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Specific properties for each dialog type</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SingleColumn" type="t:SingleColumnSelectListValues">
+        <xs:annotation>
+          <xs:documentation>Get or sets the form field value casted to the index field type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SingleColumnSelectListValues">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Value" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Select list values as string.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TypedValue" type="t:DocumentIndexFieldValue">
+        <xs:annotation>
+          <xs:documentation>Select list values.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Koala</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next" IntroducedIn="Impala">
+                <Invoke IntroducedIn="Impala">
+                  <Produces IntroducedIn="Impala">
+                    <SchemaType IntroducedIn="Impala">t:SingleColumnSelectListValues</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev" IntroducedIn="Impala">
+                <Invoke IntroducedIn="Impala">
+                  <Produces IntroducedIn="Impala">
+                    <SchemaType IntroducedIn="Impala">t:SingleColumnSelectListValues</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self" IntroducedIn="Impala">
+                <Invoke IntroducedIn="Impala">
+                  <Produces IntroducedIn="Impala">
+                    <SchemaType IntroducedIn="Impala">t:SingleColumnSelectListValues</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first" IntroducedIn="Impala">
+                <Invoke IntroducedIn="Impala">
+                  <Produces IntroducedIn="Impala">
+                    <SchemaType IntroducedIn="Impala">t:SingleColumnSelectListValues</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+          <xs:appinfo>
+            <ann:IntroducedIn>Impala</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultiColumnSelectListValuesQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolumnselectlistvaluesquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query for multi column select list values</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:SelectListValuesQuery">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Condition" type="t:MultiColumnSelectListExpressionCondition">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the conditions which are checked to obtain the select list result.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Operation" type="t:DialogExpressionOperation" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies the operation between the conditions which are checked.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="SourceColumn" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The select list column name that should be used as source</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SelectListValuesQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistvaluesquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query for select list values</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="0" name="Start" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>First result to return if block size is specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Result will be returned on pages with that block size if specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ValuePrefix" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>A possible prefix of value of the field to be filled.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Koala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="" name="ReturnType" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Return type of the result. Possible values are "String", "Decimal", "Date" and "DateTime". If ommited, each value is converted to a string using the agent's locale settings.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Koala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="SelectListKind">
+    <xs:annotation>
+      <xs:documentation>Kind of the select list</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Fixed">
+        <xs:annotation>
+          <xs:documentation>Fixed select list.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="External">
+        <xs:annotation>
+          <xs:documentation>External select list.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SelectListValueToCheck">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistvaluestocheck+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Represents value to be used for checking existance of value in select lists.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Select list value as string.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Type of select list value.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SelectListValuesToCheck">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.selectlistsvaluestocheck+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Represents list of values to be used for checking existance in select lists.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Values" type="t:SelectListValueToCheck">
+        <xs:annotation>
+          <xs:documentation>
+            List of multi column select lists.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AreValuesInSelectListsQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.arevaluesinselectlistsquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query for checking whether one or more select lists contain one or more values</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Values" type="t:SelectListValueToCheck">
+        <xs:annotation>
+          <xs:documentation>Values to check their existance in select lists </xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SelectListIds" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Ids of select lists to check</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AreValuesInSelectListsResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.arevaluesinselectlistsresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Result returned when checking for value existance in select lists</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Result" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Values to check their existance in select lists </xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListInfos">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistinfos+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of multi column select list objects.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MultiColSelectLists" type="t:MultiColSelectListInfo">
+        <xs:annotation>
+          <xs:documentation>
+            List of multi column select lists.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistinfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Multi column select list object.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="values">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:MultiColSelectListValuesQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Columns">
+        <xs:annotation>
+          <xs:documentation>Header for the select list columns</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Column" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Define a single column in the multi column select list</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Guid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The guid of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Kind" type="t:SelectListKind" use="required">
+      <xs:annotation>
+        <xs:documentation>The Kind of the select list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListValuesResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistvaluesresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Specific properties for each dialog type</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Columns">
+        <xs:annotation>
+          <xs:documentation>Header for the select list columns</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Column" type="t:MultiColSelectListColumn">
+              <xs:annotation>
+                <xs:documentation>Define a specific select list column</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Rows">
+        <xs:annotation>
+          <xs:documentation>Rows of the multi column select list result</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Row" type="t:MultiColSelectListRow">
+              <xs:annotation>
+                <xs:documentation>Define a specific select list row</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListValuesResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListColumn">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistcolumn+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Multi column select list column definition</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains the internal name of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains the type of the column.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListRow">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistrow+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Multi column select list row.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element name="Int" type="xs:long" />
+          <xs:element name="Decimal" type="xs:decimal" />
+          <xs:element name="String" type="xs:string" />
+          <xs:element name="DateTime" type="xs:dateTime" />
+          <xs:element name="Empty" type="t:NullTableResultValue" />
+        </xs:choice>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListValuesQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistvaluesquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Query for multi column select list values</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Condition" type="t:MultiColSelectListExpressionCondition">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the conditions which are checked to obtain the select list result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="StartsWithColumn" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Column name for prefix search.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StartsWithValue" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Value for prefix search.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Start" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>First result to return if block size is specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Count" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Result will be returned on pages with that block size if specified.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Operation" type="t:DialogExpressionOperation" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the operation between the conditions which are checked.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MultiColSelectListExpressionCondition">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.multicolselectlistexpressioncondition+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Condition for specific multi column select list column</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Quokka</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Value" nillable="true" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The search value of the field.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="ColumnName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the column
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+          The type of the column
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DialogInfos">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.dialogs+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of dialog infos.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Dialog" type="t:DialogInfo">
+        <xs:annotation>
+          <xs:documentation>List of dialog infos.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UserDefinedSearchInfo">
+    <xs:annotation>
+      <xs:documentation>Options for creating user defined search based on result list.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DialogExpression" type="t:DialogExpression">
+        <xs:annotation>
+          <xs:documentation>
+						Gets or sets the conditions which are used for creating user defined search based on result list.
+					</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>The name of the user defined search based on result list.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="UserDefinedSearchInfo" type="t:UserDefinedSearchInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="DialogFields" type="t:DialogFields" />
+  <xs:element name="Dialog" type="t:Dialog" />
+  <xs:element name="Dialogs" type="t:DialogInfos" />
+  <xs:element name="RequestDialogQuery" type="t:RequestDialogQuery" />
+  <xs:element name="SelectListValuesQuery" type="t:SelectListValuesQuery" />
+</xs:schema>

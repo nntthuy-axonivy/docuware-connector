@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.docuware.connector.docuware</groupId>
+  <artifactId>docuware-openapi</artifactId>
+  <version>10.0.5-SNAPSHOT</version>
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.4.0-b180830.0359</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <!-- include sources in jar next to its compiled binaries -->
+      <resource>
+        <directory>${basedir}/src/generated</directory>
+      </resource>
+      <!-- openapi.yaml -->
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>2.5.0</version>
+        <executions>
+          <execution>
+            <id>generate.docuware.pojos</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sources>
+            <!-- https://rch.docuware.cloud/docuware/platform/Schema/File/schema-0.xsd -->
+            <source>src/xmlflat</source>
+          </sources>
+          <arguments>
+            <argument>-XautoNameResolution</argument>
+          </arguments>
+          <outputDirectory>src/generated</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifestEntries><!-- main namespace to find docuware pojos, references in the openapi -->
+              <NAMESPACE>com.docuware.dev.schema._public.services.platform</NAMESPACE>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

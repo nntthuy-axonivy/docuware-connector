@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:simpleType name="RoleTypes">
+    <xs:annotation>
+      <xs:documentation>A predefined DocuWare role types</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Standard" />
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Administrator" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Role">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.role+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a DocuWare role</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <!--<Relation Name="users">
+								<Invoke>
+									<Produces>
+										<SchemaType>t:Users</SchemaType>
+									</Produces>
+								</Invoke>
+							</Relation>-->
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Role</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The role id.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the user.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Active" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Is role active flag.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Standard" name="Type" type="t:RoleTypes">
+      <xs:annotation>
+        <xs:documentation>Type of role.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Roles">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.roles+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A collection of roles</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:Role">
+        <xs:annotation>
+          <xs:documentation>A collection of roles</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Role" type="t:Role" />
+  <xs:element name="Roles" type="t:Roles" />
+</xs:schema>

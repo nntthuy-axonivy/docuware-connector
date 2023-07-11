@@ -8,3 +8,7 @@ fileCabinetId String #field
 fileCabinetId PERSISTENT #fieldModifier
 documentId String #field
 documentId PERSISTENT #fieldModifier
+organizations com.docuware.dev.schema._public.services.platform.Organizations #field
+organizations PERSISTENT #fieldModifier
+fileCabinets com.docuware.dev.schema._public.services.platform.FileCabinets #field
+fileCabinets PERSISTENT #fieldModifier

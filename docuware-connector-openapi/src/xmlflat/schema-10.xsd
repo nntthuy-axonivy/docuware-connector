@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" 
+xmlns:t="http://dev.docuware.com/schema/public/services/platform" 
+xmlns:types="http://dev.docuware.com/types" 
+xmlns:common="http://dev.docuware.com/settings/common"
+  xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" 
+  xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-5.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-35.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:include schemaLocation="schema-26.xsd" />
+  <xs:complexType name="AdhocRenderingFile">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.adhocrenderingfile+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Main class for managing adhoc rendering file.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="t:Pages">
+        <xs:annotation>
+          <xs:documentation>Gets the pages of this file up to a server defined limit.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:AdhocRenderingFile</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="rendering">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:AdhocRenderingQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required" />
+    <xs:attribute name="PageCount" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the number of pages of this file.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AdhocRenderingFiles">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.adhocrenderingfiles+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A list of uploaded files prepared for adhoc rendering.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:AdhocRenderingFile">
+        <xs:annotation>
+          <xs:documentation>Gets the pages of this file up to a server defined limit.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AdhocRenderingQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.adhocrenderingquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Specifies how a file is to be rendered.</xs:documentation>
+      <xs:documentation>
+        You can specify either a canvas size (in pixels) or a resolution (in dpi) of the rendered bitmap. In case you specify
+        the canvas size the rendered bitmap fits into the canvas while the page ratio is preserved.
+      </xs:documentation>
+      <xs:documentation>In case you do not specify the size or resolution a default rendering resolution of 72 dpi is assumed.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="0" name="Page" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Gets or sets page number to be rendered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="72" name="Dpi" type="xs:float">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the resolution of the rendered bitmap.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ApiKey" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the rendering api key.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="AdhocRenderingFile" type="t:AdhocRenderingFile" />
+  <xs:element name="AdhocRenderingFiles" type="t:AdhocRenderingFiles" />
+  <xs:element name="AdhocRenderingQuery" type="t:AdhocRenderingQuery" />
+</xs:schema>

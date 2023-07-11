@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:common="http://dev.docuware.com/settings/common" 
+xmlns="http://dev.docuware.com/public/intellix" 
+elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/public/intellix"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-35.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:simpleType name="DistanceType">
+    <xs:annotation>
+      <xs:documentation>The distance between two point in twips (1/1440 inch).</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int" />
+  </xs:simpleType>
+  <xs:simpleType name="FontFaceType">
+    <xs:annotation>
+      <xs:documentation>The name of font. e.g. "Arial", "Times New Roman", "Garamond", ...</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:attributeGroup name="FontDescriptionAttributes">
+    <xs:attribute name="bold" type="xs:boolean" />
+    <xs:attribute name="fontSize" type="DistanceType">
+      <xs:annotation>
+        <xs:documentation>The font size in twpis. E.g. a font of size 10pt has a value of 200.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="RectangleAttributes">
+    <xs:attribute name="L" type="DistanceType" use="required">
+      <xs:annotation>
+        <xs:documentation>Left of rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="T" type="DistanceType" use="required">
+      <xs:annotation>
+        <xs:documentation>Top of rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="W" type="DistanceType" use="required">
+      <xs:annotation>
+        <xs:documentation>Width of rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="H" type="DistanceType" use="required">
+      <xs:annotation>
+        <xs:documentation>Height of rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="ResolutionAttributes">
+    <xs:attribute name="HorizontalDpi" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>Horizontal resolution in dpi.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="VerticalDpi" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>Vertical resolution in dpi.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="SimpleWord">
+    <xs:annotation>
+      <xs:documentation>Contains a word with its bounding box.</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attributeGroup ref="RectangleAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Word">
+    <xs:annotation>
+      <xs:documentation>Contains a word with its bounding box.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="SimpleWord">
+        <xs:attributeGroup ref="FontDescriptionAttributes" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Space">
+    <xs:annotation>
+      <xs:documentation>Denotes a space.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="0" name="W" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The width of the space.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Words">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Wd" type="Word" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Line">
+    <xs:annotation>
+      <xs:documentation>A line is a sequence of words.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Sp" type="Space" />
+            <xs:element name="Wd" type="Word" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attributeGroup ref="FontDescriptionAttributes" />
+        <xs:attribute name="BaseLine" type="DistanceType" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RectangleBase">
+    <xs:attributeGroup ref="RectangleAttributes" />
+  </xs:complexType>
+  <xs:complexType name="TextZone">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Ln" type="Line">
+            <xs:annotation>
+              <xs:documentation>Contains a single text line.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Lang" type="xs:language" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="gridTable">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="gridCol" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>The widths of columns in twips. Each value is a distance between two grid.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="gridRow" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>The widths of rows in twips. Each value is a distance between two grid.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CellZone">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TextZone" type="TextZone" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TableZone">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="gridT" type="gridTable" />
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="Cz" type="CellZone" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BarCodeZone">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Value" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="BarcodeType" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PictureZone">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Rulerline">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RectangleBase">
+        <xs:attribute default="0" name="lineWidth" type="DistanceType" />
+        <xs:attribute default="none" name="style" type="LineStyle" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="LineStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none">
+        <xs:annotation>
+          <xs:documentation>The line isn't visible </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="single">
+        <xs:annotation>
+          <xs:documentation>The line is a single continous line</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="dotted">
+        <xs:annotation>
+          <xs:documentation>The line consist of many dot</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="thick">
+        <xs:annotation>
+          <xs:documentation>A thick continous line</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="dash">
+        <xs:annotation>
+          <xs:documentation>The line consist of many dash</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="double">
+        <xs:annotation>
+          <xs:documentation>Two single continous line</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SimplePageContent">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="W" type="SimpleWord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="Languages">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="LanguageDetection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Auto">
+        <xs:annotation>
+          <xs:documentation>The OCR could automatically detect the language.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FallbackSystemCulture">
+        <xs:annotation>
+          <xs:documentation>The OCR could not automatically detect the language and used the culture of system the OCR was run.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FallbackExplicite">
+        <xs:annotation>
+          <xs:documentation>The OCR could not automatically detect the language and used the languages which are explicitely specified by a user.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Explicite">
+        <xs:annotation>
+          <xs:documentation>The OCR did not try to automatically detect any language. Only the languages which are explicitely specified by a user are used.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocuWareLanguageIdentifier">
+        <xs:annotation>
+          <xs:documentation>The language was detected by the majority voting algorithm used inside DocuWare.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PageContent">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TextZone" type="TextZone" />
+        <xs:element name="PictureZone" type="PictureZone" />
+        <xs:element name="TableZone" type="TableZone" />
+        <xs:element name="rulerline" type="Rulerline" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BarCodes" type="BarCodeZone" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Candidates" type="CandidateInfo" />
+    </xs:sequence>
+    <xs:attribute name="Lang" type="Languages" use="optional" />
+    <xs:attribute default="Explicite" name="LanguageDetection" type="LanguageDetection" />
+    <xs:attribute default="0" name="CandidateDetectionVersion" type="xs:int" />
+    <xs:attribute default="0" name="Version" type="xs:int" />
+    <xs:attributeGroup ref="ResolutionAttributes" />
+    <xs:attribute name="SizeX" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>The page width in pixel.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SizeY" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>The page height in pixel.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0.0" name="SkewAngle" type="xs:double">
+      <xs:annotation>
+        <xs:documentation>The skew angle in degree denoting the amount by which the document image has to be rotated clockwise in order to match the text shot.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Rotate0Degree" name="Rotation" type="Rotation">
+      <xs:annotation>
+        <xs:documentation>The rotation angle of the page.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="FileTag" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>A tag identifiying the file the page was created from.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="Rotation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Rotate0Degree">
+        <xs:annotation>
+          <xs:documentation>
+            The original page is not rotated.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Rotate90Degree">
+        <xs:annotation>
+          <xs:documentation>
+            The original page has to be rotated by 90 degree clock wise in order to match the text shot.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Rotate180Degree">
+        <xs:annotation>
+          <xs:documentation>
+            The original page has to be rotated by 180 degree order to match the text shot.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Rotate270Degree">
+        <xs:annotation>
+          <xs:documentation>
+            The original page has to be rotated by 270 degree clock wise (that is, 90 degree clock-wise) in order to match the text shot.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DocumentContent">
+    <xs:annotation>
+      <xs:appinfo />
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Embedded">
+        <xs:annotation>
+          <xs:documentation>For internal use: Embedded data.</xs:documentation>
+          <xs:documentation>Embedded xml documents, which typically contain the same content as the document in a machine readable and structured way. First use case is the invoice in ZUGFeRD format.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Pages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Page" type="PageContent" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Candidate">
+    <xs:sequence>
+      <xs:element name="Type" type="xs:string" />
+      <xs:element name="OriginalValue" type="xs:string" />
+      <xs:element name="FoundValue" type="xs:string" />
+      <xs:element name="L" type="xs:int" />
+      <xs:element name="T" type="xs:int" />
+      <xs:element name="W" type="xs:int" />
+      <xs:element name="H" type="xs:int" />
+      <xs:element name="Line" type="xs:int" />
+      <xs:element name="Index" type="xs:int" />
+      <xs:element name="Length" type="xs:int" />
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="Decimal" type="xs:decimal" />
+        <xs:element name="Date" type="xs:date" />
+        <xs:element name="Text" type="xs:string" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FoundWithLanguages" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CorrectLanguageTo" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImpliesCultures" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CandidateInfo">
+    <xs:sequence>
+      <xs:element name="Type" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Candidates" type="Candidate" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Document" type="DocumentContent" />
+  <xs:element name="Page" type="PageContent" />
+</xs:schema>

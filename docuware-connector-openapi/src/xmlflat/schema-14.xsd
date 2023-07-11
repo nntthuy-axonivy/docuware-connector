@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:common="http://dev.docuware.com/settings/common" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-35.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:complexType name="Notifications">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.notifications+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A data stucture for managing notifications.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Notification" type="t:Notification">
+        <xs:annotation>
+          <xs:documentation>Collection of notifications.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Notifications</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="-1" name="Timeout" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the notifications timeout im milliseconds. A positive value lets the server wait for notifications for the specified amount of time. A value of 0 means that the server should respond immediately. A value of -1 indicates that the server should define the timeout.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Notification">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.notification+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A data stucture for implementing simple notifications.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TimeStamp" nillable="true" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>TimeStamp when the notification was checked. Ensure that notification was happened before that time stamp</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="IsActive" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true then this notification is set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of this notification.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="Notifications" type="t:Notifications" />
+</xs:schema>

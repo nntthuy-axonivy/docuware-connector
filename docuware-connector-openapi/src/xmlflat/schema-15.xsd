@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:dotnetTypes="http://dev.docuware.com/types" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:comm="http://dev.docuware.com/settings/common" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-28.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:simpleType name="ToolbarControlType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Nav_DocumentNumber" />
+      <xs:enumeration value="Nav_FirstDocument" />
+      <xs:enumeration value="Nav_PreviousDocument" />
+      <xs:enumeration value="Nav_NextDocument" />
+      <xs:enumeration value="Nav_LastDocument" />
+      <xs:enumeration value="Nav_FileNumber" />
+      <xs:enumeration value="Nav_FirstFile" />
+      <xs:enumeration value="Nav_PreviousFile" />
+      <xs:enumeration value="Nav_NextFile" />
+      <xs:enumeration value="Nav_LastFile" />
+      <xs:enumeration value="Nav_PageNumber" />
+      <xs:enumeration value="Nav_FirstPage" />
+      <xs:enumeration value="Nav_PreviousPage" />
+      <xs:enumeration value="Nav_NextPage" />
+      <xs:enumeration value="Nav_LastPage" />
+      <xs:enumeration value="Tools_Save" />
+      <xs:enumeration value="Tools_Edit" />
+      <xs:enumeration value="Tools_PrintDocument" />
+      <xs:enumeration value="Tools_SendDocument" />
+      <xs:enumeration value="Tools_ShowDocumentInformation" />
+      <xs:enumeration value="Tools_ShowDocumentOverview" />
+      <xs:enumeration value="Tools_FulltextSearch" />
+      <xs:enumeration value="Tools_FulltextSearchContinue" />
+      <xs:enumeration value="Tools_TextAnnotation" />
+      <xs:enumeration value="Tools_Checksum" />
+      <xs:enumeration value="Tools_Download" />
+      <xs:enumeration value="Tools_PointAndShoot" />
+      <xs:enumeration value="Tools_ShootToClipboard" />
+      <xs:enumeration value="Tools_WorkflowHistory" />
+      <xs:enumeration value="Tools_GetLink" />
+      <xs:enumeration value="Tools_SendRequest" />
+      <xs:enumeration value="Tools_ReplyForward" />
+      <xs:enumeration value="Display_FitToWidth" />
+      <xs:enumeration value="Display_FitToWidthNoMargins" />
+      <xs:enumeration value="Display_FullDocument" />
+      <xs:enumeration value="Display_ZoomIn" />
+      <xs:enumeration value="Display_ZoomOut" />
+      <xs:enumeration value="Display_ZoomNumber" />
+      <xs:enumeration value="Display_MagnifyingGlass" />
+      <xs:enumeration value="Display_DisplayEnhancement" />
+      <xs:enumeration value="Display_Invert" />
+      <xs:enumeration value="Display_RotateLeft" />
+      <xs:enumeration value="Display_RotateRight" />
+      <xs:enumeration value="Display_SaveRotation" />
+      <xs:enumeration value="Display_ImageEnhancement" />
+      <xs:enumeration value="Display_MergeLayers" />
+      <xs:enumeration value="Display_ShowOverlay1" />
+      <xs:enumeration value="Display_ShowOverlay2" />
+      <xs:enumeration value="Display_ShowOverlay3" />
+      <xs:enumeration value="Display_ShowOverlay4" />
+      <xs:enumeration value="Display_ShowOverlay5" />
+      <xs:enumeration value="Annotations_Select" />
+      <xs:enumeration value="Annotations_Delete" />
+      <xs:enumeration value="Annotations_Text" />
+      <xs:enumeration value="Annotations_Marker" />
+      <xs:enumeration value="Annotations_Line" />
+      <xs:enumeration value="Annotations_FreehandLine" />
+      <xs:enumeration value="Annotations_Arrow" />
+      <xs:enumeration value="Annotations_Rectangle" />
+      <xs:enumeration value="Annotations_Ellipse" />
+      <xs:enumeration value="Annotations_FilledEllipse" />
+      <xs:enumeration value="Annotations_FilledRectangle" />
+      <xs:enumeration value="Annotations_TransparentEllipse" />
+      <xs:enumeration value="Annotations_TransparentRectangle" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ToolbarControlState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Toggled" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ToolbarPosition">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Left" />
+      <xs:enumeration value="Right" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ToolbarVisibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Expanded" />
+      <xs:enumeration value="Collapsed" />
+      <xs:enumeration value="NotVisible" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ViewerToolbarType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Navigation" />
+      <xs:enumeration value="Tools" />
+      <xs:enumeration value="Display" />
+      <xs:enumeration value="Stamps" />
+      <xs:enumeration value="DocOverview" />
+      <xs:enumeration value="Annotations" />
+      <xs:enumeration value="DocLinks" />
+      <xs:enumeration value="BWMStamps" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="AnnotationTools">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Line" />
+      <xs:enumeration value="Arrow" />
+      <xs:enumeration value="Rectangle" />
+      <xs:enumeration value="Ellipse" />
+      <xs:enumeration value="FilledEllipse" />
+      <xs:enumeration value="FilledRectangle" />
+      <xs:enumeration value="TransparentEllipse" />
+      <xs:enumeration value="TransparentRectangle" />
+      <xs:enumeration value="Marker" />
+      <xs:enumeration value="Text" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ViewerToolbarControl">
+    <xs:attribute name="Type" type="t:ToolbarControlType" use="required" />
+    <xs:attribute name="Checked" type="xs:boolean" use="required" />
+    <xs:attribute name="State" type="t:ToolbarControlState" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ViewerToolbar">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Controls">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="ToolbarControl" type="t:ViewerToolbarControl" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Type" type="t:ViewerToolbarType" use="required" />
+    <xs:attribute name="Position" type="t:ToolbarPosition" use="required" />
+    <xs:attribute name="Visibility" type="t:ToolbarVisibility" use="required" />
+  </xs:complexType>
+  <xs:complexType name="FontSettings">
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Size" type="xs:string" use="required" />
+    <xs:attribute name="Bold" type="xs:boolean" use="required" />
+    <xs:attribute name="Italic" type="xs:boolean" use="required" />
+    <xs:attribute name="Underline" type="xs:boolean" use="required" />
+    <xs:attribute name="Strikeout" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TextAnnotationToolSettings">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:AnnotationToolSettings">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="FontSettings" type="t:FontSettings" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SizedAnnotationToolSettings">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:AnnotationToolSettings">
+        <xs:attribute name="LineSize" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AnnotationToolSettings">
+    <xs:attribute name="Type" type="t:AnnotationTools" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ViewerPreferences">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Annotations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="AnnotationTool" type="t:AnnotationToolSettings" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Toolbars">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Toolbar" type="t:ViewerToolbar" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The ID of the Viewer preferences.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LeftToolbarState" type="t:ToolbarVisibility" use="required" />
+    <xs:attribute name="RightToolbarState" type="t:ToolbarVisibility" use="required" />
+    <xs:attribute name="ExpandStatusbar" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ApplicationPreferences" />
+  <xs:complexType name="ApplicationPreferencesHolder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AppPrefs" type="t:ApplicationPreferences" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WebClientPreferences">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:ApplicationPreferences">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkAreas" type="t:WorkAreaPreferences" />
+          <xs:element name="GeneralSettings" type="t:GeneralSettings">
+            <xs:annotation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="WebClientLayout" type="t:WebClientLayout" />
+          <xs:element name="Favorites" type="t:Favorites" />
+          <xs:element name="Viewer" type="t:ViewerPreferences" />
+          <xs:element name="MultiFCSearches" type="t:MultiFCSearches">
+            <xs:annotation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="LocalStorage" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="SurveyTimeStamp" type="xs:date" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GeneralSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute default="None" name="StartWith" type="t:WorkAreaType">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="" name="CreatedVersion" type="xs:string">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Impala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WebClientLayout">
+    <xs:attribute name="Mode" type="t:LayoutMode" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="LayoutMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AllInOne" />
+      <xs:enumeration value="Separate" />
+      <xs:enumeration value="StoreView" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Favorites">
+    <xs:sequence>
+      <xs:element name="Baskets" type="t:FavoriteItems" />
+      <xs:element name="StoreDialogs" type="t:FavoriteItems" />
+      <xs:element name="SearchDialogs" type="t:FavoriteItems" />
+      <xs:element name="TaskLists" type="t:FavoriteItems" />
+      <xs:element name="TreeViews" type="t:FavoriteItems" />
+      <xs:element name="MultiFCSearches" type="t:FavoriteItems">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>
+              Eagle
+            </ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Forms" type="t:FavoriteItems" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FavoriteItems">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Disabled" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Order" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WorkAreaPreferences">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ContentAreas" type="t:ContentAreaPreferences" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="MultiFCSearches">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="t:MultiFCSearchConfiguration">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="_ignore_me" type="xs:boolean">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MultiFCSearchConfiguration">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FcIds" type="xs:string">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SearchDialogID" type="xs:string">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SearchDialogFCID" type="xs:string">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="dotnetTypes:GUIDType">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ContentAreaPreferences">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Instances" type="t:WorkInstance">
+        <xs:annotation>
+          <xs:documentation>Items assigned to the area like dialogs, Baskets.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="None" name="AreaType" type="t:WorkAreaType" />
+    <xs:attribute name="SelectedInstanceIndex" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="WorkInstance">
+    <xs:attribute name="ID" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="BasketAreaPreferences">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:ContentAreaPreferences">
+        <xs:attribute default="false" name="StoreDialogsBarLocked" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="WorkflowAreaPreferences">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:ContentAreaPreferences">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ControllerInstances" type="t:WorkInstance">
+            <xs:annotation>
+              <xs:documentation>Items assigned to the area like dialogs, Baskets.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="WorkAreaType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Basket" />
+      <xs:enumeration value="Search" />
+      <xs:enumeration value="TaskList" />
+      <xs:enumeration value="Workflow" />
+      <xs:enumeration value="TreeView" />
+      <xs:enumeration value="Forms" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="WebSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.websettings+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ApplicationPreferences" type="t:ApplicationPreferences">
+        <xs:annotation>
+          <xs:documentation>Preferences for a specific application.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WebSettings" type="t:WebSettings" />
+</xs:schema>

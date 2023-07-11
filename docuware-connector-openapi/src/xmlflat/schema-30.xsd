@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:common="http://dev.docuware.com/settings/common" 
+  xmlns:interop="http://dev.docuware.com/settings/interop" 
+  xmlns:svc="http://dev.docuware.com/schema/public/services"
+  xmlns:t="http://dev.docuware.com/schema/public/services/platform" 
+  xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" 
+  xmlns:intellix="http://dev.docuware.com/public/intellix"
+  xmlns="http://dev.docuware.com/schema/public/services/platform" 
+  elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-28.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-38.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:include schemaLocation="schema-23.xsd" />
+  <xs:include schemaLocation="schema-25.xsd" />
+  <xs:include schemaLocation="schema-39.xsd" />
+  <xs:complexType name="TextStamp">
+    <xs:annotation>
+      <xs:documentation>Stamp that applies a defined text.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Font" type="t:Font">
+        <xs:annotation>
+          <xs:documentation>The font of the text of the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Content" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The text to be displayed in the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BitmapStamp">
+    <xs:annotation>
+      <xs:documentation>Stamp that applies an image.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="content">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StrokeStamp">
+    <xs:annotation>
+      <xs:documentation>Stamp that allows you to add a signature using an electronic pen.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="StrokeWidth" type="xs:unsignedInt" use="required">
+      <xs:annotation>
+        <xs:documentation>The line weight of the handwritten signature.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="StrokeColor" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Color of the line of the handwritten signature.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="StampFormField">
+    <xs:annotation>
+      <xs:documentation>A form field for variable text to a text stamp.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="selectListValues">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="simpleSelectList">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SelectListExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SelectListResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the form field</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Label" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The label used to represent the form field when the stamp is set on the client.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Length" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Lenght of the form field</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Precision" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Gets the number of digits after the decimal point in case of a numeric field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Mask" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Mask(regular expression) for limiting the input options for the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="MaskErrorText" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Error message to display if the input does not match the mask definition.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SampleEditText" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Sample entry that matches the mask definition.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="SelectListsAssigned" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>A value indicating whether the any select list is assigned.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Jellyfish</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="NotEmpty" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>A value indicating whether the form field value must be filled.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="StampField">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Value" type="t:DocumentIndexFieldValue">
+        <xs:annotation>
+          <xs:documentation>Get or sets the form field value casted to the index field type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the index field that will be changed by the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Length" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Length of the index field that will be changed by the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="HasFixedEntry" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Determines whether the stamp field has defined fixed entry.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Stamp">
+    <xs:annotation>
+      <xs:documentation>Models a DocuWare stamp.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.stamp+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FormField" type="t:StampFormField">
+        <xs:annotation>
+          <xs:documentation>List of the stamp form fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Fields" type="t:StampField">
+        <xs:annotation>
+          <xs:documentation>List of the stamp fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HeadFont" type="t:Font">
+        <xs:annotation>
+          <xs:documentation>Font for the additional items of information.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="TextStamp" type="t:TextStamp" />
+        <xs:element name="StrokeStamp" type="t:StrokeStamp" />
+        <xs:element name="BitmapStamp" type="t:BitmapStamp" />
+      </xs:choice>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="asBitmap">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FormFieldValues</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="asSvg">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/svg</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FormFieldValues</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>image/svg</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="PasswordProtected" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>If this flag is true password is needed to place the stamp.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Signature" type="t:StampSignatureType" use="required">
+      <xs:annotation>
+        <xs:documentation>The type of the stamp signature if there is any.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The name of the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DisplayName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The display name of the stamp.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Overwrite" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true the system will overwrite existing database entries with the stamp entries.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The id of the stamp, which is a GUID usually.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsHidden" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the stamp is visible.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="-1" name="Autosave" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Automatically save the stamp after specified period in seconds. Value -1 mean the stamp have to be saved on user action.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="CloseAfterStampSet" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Automatically close the window after stamp is placed in a document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AutomaticallyOpenNextDocument" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether the stamp remains active after being stored.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="KeepStampActive" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Determines whether next document is opened automatically after the stamp is stored.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Stamps">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.stamps+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of stamps.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Stamp" type="t:Stamp">
+        <xs:annotation>
+          <xs:documentation>List of stamps.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FormFieldValue">
+    <xs:annotation>
+      <xs:documentation>Contains the value of form field</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="TypedValue" type="t:DocumentIndexFieldValue">
+        <xs:annotation>
+          <xs:documentation>Get or sets the form field value casted to the index field type.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Get or sets the name of the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Value" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Get or sets the display value of the form field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FormFieldValues">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.formfieldvalues+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>The form field values which are applied when placing or rendering the stamp.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="t:FormFieldValue">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the form field values which are applied when placing or rendering the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StampPlacement">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.stampplacement+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Describes how to place a stamp on a page.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Strokes" type="t:PolyLineEntry">
+        <xs:annotation>
+          <xs:documentation>A polyline entry in case of stroke stamps.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="5" name="Field" type="t:FormFieldValue">
+        <xs:annotation>
+          <xs:documentation>The form field values which are applied when placing the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="StampId">
+      <xs:annotation>
+        <xs:documentation>The Id of the stamp to place.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Rotation" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Rotation of the stamp. Only rotation even of 90 degree are supported.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="Layer" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Layer where the stamp have to be placed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="" name="Password" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Password for password protected stamps</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="StampFormFieldValues">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.stampformfieldvalues+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>The form field values which are applied when placing or rendering a specific stamp.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="5" name="Field" type="t:FormFieldValue">
+        <xs:annotation>
+          <xs:documentation>The form field values which are applied when placing the stamp.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="StampId">
+      <xs:annotation>
+        <xs:documentation>The Id of the stamp to place.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DecisionStampPlacement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:StampPlacement">
+        <xs:attribute name="WorkflowId" type="xs:string" use="required" />
+        <xs:attribute name="InstanceId" type="xs:string" use="required" />
+        <xs:attribute name="TaskId" type="xs:string" use="required" />
+        <xs:attribute name="DecisionId" type="xs:int" use="required" />
+        <xs:attribute name="IsController" type="xs:boolean" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DecisionFormFieldValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FormFieldValue">
+        <xs:attribute name="Id" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AnnotationsPlacement">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.annotationsplacement+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Describes how to place a set of annotations and stamps on a page.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element name="Annotation" type="t:Annotation">
+          <xs:annotation>
+            <xs:documentation>Annotation element. Contains all annotations for a specific page in up to 5 layers</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="StampPlacement" type="t:StampPlacement">
+          <xs:annotation>
+            <xs:documentation>Describes how to place a stamp on a page.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SectionAnnotationsPlacement">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Eagle">application/vnd.docuware.platform.sectionannotationsplacement+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Describes how to place a set of annotations and stamps on a section.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="AnnotationsPlacement" type="t:AnnotationsPlacement">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="SectionNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Number of the section to set annotations on.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PageNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Number of the page to set annotations on.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAnnotationsPlacement">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Eagle">application/vnd.docuware.platform.documentannotationsplacement+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Descripes how to place a set of annotations and stamps on a document.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Annotations" type="t:SectionAnnotationsPlacement">
+        <xs:annotation>
+          <xs:documentation>List of SectionAnnotationsPlacement items.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SectionAnnotation">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Eagle">application/vnd.docuware.platform.sectionannotation+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Describes how to place a set of annotations and stamps on a section.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Annotation" type="t:Annotation">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="SectionNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Number of the section to set annotations on.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PageNumber" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Number of the page to set annotations on.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentAnnotations">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType IntroducedIn="Eagle">application/vnd.docuware.platform.documentannotations+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Descripes how to place a set of annotations and stamps on a document.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Annotations" type="t:SectionAnnotation">
+        <xs:annotation>
+          <xs:documentation>List of SectionAnnotation items.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StampFormFields" type="t:FormFieldValues" />
+  <xs:element name="Stamps" type="t:Stamps" />
+  <xs:element name="StampPlacement" type="t:StampPlacement" />
+  <xs:element name="StampFormFieldValues" type="t:StampFormFieldValues" />
+  <xs:element name="AnnotationsPlacement" type="t:AnnotationsPlacement" />
+  <xs:element name="DocumentAnnotationsPlacement" type="t:DocumentAnnotationsPlacement" />
+  <xs:element name="DocumentAnnotations" type="t:DocumentAnnotations" />
+</xs:schema>

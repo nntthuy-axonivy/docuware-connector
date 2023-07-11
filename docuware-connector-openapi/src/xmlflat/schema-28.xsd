@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/settings/common" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/settings/common" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="Color">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="#([A-Fa-f]|[0-9]){6}" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

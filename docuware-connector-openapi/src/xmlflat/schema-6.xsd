@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/settings/interop" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/settings/interop" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="DWProductTypes">
+    <xs:annotation>
+      <xs:documentation>Subset of DocuWare license types.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DocuWareClient">
+        <xs:annotation>
+          <xs:documentation>DocuWare Windows Client</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocuWareClientLic4">
+        <xs:annotation>
+          <xs:documentation>One Concurrent is equal to 4 named licenses - since Jellyfish</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ReadAndApproveClient">
+        <xs:annotation>
+          <xs:documentation>Named license with limited DocuWare functionality - since Lobster</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocuWareSite">
+        <xs:annotation>
+          <xs:documentation>DocuWare Site Windows Client</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToRicoh">
+        <xs:annotation>
+          <xs:documentation>Connect to Ricoh</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToToshiba">
+        <xs:annotation>
+          <xs:documentation>Connect To Toshiba</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToXerox">
+        <xs:annotation>
+          <xs:documentation>Connect to Xerox</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToSharp">
+        <xs:annotation>
+          <xs:documentation>Connect to Sharp</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToMOSS">
+        <xs:annotation>
+          <xs:documentation>Connect to SharePoint</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SmartConnect">
+        <xs:annotation>
+          <xs:documentation>Smart Connect</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WebClient">
+        <xs:annotation>
+          <xs:documentation>DocuWare Web Client</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ROWebClient">
+        <xs:annotation>
+          <xs:documentation>Read only DocuWare Web Client</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TaskList">
+        <xs:annotation>
+          <xs:documentation>Task Lists</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EmailAlert">
+        <xs:annotation>
+          <xs:documentation>Email Alert</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToOutlook">
+        <xs:annotation>
+          <xs:documentation>Connect to Outlook</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Mobile">
+        <xs:annotation>
+          <xs:documentation>DocuWare mobile device</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToMail">
+        <xs:annotation>
+          <xs:documentation>Connect to Mail</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocuWareServer">
+        <xs:annotation>
+          <xs:documentation>License for all DocuWare servers</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PlatformService">
+        <xs:annotation>
+          <xs:documentation>Platform service</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WorkflowManager">
+        <xs:annotation>
+          <xs:documentation>Workflow Manager</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Import">
+        <xs:annotation>
+          <xs:documentation>Import</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DWRequest">
+        <xs:annotation>
+          <xs:documentation>DocuWare Request</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToOKI">
+        <xs:annotation>
+          <xs:documentation>Connect to OKI</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToRicohOnline">
+        <xs:annotation>
+          <xs:documentation>Connect to Ricoh Online</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BarcodeAndForms">
+        <xs:annotation>
+          <xs:documentation>Barcode and Forms</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WindowsExplorerClient">
+        <xs:annotation>
+          <xs:documentation>Windows Explorer Client</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Administration">
+        <xs:annotation>
+          <xs:documentation>Administration only client. No content rights</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unknown">
+        <xs:annotation>
+          <xs:documentation>Unknown product type</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Forms">
+        <xs:annotation>
+          <xs:documentation>Forms</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PublicForms">
+        <xs:annotation>
+          <xs:documentation>Public Forms</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AutoIndex">
+        <xs:annotation>
+          <xs:documentation>Auto index</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DesktopApps">
+        <xs:annotation>
+          <xs:documentation>Desktop Applications</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="DocumentSourceType">
+    <xs:annotation>
+      <xs:documentation>Specifies the source of documents which trigger jobs in the DocuWare Job Framework. Also used to identify the type of configuration edited in the Job Configurator (Printer Configurator, Import Configurator etc.)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Printer" />
+      <xs:enumeration value="Scanner" />
+      <xs:enumeration value="WebCapture" />
+      <xs:enumeration value="DocTray" />
+      <xs:enumeration value="None" />
+      <xs:enumeration value="SmartConnect" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

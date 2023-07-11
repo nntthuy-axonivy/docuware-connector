@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/settings/common" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/settings/common" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="DWRectangle">
+    <xs:annotation>
+      <xs:appinfo>
+        <ContentType xmlns="http://dev.docuware.com/schema/public/services/annotations">application/vnd.docuware.datatypes.rectangle+xml</ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="Left" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The left coordinate of the rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Top" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The top coordinate of the rectangle.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Width" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The width of the rectangle in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Height" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>The height of the rectangle in coordinates.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

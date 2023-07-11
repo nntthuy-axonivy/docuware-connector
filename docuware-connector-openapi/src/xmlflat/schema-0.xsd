@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:tw="http://dev.docuware.com/schema/public/services/platform/workflow" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform"
+  xmlns:types="http://dev.docuware.com/types" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified"
+  targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-5.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-6.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-7.xsd" />
+  <xs:include schemaLocation="schema-8.xsd" />
+  <xs:include schemaLocation="schema-9.xsd" />
+  <xs:include schemaLocation="schema-10.xsd" />
+  <xs:include schemaLocation="schema-11.xsd" />
+  <xs:include schemaLocation="schema-12.xsd" />
+  <xs:include schemaLocation="schema-13.xsd" />
+  <xs:include schemaLocation="schema-14.xsd" />
+  <xs:include schemaLocation="schema-15.xsd" />
+  <xs:include schemaLocation="schema-16.xsd" />
+  <xs:include schemaLocation="schema-17.xsd" />
+  <xs:include schemaLocation="schema-18.xsd" />
+  <xs:include schemaLocation="schema-19.xsd" />
+  <xs:import schemaLocation="schema-20.xsd" namespace="http://dev.docuware.com/schema/public/services/platform/workflow" />
+  <xs:import schemaLocation="schema-1.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-21.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:complexType name="ServiceDescriptionDocumentation">
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="linkModelOverview">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/pdf</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="schemas">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:XmlSchemas</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <!--
+							<Relation Name="functionDescriptions">
+								<Invoke>
+									<Produces>
+										<SchemaType>t:FunctionDescriptions</SchemaType>
+									</Produces>
+								</Invoke>
+							</Relation>-->
+              <Relation Name="schemaSearch">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="uriTemplatesDocumentation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ServiceDescriptionStatistics">
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="cfs">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:CFSStatisticGeneral</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/string</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ServiceDescriptionTests">
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="htmlTestClient">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="reflectStampPlacement">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:StampPlacement</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:StampPlacement</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="reflectDialogQuery">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DialogExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DialogExpression</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="queryString">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ServiceDescription">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.servicedescription+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Root object that define platform structure.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="organizations">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Organizations</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="login">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="guestLogin">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="windowsLogin">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="changePassword">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="resetPassword">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tokenLogin">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="trustedLogin">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="jwtLogin">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="logout">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="disconnect">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/html</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="loginCookie">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="uriTemplates">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>svc:UriTemplateDescriptions</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="adhocRendering">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:AdhocRenderingFiles</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:AdhocRenderingFile</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="rootSchema">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="log">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>svc:LogMessages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="permanentUrl">
+                <Invoke>
+                  <Accepts>
+                    <ContentType>application/x-www-form-urlencoded</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="identityServiceInfo">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:IdentityServiceInfo</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Tests" type="t:ServiceDescriptionTests">
+        <xs:annotation>
+          <xs:documentation>Test applications for platform.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Documentation" type="t:ServiceDescriptionDocumentation">
+        <xs:annotation>
+          <xs:documentation>Documentation links for platform.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Statistics" type="t:ServiceDescriptionStatistics">
+        <xs:annotation>
+          <xs:documentation>Test applications for platform.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Version" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Contains the product version of DocuWare.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Organization">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.organization+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Definition for DocuWare organization.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AdditionalInfo" type="t:AdditionalOrganizationInfo" />
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="filecabinets">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:FileCabinets</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="users">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Users</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="roles">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Roles</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="groups">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Groups</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="selectListInfos">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SelectListInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="multiColSelectListInfos">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:MultiColSelectListInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="webSettings">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:WebSettings</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:WebSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:WebSettings</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Organization</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="loginToken">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:TokenDescription</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="dialogs">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:RequestDialogQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="userInfo">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>t:UserInfo</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:User</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:User</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:NewUser</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:User</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="workflows">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:Workflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="controllerWorkflows">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:Workflows</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="workflowRequests">
+                <Invoke Verb="Get">
+                  <Produces>
+                    <SchemaType>tw:WorkflowRequests</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>tw:RequestSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="substitutionLists">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SubstitutionLists</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ConfigurationRights" type="t:ConfigurationRights">
+        <xs:annotation>
+          <xs:documentation>List of the rights that the current user has for this cabinet.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExtendedConfigurationRights" type="t:ExtendedConfigurationRights">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the extended configuration rights</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Numbat</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the organization</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identity of the organization</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Guid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Guid of the organization</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ExtendedConfigurationRights">
+    <xs:annotation>
+      <xs:documentation>Defines the extended rights of the user.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Numbat</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute default="false" name="Forms" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether the right for configuring forms is allowed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Organizations">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.organizations+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of organizations</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Organization" type="t:Organization">
+        <xs:annotation>
+          <xs:documentation>List of organizations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AdditionalOrganizationInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.AdditionalOrganizationInfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Additional information for organization</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CompanyNames" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of companies included in organization</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AddressLines" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Addresses of organization</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Administrator" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the administrator</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="EMail" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contact email of organization</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="SystemNumber" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>System number</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="RuntimeVersion" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Runtime version of the DocuWare system</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OrganizationType" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Type of the organization</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CountResultItem">
+    <xs:annotation>
+      <xs:documentation>Result of item count</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the item that is counted</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Count" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>The items count</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="CountResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.countresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Result set of of item counts</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Group" type="t:CountResultItem">
+        <xs:annotation>
+          <xs:documentation>Set of count results</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="AssignmentOperationType">
+    <xs:annotation>
+      <xs:documentation>Types of the assignment operation.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add">
+        <xs:annotation>
+          <xs:documentation>Add assignment.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Remove">
+        <xs:annotation>
+          <xs:documentation>Remove assignment.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AssignmentOperation">
+    <xs:annotation>
+      <xs:documentation>Add or remove assignments.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Ids" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            List of ids of the assigned objects.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="OperationType" type="t:AssignmentOperationType" use="required" />
+  </xs:complexType>
+  <xs:complexType name="XmlSchema">
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="schema">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="TargetNamespace" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="XmlSchemas">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Schema" type="t:XmlSchema" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IdentityServiceInfo">
+    <xs:sequence>
+      <xs:element name="IdentityServiceUrl" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Organization" type="t:Organization" />
+  <xs:element name="Organizations" type="t:Organizations" />
+  <xs:element name="ServiceDescription" type="t:ServiceDescription" />
+  <xs:element name="XmlSchemas" type="t:XmlSchemas" />
+  <xs:element name="AssignmentOperation" type="t:AssignmentOperation" />
+</xs:schema>

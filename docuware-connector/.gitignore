@@ -16,4 +16,6 @@ lib/mvn-deps/
 classes/
 src_dataClasses/
 src_wsproc/
+src_generated/
 logs/
+lib/generated/rest/

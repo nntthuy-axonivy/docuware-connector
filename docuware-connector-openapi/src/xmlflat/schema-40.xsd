@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-41.xsd" namespace="http://dev.docuware.com/schema/public/services/annotations" />
+  <xs:include schemaLocation="schema-7.xsd" />
+  <xs:element name="SuggestionFields" type="t:SuggestionFields" />
+  <xs:element name="SuggestionTableFields" type="t:SuggestionTableFields" />
+  <xs:complexType name="SuggestionFields">
+    <xs:annotation>
+      <xs:appinfo>
+        <ContentType xmlns="http://dev.docuware.com/schema/public/services/annotations">application/vnd.docuware.platform.suggestionfields+xml</ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="t:SuggestionField" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SuggestionTableFields">
+    <xs:annotation>
+      <xs:appinfo>
+        <ContentType xmlns="http://dev.docuware.com/schema/public/services/annotations">application/vnd.docuware.platform.suggestiontablefields+xml</ContentType>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TableField" type="t:SuggestionTableField" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="IntellixFieldTrust">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Red" />
+      <xs:enumeration value="Yellow" />
+      <xs:enumeration value="Green" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SuggestionField">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Value" type="t:SuggestionValue" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="DBName" type="xs:string" use="required" />
+    <xs:attribute default="None" name="Confidence" type="t:IntellixFieldTrust" />
+  </xs:complexType>
+  <xs:complexType name="SuggestionTableField">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Table" type="t:SuggestionTable" />
+    </xs:sequence>
+    <xs:attribute name="DBName" type="xs:string" use="required" />
+    <xs:attribute default="None" name="Confidence" type="t:IntellixFieldTrust" />
+  </xs:complexType>
+  <xs:complexType name="SuggestionTable">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Cell" type="t:SuggestionCellValue" />
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="HighlightRectangle" type="t:PointAndShootInfo" />
+      </xs:sequence>
+    </xs:sequence>
+    <xs:attribute default="1" name="Trust" type="xs:double" />
+  </xs:complexType>
+  <xs:complexType name="SuggestionCellValue" final="extension">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:SuggestionValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="HighlightRectangle" type="t:PointAndShootInfo" />
+        </xs:sequence>
+        <xs:attribute name="TextFallback" type="xs:string" use="optional" />
+        <xs:attribute name="DecimalFallback" type="xs:decimal" use="optional" />
+        <xs:attribute name="DateFallback" type="xs:date" use="optional" />
+        <xs:attribute name="ColumnName" type="xs:string" use="required" />
+        <xs:attribute name="RowNumber" type="xs:int" use="required" />
+        <xs:attribute name="Mapped" type="xs:boolean" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SuggestionValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentIndexFieldValueBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Source" type="t:PointAndShootInfo" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

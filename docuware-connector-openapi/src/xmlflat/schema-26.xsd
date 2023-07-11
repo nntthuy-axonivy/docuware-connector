@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:common="http://dev.docuware.com/settings/common" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-22.xsd" namespace="http://dev.docuware.com/public/intellix" />
+  <xs:import schemaLocation="schema-38.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:include schemaLocation="schema-23.xsd" />
+  <xs:include schemaLocation="schema-24.xsd" />
+  <xs:complexType name="Pages">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.pages+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a collection of pages</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Page" type="t:Page">
+        <xs:annotation>
+          <xs:documentation>A collection of pages</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="nextBlock">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Pages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="PlatformImageFormat">
+    <xs:annotation>
+      <xs:documentation>Define a supported image formats in platform</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Png" />
+      <xs:enumeration value="Jpeg" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PageData">
+    <xs:annotation>
+      <xs:documentation>Define a metadata for a page</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" name="LowQualitySize" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the low quality level.</xs:documentation>
+          <xs:documentation>
+            The low quality size is the size in pixels which a client can use for displaying a document before starting using the deep zoom control.
+            A client should not request any levels with less resolution than defined by this value because
+            the quality of the level defined by this value is the best also for lower levels.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" name="TileSize" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the recommented size of multi scale image tiles.</xs:documentation>
+          <xs:documentation>
+            If a client decides to display the rendered page as multi scale image (using the Deep Zoom technology)
+            this value gives a hint for the recommented size of the tiles.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" name="RenderedImageFormat" type="t:PlatformImageFormat">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the preferred format this page is rendered.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ContentArea" nillable="true" type="common:DWRectangle">
+        <xs:annotation>
+          <xs:documentation>Gets or sets the area of the content of the page. The coordinates are in twips (1/1440 inches) - https://en.wikipedia.org/wiki/Twip .</xs:documentation>
+          <xs:documentation>
+            The content of a page is the part where the text resided.
+            If the page is blank or the server cannot determine
+            such an area the rectangle should contain the entire page.
+          </xs:documentation>
+          <xs:documentation>
+            If this field is &lt;v&gt;null&lt;/v&gt; the server has not yet calculated the size of this page.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DpiX" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the horizontal resolution of a page image. In case of vector images this is the maximal resolution which can be rendered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DpiY" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the vertical resolution of a page image. In case of vector images this is the maximal resolution which can be rendered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Width" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the horizontal size of a page image in pixels. In case of vector images this is the maximal pixel width which can be rendered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Height" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the vertical size of a page image in pixels. In case of vector images this is the maximal pixel height which can be rendered.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Page">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.page+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Gets information about specific page.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Data" type="t:PageData" />
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="thumbnail">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="icon">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImageWithAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lowQualityImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lowQualityImageWithAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="textshot">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>intellix:PageContent</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fileDownload">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/pdf</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FileDownloadPage</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>application/pdf</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotation">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Annotation</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:AnnotationsPlacement</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Annotation</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Annotation</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Annotation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotationAsSvg">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/svg+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotationAsXaml">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xaml+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stamp">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:StampPlacement</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Annotation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stampBestPosition">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:StampFormFieldValues</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>common:DWPoint</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Page</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="PageNum" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Zero based page number.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasAnnotation" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>True if the page contains at least one annotation.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="PagesBlockQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.pagesblock+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>A query for requesting page blocks.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FirstPage" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>The first page of the page block</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="PageCount" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Total count of the pages in the page block</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="Page" type="t:Page" />
+  <xs:element name="Pages" type="t:Pages" />
+  <xs:element name="PagesBlockQuery" type="t:PagesBlockQuery" />
+</xs:schema>

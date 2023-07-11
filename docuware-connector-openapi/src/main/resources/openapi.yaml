@@ -1,0 +1,1453 @@
+openapi: 3.0.0
+info:
+  title: Platform Workshop
+  description: >-
+    This collection contains requests and stored responses you can use when
+    preparing for a Platform workshop.
+  version: 1.0.0
+servers:
+  - url: http://{{serverurl}}/docuware/platform
+  - url: https://sdkinc.inhouse.docuware.cloud
+tags:
+  - name: Authentication
+  - name: Basics
+    description: Hera you find request you usually will start with.
+  - name: Check-in check-out a document.
+  - name: Download
+  - name: Documents
+  - name: Sections
+  - name: Get total amount of documents
+  - name: Search in FileCabinets
+  - name: Search in FileCabinets > Get search dialog
+  - name: Search in FileCabinets > Search in single FileCabinet
+  - name: Update index values
+  - name: How to create data record and upload files
+  - name: IFrame
+    description: >-
+      Parameter p = SRLV (search dialog, result list and viewer), RLV (result
+      list and viewer) ,  V (Viewer) , D (Download) 
+  - name: ApplicationProperties
+    description: Examples about how to handle ApplicationProperties
+  - name: Annotations/Stamps
+  - name: History
+  - name: SelectLists
+  - name: Document Clip/Unclip Stack/Unstack
+  - name: User/Group/Role handling
+paths:
+  /Account/Logon:
+    post:
+      tags:
+        - Authentication
+      summary: Forms Authentication include HostID
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                LicenseType:
+                  type: string
+                Organization:
+                  type: string
+                  description: Organisationsname, Nutzername
+                  example: '{{Organization}},{{Username}}'
+                Password:
+                  type: string
+                  example: '{{Password}}'
+                RedirectToMyselfInCaseOfError:
+                  type: boolean
+                  example: 'false'
+                RememberMe:
+                  type: boolean
+                  example: 'false'
+                UserName:
+                  type: string
+                  example: '{{Username}}'
+                HostID:
+                  type: string
+                  example: This_Is_A_Test
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Organizations"
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              # Dear Bug Hunter
+              # This credential is intentionally included for educational purposes only and does not provide access to any production systems.
+              # Please do not submit it as part of our bug bounty program.
+              example: >-
+                <html><meta http-equiv="refresh"
+                content="0;url=/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon"><body>You
+                are redirected to enter your <a
+                href="/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon">credentials</a></body></html>
+  /Organization/LoginToken:
+    post:
+      tags:
+        - Authentication
+      summary: Get Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                TargetProducts:
+                  - PlatformService
+                Usage: Multi
+                Lifetime: 1.00:00:00
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                {"Links":[{"rel":"organizations","href":"/DocuWare/Platform/Organizations"},{"rel":"uriTemplates","href":"/DocuWare/Platform/Home/Templates"},{"rel":"loginCookie","href":"/DocuWare/Platform/Home/Token"},{"rel":"login","href":"/DocuWare/Platform/Account/Logon"},{"rel":"guestLogin","href":"/DocuWare/Platform/Account/LogOnGuest"},{"rel":"trustedLogin","href":"/DocuWare/Platform/Account/TrustedLogOn"},{"rel":"windowsLogin","href":"/DocuWare/Platform/Account/LogonNTLM"},{"rel":"changePassword","href":"/DocuWare/Platform/Account/ChangePassword"},{"rel":"resetPassword","href":"/DocuWare/Platform/Account/ResetPassword"},{"rel":"tokenLogin","href":"/DocuWare/Platform/Account/TokenLogOn"},{"rel":"logout","href":"/DocuWare/Platform/Account/Logoff"},{"rel":"disconnect","href":"/DocuWare/Platform/Account/Disconnect"},{"rel":"rootSchema","href":"/DocuWare/Platform/Schema/File/schema-0.xsd"},{"rel":"log","href":"/DocuWare/Platform/Home/LogMessages"},{"rel":"adhocRendering","href":"/DocuWare/Platform/AdhocRendering"},{"rel":"permanentUrl","href":"/DocuWare/Platform/Account/PermanentUrl"},{"rel":"-webClientDirectAccessTemplate","href":"/DocuWare/Platform/WebClient/Viewer/DocumentData?fileCabinetId={fileCabinetId}\u0026docId={docId}\u0026sectionId={sectionId}"}],"Tests":{"Links":[{"rel":"htmlTestClient","href":"/DocuWare/Platform/HtmlClient/Html"}]},"Documentation":{"Links":[{"rel":"schemaSearch","href":"/DocuWare/Platform/Schema/Search"},{"rel":"uriTemplatesDocumentation","href":"/DocuWare/Platform/Home/UriTemplatesDocumentation"},{"rel":"schemas","href":"/DocuWare/Platform/Schema"},{"rel":"linkModelOverview","href":"/DocuWare/Platform/Content/PlatformLinkModel.pdf"},{"rel":"documentation","href":"/DocuWare/Platform/Documentation","type":"text/html"}]},"Resources":[{"Name":"workflowDocumentHistory","UriPattern":"/DocuWare/Platform/Bpw/Workflows/DocumentHistory?orgID={orgID}\u0026fileCabinetID={fileCabinetID}\u0026dwVerID={dwVerID}"},{"Name":"processDocumentAction","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Operations/ProcessDocumentAction?docId={docId}"},{"Name":"createPermanentUrl","UriPattern":"/DocuWare/Platform/Account/PermanentUrl?clientSideChecksum={clientSideChecksum}"},{"Name":"dialog","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Dialogs/{id}?dialogType={dialogType}"},{"Name":"batchDialogUpdateFields","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Dialogs/{id}/BatchUpdateFields?fields={fields}\u0026sortOrder={sortOrder}"},{"Name":"documentDelete","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}"},{"Name":"document","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}"},{"Name":"documentAppendFiles","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}"},{"Name":"documents","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents?q={q}\u0026fields={fields}\u0026sortOrder={sortOrder}\u0026start={start}\u0026msStart={msStart}\u0026count={count}\u0026format={format}"},{"Name":"uploadDocument","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents?processTextshot={processTextshot}\u0026imageProcessing={imageProcessing}\u0026redirect={redirect}\u0026storeDialogId={storeDialogId}\u0026checkFileNameForCheckinInfo={checkFileNameForCheckinInfo}"},{"Name":"documentIndexFields","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/Fields"},{"Name":"intellixSuggestions","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/Suggestions?normalizeCoordinates={normalizeCoordinates}"},{"Name":"documentsFileDownload","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/FileDownload?targetFileType={targetFileType}\u0026keepAnnotations={keepAnnotations}\u0026downloadFile={downloadFile}\u0026autoPrint={autoPrint}\u0026layers={layers}\u0026append={append}"},{"Name":"documentRights","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/Rights"},{"Name":"documentDocumentLinks","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/DocumentLinks"},{"Name":"checkout","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/CheckOutToFileSystem"},{"Name":"checkoutDocument","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/CheckoutDocument"},{"Name":"checkin","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/CheckInFromFileSystem"},{"Name":"documentAnnotations","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Documents/{id}/Annotation"},{"Name":"fileCabinet","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}"},{"Name":"pagesBlock","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Sections/{id}/PagesBlock?start={start}\u0026count={count}\u0026embedThumbnailData={embedThumbnailData}\u0026thumbnailSize={thumbnailSize}\u0026thumbnailsOnly={thumbnailsOnly}"},{"Name":"annotation","UriPattern":"/DocuWare/Platform/FileCabinets/{fileCabinetId}/Sections/{id}/Annotation?page={page}"},{"Name":"clientSetupData","UriPattern":"/DocuWare/Platform/Home/ClientSetupInfo?orgId={orgId}\u0026baseAddress={baseAddress}"},{"Name":"validateUser","UriPattern":"/DocuWare/Platform/Organizations/{id}/ValidateUser"},{"Name":"webSettings","UriPattern":"/DocuWare/Platform/Organizations/{id}/WebSettings"},{"Name":"storeIntegration","UriPattern":"/DocuWare/Platform/WebClient/Client/Store?dlgID={dlgID}\u0026fc={fc}\u0026culture={culture}\u0026orgId={orgId}\u0026validateMandatoryFields={validateMandatoryFields}"},{"Name":"indexesIntegration","UriPattern":"/DocuWare/Platform/WebClient/Client/Indexes?rl={rl}\u0026fc={fc}\u0026did={did}\u0026culture={culture}\u0026orgId={orgId}"},{"Name":"stamps","UriPattern":"/DocuWare/Platform/WebClient/Viewer/Stamps?fileCabinetId={fileCabinetId}\u0026stampType={stampType}"},{"Name":"documentData","UriPattern":"/DocuWare/Platform/WebClient/Viewer/DocumentData?fileCabinetId={fileCabinetId}\u0026docId={docId}\u0026sectionId={sectionId}\u0026page={page}\u0026includeDocument={includeDocument}\u0026includeSection={includeSection}\u0026includePage={includePage}\u0026checksum={checksum}\u0026latestVersion={latestVersion}\u0026withContentArea={withContentArea}"},{"Name":"getDocument","UriPattern":"/DocuWare/Platform/WebClient/Viewer/GetDocument?fileCabinetId={fileCabinetId}\u0026docId={docId}\u0026sectionId={sectionId}\u0026page={page}\u0026checksum={checksum}\u0026latestVersion={latestVersion}\u0026withContentArea={withContentArea}"},{"Name":"getSection","UriPattern":"/DocuWare/Platform/WebClient/Viewer/GetSection?fileCabinetId={fileCabinetId}\u0026docId={docId}\u0026sectionId={sectionId}\u0026page={page}\u0026withContentArea={withContentArea}"},{"Name":"getPage","UriPattern":"/DocuWare/Platform/WebClient/Viewer/GetPage?fileCabinetId={fileCabinetId}\u0026docId={docId}\u0026sectionId={sectionId}\u0026page={page}\u0026withContentArea={withContentArea}"}],"Version":"6.9.0.22"}
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                <html><meta http-equiv="refresh"
+                content="0;url=/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon"><body>You
+                are redirected to enter your <a
+                href="/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon">credentials</a></body></html>
+  /Account/TokenLogOn:
+    post:
+      tags:
+        - Authentication
+      summary: Forms Authentication with Token include HostID
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                Token:
+                  type: string
+                  example: >-
+                    24750358-8e9c-4e5c-be1d-3d781846c471_7a6e76ca-e9d1-43ac-bfa4-5af986219f14
+                HostID:
+                  type: string
+                  example: This_Is_A_Test
+                LicenseType:
+                  type: string
+                  example: PlatformService
+                RememberMe:
+                  type: boolean
+                  example: 'false'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Organizations"
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                <html><meta http-equiv="refresh"
+                content="0;url=/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon"><body>You
+                are redirected to enter your <a
+                href="/DocuWare/Platform/LoginRedirect?returnUrl=%2fDocuWare%2fPlatform%2fAccount%2fLogon">credentials</a></body></html>
+  /Account/TrustedLogOn:
+    post:
+      tags:
+        - Authentication
+      summary: Trusted user
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                ImpersonateName:
+                  type: string
+                  example: '{{Username}}'
+                UserName:
+                  type: string
+                  example: '{{TrustedUserName}}'
+                Password:
+                  type: string
+                  example: '{{TrustedUserPassword}}'
+                Organization:
+                  type: string
+                  example: '{{Organization}}'
+                LicenseType:
+                  type: string
+                  example: PlatformService
+                RememberMe:
+                  type: boolean
+                  example: 'false'
+                RedirectToMyselfInCaseOfError:
+                  type: string
+                  example: 'True'
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: number
+          example: >-
+            text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+        - name: Upgrade-Insecure-Requests
+          in: header
+          schema:
+            type: integer
+          example: '1'
+        - name: returnUrl
+          in: query
+          schema:
+            type: string
+          example: /DocuWare/Platform/Home/XSL
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /Account/Logoff:
+    get:
+      tags:
+        - Authentication
+      summary: Logoff
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets:
+    get:
+      tags:
+        - Basics
+      summary: Get all file cabinets and document trays
+      description: >-
+        The response contains all file cabinets AND baskets the current user has
+        access to.
+      parameters:
+        - name: orgid
+          in: query
+          schema:
+            type: string
+          example: '{{OrgId}}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/FileCabinets"
+              example: >-
+                {"FileCabinet":[{"Links":[{"rel":"documents","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Documents"},{"rel":"advancedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Documents"},{"rel":"unprocessedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Documents?processTextshot=False"},{"rel":"query","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Query/FunctionExpression"},{"rel":"self","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5"},{"rel":"dialogs","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs"},{"rel":"searches","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs?dialogType=Search"},{"rel":"customSearch","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs/00000000-0000-0000-0000-000000000000"},{"rel":"resultTrees","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs?dialogType=ResultTree"},{"rel":"stores","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs?dialogType=Store"},{"rel":"taskLists","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Dialogs?dialogType=TaskList"},{"rel":"stamps","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Stamps"},{"rel":"transfer","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Task/Transfer"},{"rel":"notifications","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Query/Notifications?notification=newDocuments\u0026timeout=500"},{"rel":"contentMergeOperation","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Operations/ContentMerge"},{"rel":"batchUpdate","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Operations/BatchDocumentsUpdateFields"},{"rel":"fieldValueStatistics","href":"/DocuWare/Platform/FileCabinets/8581a8cf-99e5-432f-9193-b2d908e9b2b5/Query/FieldValueStatistics"}],"Color":"Black","Name":"Document
+                Pool","Id":"8581a8cf-99e5-432f-9193-b2d908e9b2b5","IsBasket":false,"Usable":true,"Default":false,"VersionManagement":"Disable","WindowsExplorerClientAccess":false,"AddIndexEntriesInUpperCase":false},{"Links":[{"rel":"documents","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Documents"},{"rel":"advancedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Documents"},{"rel":"unprocessedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Documents?processTextshot=False"},{"rel":"query","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Query/FunctionExpression"},{"rel":"self","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f"},{"rel":"dialogs","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs"},{"rel":"searches","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs?dialogType=Search"},{"rel":"customSearch","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs/00000000-0000-0000-0000-000000000000"},{"rel":"resultTrees","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs?dialogType=ResultTree"},{"rel":"stores","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs?dialogType=Store"},{"rel":"taskLists","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Dialogs?dialogType=TaskList"},{"rel":"stamps","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Stamps"},{"rel":"transfer","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Task/Transfer"},{"rel":"notifications","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Query/Notifications?notification=newDocuments\u0026timeout=500"},{"rel":"contentMergeOperation","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Operations/ContentMerge"},{"rel":"batchUpdate","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Operations/BatchDocumentsUpdateFields"},{"rel":"fieldValueStatistics","href":"/DocuWare/Platform/FileCabinets/b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f/Query/FieldValueStatistics"}],"Color":"Green","Name":"Inbox","Id":"b_64483ab5-61e2-4ab5-9a5b-8270c93eb50f","IsBasket":true,"Usable":true,"Default":true,"AssignedCabinetId":"41537414-0df0-4d08-adb5-fa40564b80f9","VersionManagement":"Disable","WindowsExplorerClientAccess":false,"AddIndexEntriesInUpperCase":false},{"Links":[{"rel":"documents","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Documents"},{"rel":"advancedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Documents"},{"rel":"unprocessedDocumentUpload","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Documents?processTextshot=False"},{"rel":"query","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Query/FunctionExpression"},{"rel":"self","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9"},{"rel":"dialogs","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs"},{"rel":"searches","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs?dialogType=Search"},{"rel":"customSearch","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs/00000000-0000-0000-0000-000000000000"},{"rel":"resultTrees","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs?dialogType=ResultTree"},{"rel":"stores","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs?dialogType=Store"},{"rel":"taskLists","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Dialogs?dialogType=TaskList"},{"rel":"stamps","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Stamps"},{"rel":"transfer","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Task/Transfer"},{"rel":"notifications","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Query/Notifications?notification=newDocuments\u0026timeout=500"},{"rel":"contentMergeOperation","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Operations/ContentMerge"},{"rel":"batchUpdate","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Operations/BatchDocumentsUpdateFields"},{"rel":"fieldValueStatistics","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Query/FieldValueStatistics"}],"Color":"Green","Name":"Platform
+                Workshop","Id":"41537414-0df0-4d08-adb5-fa40564b80f9","IsBasket":false,"Usable":true,"Default":false,"VersionManagement":"Disable","WindowsExplorerClientAccess":false,"AddIndexEntriesInUpperCase":false}]}
+  
+  /FileCabinets/{FileCabinetId}:
+    get:
+      tags:
+        - Basics
+      summary: Get all data for a file cabinet (e.g fields)
+      description: >-
+        You can use "self" relation for each resource in order to get all data
+        related to it.
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/FileCabinet"
+    post:
+      tags:
+        - Check-in check-out a document.
+      summary: Check-out a particular document and download it
+      description: >-
+        **IMPORTANT:** Version management has to be activated for the file
+        cabinet you are using.
+
+
+        The response contains the generated file name in the header
+        "*Content-Disposition*"
+
+
+        E.g.: Content-Disposition → attachment;
+        filename=18+41537414-0df0-4d08-adb5-fa40564b80f9+EmploymentContractWithBarcodeOnBothP.pdf
+
+
+        **IMPORTANT:** You have to use this file name if stored the document to
+        the file system!
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: ''
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                {"Links":[{"rel":"content","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Sections/18-0/Data?documentInfoInFileName=True"}]}
+  
+            
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/FileDownload:
+    get:
+      tags:
+        - Download
+      summary: Download document
+      description: Download document that is specified using it's doc id in the request.
+      parameters:
+        - name: targetFileType
+          in: query
+          schema:
+            type: string
+          example: Auto
+        - name: keepAnnotations
+          in: query
+          schema:
+            type: boolean
+          example: 'false'
+
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            "application/octet-stream":
+              schema:
+                type: string
+                format: binary
+            
+  /FileCabinets/{FileCabinetId}/Documents:
+    get:
+      tags:
+        - Search in FileCabinets > Search in single FileCabinet
+      summary: '2. step: Search with URL'
+      description: >-
+        The response will contain documents you are searching for.  
+
+        The documents are sorted by the order that was specified in the previous
+        POST request.
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Contains the q query parameter from the response of the 1. step.
+          example: >-
+            dialog;76301253-0b28-469d-9388-4e8eef51193a;;Or;;COMPANY:US-Steel;DATE:>=2010-03-01
+            AND <=2010-03-30
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: COMPANY,CONTACT,SUBJECT,DOCTYPE,DATE,STATUS
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+          example: COMPANY Asc
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DocumentsQueryResult"
+    post:
+      tags:
+        - How to create data record and upload files
+      summary: Create data record and upload file with store dialog
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  description: >-
+                    index.xml file with all index values. The format is
+                    described in Create a new document in a file cabinet.
+                  format: binary
+                file[]:
+                  type: string
+                  description: files you want to attach
+                  format: binary
+      parameters:
+        - name: StoreDialogId
+          in: query
+          schema:
+            type: string
+          example: '{{StoreDialogId}}'
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}:
+    get:
+      tags:
+        - Update index values
+      summary: Get a particular data record or document
+      description: >
+        The response contains a particular document specified in request using
+        it's doc id.  
+
+        The next step is to use "fields" link for a PUT request containing a
+        JSON object specifying new index values.
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Document"
+    delete:
+      tags:
+        - Documents
+      summary: Delete document
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  
+  /FileCabinets/{DestinationFileCabinetId}/Task/Transfer:
+    post:
+      tags:
+        - Documents
+      summary: Transfer document
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                SourceFileCabinetId: '{{SourceFileCabinetId}}'
+                Documents:
+                  - Id: 18
+                    Fields: null
+                KeepSource: false
+                FillIntellix: false
+                UseDefaultDialog: false
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/vnd.docuware.platform.documentstransferinfo+json
+        - name: storeDialogId
+          in: query
+          schema:
+            type: string
+          example: b8d7dccb-1dc3-44b1-b059-673f9d82d201
+        - name: DestinationFileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Sections:
+    get:
+      tags:
+        - Sections
+      summary: Get sections from a document
+      parameters:
+        - name: docid
+          in: query
+          schema:
+            type: string
+          required: true
+          example: '{{DocumentId}}'
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Sections"
+    post:
+      tags:
+        - How to create data record and upload files
+      summary: Upload  a single pdf file for a data entry
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: the file you want to attach
+                  format: binary
+      parameters:
+        - name: DocId
+          in: query
+          schema:
+            type: string
+          required: true
+          example: '{{DocumentId}}'
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Section"
+                
+  /FileCabinets/{FileCabinetId}/Sections/{Section}:
+    get:
+      tags:
+        - Sections
+      summary: Get a particular section
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: Section
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Section"
+            
+    delete:
+      tags:
+        - Sections
+      summary: Delete section
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: Section
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Sections/{Section}/Data:
+    get:
+      tags:
+        - Download
+      summary: Download partial section
+      parameters:
+        - name: Range
+          in: header
+          schema:
+            type: string
+          example: bytes=1000-1500
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: Section
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            "application/octet-stream":
+              schema:
+                type: string
+                format: binary      
+            
+  /FileCabinets/{FileCabinetId}/Dialogs:
+    get:
+      tags:
+        - Search in FileCabinets > Get search dialog
+      summary: Get all search dialogs
+      description: >
+        The response contains all dialogs that belong to the file cabinet
+        specified in the request.  
+
+
+        The next step is to follow "self" link of search dialog you want to use
+        for building search query.  
+
+        ("Type": "Search")
+      parameters:
+        - name: dialogType
+          in: query
+          schema:
+            type: string
+          example: Search
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dialog'
+                
+  /FileCabinets/{FileCabinetId}/Dialogs/{SearchDialogId}:
+    get:
+      tags:
+        - Search in FileCabinets > Get search dialog
+      summary: Get a specific search dialog
+      description: >
+        The response contains data related to the search dialog specified in the
+        request.
+
+
+        The next step is to use "dialogExpression" link for a POST request in
+        order to build the search query.
+      parameters:
+        - name: dialogType
+          in: query
+          schema:
+            type: string
+          example: Search
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: SearchDialogId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dialog'
+  
+  /FileCabinets/{FileCabinetId}/Query/CountExpression:
+    get:
+      tags:
+        - Get total amount of documents
+      summary: Get total amount of documents
+      description: Follows the "count" link.
+      parameters:
+        - name: dialogId
+          in: query
+          schema:
+            type: string
+          example: '{{SearchDialogId}}'
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/CountResult"
+            
+  /FileCabinets/{FileCabinetId}/Query/DialogExpressionLink:
+    post:
+      tags:
+        - Search in FileCabinets > Search in single FileCabinet
+      summary: '1. step: Build search URL'
+      description: >-
+        This request contains a body with JSON object that specify your search
+        criteria.  
+
+        The response will contain the URL you can use for a GET request which
+        will perform the serach according to criteria you've specified by the
+        JSON object.
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/MultiColumnSelectListValuesQuery"
+              example:
+                Condition:
+                  - DBName: COMPANY
+                    Value:
+                      - Company
+                  - DBName: DATE
+                    Value:
+                      - '2010-03-01'
+                      - '2010-03-30'
+                Operation: Or
+      parameters:
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+          example: COMPANY Asc
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: COMPANY,CONTACT,SUBJECT,DOCTYPE,DATE,STATUS
+        - name: dialogId
+          in: query
+          schema:
+            type: string
+          example: '{{SearchDialogId}}'
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                /DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Documents?q=dialog%3B76301253-0b28-469d-9388-4e8eef51193a%3B%3BOr%3B%3BCOMPANY%3AUS-Steel%3BDATE%3A%3E%3D2010-03-01%20AND%20%3C%3D2010-03-30&fields=COMPANY%2CCONTACT%2CSUBJECT%2CDOCTYPE%2CDATE%2CSTATUS&sortOrder=COMPANY%20Asc
+
+  /FileCabinets/{FileCabinetId}/Query/DialogExpression:
+    post:
+      tags:
+        - Search in FileCabinets
+      summary: Search for documents in multiple FileCabinets
+      description: "The search dialog must be in every file cabiinet zou want to search for documents.\r\nIn the body the additional cabinets are responsible for the file cabinets where you want to search."
+      requestBody:
+        content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DialogExpression"
+      parameters:
+        - name: dialogId
+          in: query
+          schema:
+            type: string
+          description: The dialog guid with zeros filled represents the default dialog.
+          example: 00000000-0000-0000-0000-000000000000
+        - name: format
+          in: query
+          schema:
+            type: number
+          example: table HTTP/1.1
+
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DocumentsQueryResult"
+            
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/Fields:
+    put:
+      tags:
+        - Update index values
+      summary: Update index values table fields (JSON)
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/DocumentIndexFields"
+              example:
+                Field:
+                  - FieldName: TEST
+                    ReadOnly: false
+                    SystemField: false
+                    ItemElementName: Table
+                    PointAndShootInfo: null
+                    IsAutoNumber: false
+                    IsNull: false
+                    Item:
+                      $type: DocumentIndexFieldTable
+                      Row:
+                        - ColumnValue:
+                            - FieldName: FELD__NAME
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: test
+                              FieldValue: test
+                            - FieldName: TEST_TEST
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: '123'
+                              FieldValue: '123'
+                        - ColumnValue:
+                            - FieldName: FELD__NAME
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: test2
+                              FieldValue: test2
+                            - FieldName: TEST_TEST
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: '456'
+                              FieldValue: '456'
+                    FieldValue:
+                      Row:
+                        - ColumnValue:
+                            - FieldName: FELD__NAME
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: test
+                              FieldValue: test
+                            - FieldName: TEST_TEST
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: '123'
+                              FieldValue: '123'
+                        - ColumnValue:
+                            - FieldName: FELD__NAME
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: test2
+                              FieldValue: test2
+                            - FieldName: TEST_TEST
+                              ReadOnly: false
+                              SystemField: false
+                              ItemElementName: string
+                              PointAndShootInfo: null
+                              IsAutoNumber: false
+                              IsNull: false
+                              Item: '456'
+                              FieldValue: '456'
+                DialogId: i_5c8c5139-9bb7-417e-864f-967a861fac21
+                NormalizeCoordinates: true
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /WebClient/336/Integration:
+    get:
+      tags:
+        - IFrame
+      summary: View document
+      parameters:
+        - name: fc
+          in: query
+          schema:
+            type: string
+          description: FileCabinet ID
+          example: e1390171-c231-4a8b-8f01-1ca78dee5dbf
+        - name: did
+          in: query
+          schema:
+            type: integer
+          description: Document ID
+          example: '1'
+        - name: p
+          in: query
+          schema:
+            type: string
+          description: View
+          example: V
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/DocumentApplicationProperties:
+    post:
+      tags:
+        - ApplicationProperties
+      summary: UpdateApplicationProperty
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/DocumentApplicationProperty"
+              example:
+                DocumentApplicationProperty:
+                  - Name: Key1
+                    Value: Value Key1 update
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/Annotation:
+    post:
+      tags:
+        - Annotations/Stamps
+      summary: UpdateTextAnnotation
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Annotations"
+              example:
+                Annotations:
+                  - PageNumber: 0
+                    SectionNumber: 0
+                    AnnotationsPlacement:
+                      Items:
+                        - $type: Annotation
+                          Layer:
+                            - Id: '1'
+                              Items:
+                                - $type: TextEntry
+                                  Font:
+                                    FontName: Lucida Console
+                                    Bold: true
+                                    Italic: true
+                                    Underlined: false
+                                    StrikeThrough: false
+                                    FontSize: 200
+                                    Spacing: 0
+                                  Value: Test update
+                                  Location:
+                                    Left: 100
+                                    Top: 100
+                                    Width: 1500
+                                    Height: 500
+                                  Color: Black
+                                  Rotation: 0
+                                  Transparent: false
+                                  StrokeWidth: 50
+                                  id: 8e57e1f9-612d-4bc4-98b2-b1bb4b4526e6
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/WorkflowHistory:
+    get:
+      tags:
+        - History
+      summary: WorkflowDocumentHistory
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/WorkflowDocumentHistory"
+            
+  /Workflows/0c135ffb-1616-4607-9d9f-f3ea7789de12/Instances/be39345c-af7e-521e-81ca-12fc4b8c7d02/History:
+    get:
+      tags:
+        - History
+      summary: WorkflowDocumentHistorySteps
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{FileCabinetId}/Query/SelectListExpression:
+    post:
+      tags:
+        - SelectLists
+      summary: GetFilteredSelectList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ValuePrefix: ''
+                Limit: 100
+                Typed: true
+                ExcludeExternal: true
+                DialogExpression:
+                  Operation: And
+                  Condition:
+                    - DBName: DOCUMENTTYPE
+                      Value:
+                        - '"Photo"'
+      parameters:
+        - name: dialogId
+          in: query
+          schema:
+            type: string
+          example: '{{SearchDialogId}}'
+        - name: fieldName
+          in: query
+          schema:
+            type: string
+          example: COMPANY
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{BasketId}/Operations/ContentMerge:
+    post:
+      tags:
+        - Document Clip/Unclip Stack/Unstack
+      summary: Staple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Documents:
+                  - 15
+                  - 16
+                Operation: Staple
+                Force: false
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: number
+          example: application/json, text/javascript, */*; q=0.01
+        - name: BasketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /FileCabinets/{BasketId}/Operations/ContentDivide:
+    post:
+      tags:
+        - Document Clip/Unclip Stack/Unstack
+      summary: Unstaple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Operation: Unstaple
+                Force: false
+      parameters:
+        - name: docId
+          in: query
+          schema:
+            type: string
+          example: '{{DocumentId}}'
+        - name: BasketId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+           
+  /Organizations:
+    get:
+      tags:
+        - Basics
+      summary: Get organization
+      description: The response contains the organization the user is currently logged in.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Organizations"         
+            
+  /Organization/Users:
+    get:
+      tags:
+        - User/Group/Role handling
+      summary: Get Users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Users"
+                
+  /Organization/UserByID:
+    get:
+      tags:
+        - User/Group/Role handling
+      summary: Get User
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+          example: '{{UserId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
+    post:
+      tags:
+        - User/Group/Role handling
+      summary: Update User
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/User"
+              example:
+                Id: 00000000-0000-0000-0000-000000000000
+                Name: Peter Engineering Update
+                Email: peter@peters-engineering.com
+                LastName: Engineering
+                FirstName: Peter
+                OutOfOffice:
+                  IsOutOfOffice: 'true'
+                  StartDateTime: '2022-01-01T13:00:00.0000000Z'
+                  EndDateTime: '2022-12-31T13:00:00.0000000Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /Organization/Roles:
+    get:
+      tags:
+        - User/Group/Role handling
+      summary: Get all Roles from User
+      parameters:
+        - name: UserId
+          in: query
+          schema:
+            type: string
+          example: '{{UserId}}'
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Roles"
+    put:
+      tags:
+        - User/Group/Role handling
+      summary: Remove Role from User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Ids:
+                  - 2d89fc45-a3c4-49c6-971b-ebc696a67d78
+                  - d1713dfa-9d33-4663-8dc8-ab1c3c432551
+                OperationType: Remove
+      parameters:
+        - name: UserId
+          in: query
+          schema:
+            type: string
+          example: '{{UserId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Roles"
+                
+  /Organization/Groups:
+    get:
+      tags:
+        - User/Group/Role handling
+      summary: Get Groups
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Groups"
+                
+  /Organization/UserGroups:
+    get:
+      tags:
+        - User/Group/Role handling
+      summary: Get all Groups from User
+      parameters:
+        - name: UserId
+          in: query
+          schema:
+            type: string
+          example: '{{UserId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Groups"
+    put:
+      tags:
+        - User/Group/Role handling
+      summary: Remove Group from User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Ids:
+                  - 2d89fc45-a3c4-49c6-971b-ebc696a67d78
+                  - d1713dfa-9d33-4663-8dc8-ab1c3c432551
+                OperationType: Remove
+      parameters:
+        - name: UserId
+          in: query
+          schema:
+            type: string
+          example: '{{UserId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+ 
+components:
+  schemas:
+    Organizations:
+      type: object
+    FileCabinets:
+      type: object
+    FileCabinet:
+      type: object
+    Documents:
+      type: object
+    Document:
+      type: object
+    Sections:
+      type: object
+    Section:
+      type: object
+    Dialog:
+      type: object
+    DialogExpression:
+      type: object
+    MultiColumnSelectListValuesQuery:
+      type: object
+    CountResult:
+      type: object
+    DocumentActionInfo:
+      type: object
+    DocumentApplicationProperty:
+      type: object
+    DocumentsQueryResult:
+      type: object
+    DocumentIndexFields:
+      type: object
+    WorkflowDocumentHistory:
+      type: object
+    Annotations:
+      type: object
+    Groups:
+      type: object
+    Roles:
+      type: object
+    Users:
+      type: object
+    User:
+      type: object
+

@@ -1,0 +1,5 @@
+DeleteServiceData #class
+com.axonivy.market.docuware.connector #namespace
+documentId String #field
+configuration com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration #field
+error ch.ivyteam.ivy.bpm.error.BpmError #field

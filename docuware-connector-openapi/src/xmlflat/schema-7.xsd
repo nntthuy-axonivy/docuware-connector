@@ -1,0 +1,2819 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:tw="http://dev.docuware.com/schema/public/services/platform/workflow" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:common="http://dev.docuware.com/settings/common" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-22.xsd" namespace="http://dev.docuware.com/public/intellix" />
+  <xs:include schemaLocation="schema-23.xsd" />
+  <xs:include schemaLocation="schema-24.xsd" />
+  <xs:include schemaLocation="schema-25.xsd" />
+  <xs:include schemaLocation="schema-26.xsd" />
+  <xs:import schemaLocation="schema-20.xsd" namespace="http://dev.docuware.com/schema/public/services/platform/workflow" />
+  <xs:complexType name="CountPlusValue">
+    <xs:annotation>
+      <xs:documentation>Define unstrict count. If HasMore is true it is possible to have more items</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:int">
+        <xs:attribute default="false" name="HasMore" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>If this flag is true then the real number of hits can be larger than specified by the value of this element.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="ExceedLimit" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="TableResultFieldKind">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Kind of the field</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="System">
+        <xs:annotation>
+          <xs:documentation>System field.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Index">
+        <xs:annotation>
+          <xs:documentation>Index field.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Additional">
+        <xs:annotation>
+          <xs:documentation>Additional field which is not part of the file cabinet(calculated fields like total page count, special values like text preview etc.).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TableResultHeader">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Header for a column table result from document query</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="FieldName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Contains the internal name of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string" use="required" />
+    <xs:attribute name="FieldLabel" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Contains the label of the field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Kind" type="t:TableResultFieldKind" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Kind of the field.
+          System, index or additional (calculated fields like total page count, special values like text preview etc.).
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsDocumentName" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the field is document name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="NullTableResultValue">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Represents empty value in table result list.</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="TableResultRow">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Define a row of  the table result from document query</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element name="Int" type="xs:long" />
+          <xs:element name="Decimal" type="xs:decimal" />
+          <xs:element name="String" type="xs:string" />
+          <xs:element name="DateTime" type="xs:dateTime" />
+          <xs:element name="Empty" type="t:NullTableResultValue" />
+        </xs:choice>
+      </xs:sequence>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fields">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:UpdateIndexFieldsInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="suggestions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SuggestionFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tableFieldsSuggestions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SuggestionTableFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="clippedDocuments">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:IntegerList</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="sections">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Sections</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Section</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="thumbnail">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="thumbnailWithoutAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotationAsSvg">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/svg+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lowQualityImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lock">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:LockInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="rights">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Rights</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Rights</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="intellix">
+                <Invoke Verb="Get" />
+              </Relation>
+              <Relation Name="textshotPreview">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Id of the document represented by the current row.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AnnotationsPreview" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if the document may contain any annotations on the first section and first page.
+          If this is false there is no need the AnnotationsAsImage link to be called.
+        </xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentsQueryTableResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentstable+xml</ann:ContentType>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+      <xs:documentation>Define table result from document query</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Count" type="t:CountPlusValue">
+        <xs:annotation>
+          <xs:documentation>Gets the number of items of the query leading to this result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Headers">
+        <xs:annotation>
+          <xs:documentation>Collection of headers for the result</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Header" type="t:TableResultHeader">
+              <xs:annotation>
+                <xs:documentation>Define a specific result header</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Rows">
+        <xs:annotation>
+          <xs:documentation>Collection of the rows for the result</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="R" type="t:TableResultRow">
+              <xs:annotation>
+                <xs:documentation>Define a specific result row</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="feed">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/atom+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="download">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="batchUpdate">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchUpdateProcessData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="createUserDefinedSearch">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:UserDefinedSearchInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="exportDocuments">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ExportSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentsQueryResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documents+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a result from document query</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Count" type="t:CountPlusValue">
+        <xs:annotation>
+          <xs:documentation>Gets the number of items of the query leading to this result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Items">
+        <xs:annotation>
+          <xs:documentation>Collection of documents from result</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:Document">
+              <xs:annotation>
+                <xs:documentation>Define a specific document from result</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="prev">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="first">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="feed">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/atom+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="download">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="batchUpdate">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchUpdateProcessData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="createUserDefinedSearch">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:UserDefinedSearchInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="exportDocuments">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ExportSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Title" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The title of the document collection, if it exists.</xs:documentation>
+        <xs:documentation>Could be the name of the dialog creating this collection.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>TimeStamp of the result.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="UploadedFileChunk">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.filechunkinfo+xml</ann:ContentType>
+        <xs:documentation>Contains data for a file chunk during a big file upload. This data is created on the server of every chunk request.</xs:documentation>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:UploadedFileChunk</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="Finished" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates that the last chunk has been uploaded.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LastChunkId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The id of the last uploaded chunk.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="BytesWritten" type="xs:long">
+      <xs:annotation>
+        <xs:documentation>The number of bytes written up to now.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="InputDocument" final="#all">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.inputdocument+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Fields" type="t:DocumentIndexFields">
+        <xs:annotation>
+          <xs:documentation>Fields of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Flags" type="t:InputFlags">
+        <xs:annotation>
+          <xs:documentation>Flags of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Sections" type="t:InputSections">
+        <xs:annotation>
+          <xs:documentation>Sections of the document. Contains no sections if the document is DBRecord</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FileChunk" type="t:UploadedFileChunk">
+        <xs:annotation>
+          <xs:documentation>Contains data for a file chunk during a big file upload. This data is created on the server of every chunk request.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InputSections">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Section" type="t:InputSection">
+        <xs:annotation>
+          <xs:documentation>Specific sections of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InputSection">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ApplicationProperties" type="t:ApplicationProperties">
+        <xs:annotation>
+          <xs:documentation>Define application properties of the section. Different applications store specific application here.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InputFlags">
+    <xs:attribute default="false" name="IsEmail" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>A flag indicating whether the document is email.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ApplicationProperties">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ApplicationProperties" type="t:ApplicationProperty">
+        <xs:annotation>
+          <xs:documentation>Define application specific properties. Different applications store specific application here.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ApplicationProperty">
+    <xs:annotation>
+      <xs:documentation>Define application specific property</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the property.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Value" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Value of the property</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Document" final="#all">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.document+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Fields" type="t:DocumentIndexFields">
+        <xs:annotation>
+          <xs:documentation>Fields of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Flags" type="t:DocumentFlags">
+        <xs:annotation>
+          <xs:documentation>Flags of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Version" type="t:DocumentVersion">
+        <xs:annotation>
+          <xs:documentation>Version of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TextShot" type="intellix:DocumentContent">
+        <xs:annotation>
+          <xs:documentation>Obsolete. Use TextShots property. Content textshot (OCR) of the document</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="contentDivideOperation">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:ContentDivideOperationInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="clippedDocuments">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:IntegerList</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="unclip">
+                <Invoke Verb="Put">
+                  <Accepts>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="positions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentWordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SearchPositionQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentWordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lock">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:LockInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="thumbnail">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="thumbnailWithoutAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotationAsSvg">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/svg+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="lowQualityImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImageWithAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="resultListIcon">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/png</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fields">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:UpdateIndexFieldsInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentIndexFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="suggestions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SuggestionFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="tableFieldsSuggestions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SuggestionTableFields</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="sections">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Sections</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Section</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="content">
+                <Invoke>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:IntegerList</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fileDownload">
+                <Invoke>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FileDownload</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="textAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/string</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>text/string</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/string</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="checksumStatus">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="xmlDSigContent">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:XmlDSigContentType</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="rights">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Rights</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Rights</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="processDocumentAction">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:DocumentActionInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="appProperties">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="documentLinks">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentLinks</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="latestVersion">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="versionHistory">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ResultListQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="intellix">
+                <Invoke Verb="Get" />
+              </Relation>
+              <Relation Name="checkoutDocument">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:CheckOutToFileSystemInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>t:CheckOutResult</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="checkoutToFileSystem">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:CheckOutToFileSystemInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="checkInFromFileSystem">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>multipart/form-data</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="downloadAsArchive">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ExportSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>application/vnd.docuware.platform.filescontainer+dwx</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotation">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAnnotations</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentAnnotationsPlacement</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentAnnotations</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="workflowHistory">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>tw:WorkflowDocumentHistory</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="auditInformation">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentAuditQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentAuditInformation</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Sections" type="t:Sections">
+        <xs:annotation>
+          <xs:documentation>Sections of the document. Contain no sections if document is DBRecord</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Preview">
+        <xs:annotation>
+          <xs:documentation>Contains an XHTML preview of the document. This can be used to display a part of text which contains the hits of a full-text query.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any processContents="skip" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ContentType" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The internet media type of the document. If there is no section this value is missing.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FileChunk" type="t:UploadedFileChunk">
+        <xs:annotation>
+          <xs:documentation>Contains data for a file chunk during a big file upload. This data is created on the server of every chunk request.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ApplicationProperties" type="t:DocumentApplicationProperties">
+        <xs:annotation>
+          <xs:documentation>Defines application specific properties. Different applications store specific application here</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="HaveMoreTotalPages" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if all pages are known so PageCount contains exact number the pages in section. If the value is set to false there are more pagesm but at least the number set in PageCount
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasTextAnnotation" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+					Contains true if document has a text annotation (the first section of the document has text annotation)
+				</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasXmlDigitalSignatures" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if document contains at least one XML Digital signature
+        </xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AnnotationsPreview" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if the document may contain any annotations on the first section and first page.
+          If this is false there is no need the AnnotationsAsImage link to be called.
+        </xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="TotalPages" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>
+          The number of pages of this section, if known. If it is unknown, this value is -1.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="-1" name="Id" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Document identity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Title" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The title of the document, if it exists.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="LastModified" type="xs:dateTime">
+      <xs:annotation>
+        <xs:documentation>Contains last modification date of the document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="CreatedAt" type="xs:dateTime">
+      <xs:annotation>
+        <xs:documentation>Contains creation date of the document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="FileSize" type="xs:long">
+      <xs:annotation>
+        <xs:documentation>The sum of the size of all section files and document header.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="SectionCount" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The number of sections of this document. This number is equal to the sequence length of the Sections element.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="None" name="IntellixTrust" type="t:IntellixTrust">
+      <xs:annotation>
+        <xs:documentation>Intellix status</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Disable" name="VersionStatus" type="t:VersionManagementStatus">
+      <xs:annotation>
+        <xs:documentation>Version management status of the document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ExternalContentLocation" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Defines the location of the document if it is stored outside of the system</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Moose</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Sections">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.sections+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define all sections of a document</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Section" type="t:Section">
+        <xs:annotation>
+          <xs:documentation>Specific section of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentLinks">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentlinks+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define all document links that a vlid for a document</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Items" type="t:DocumentLink">
+        <xs:annotation>
+          <xs:documentation>Define specific document link of a document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentLink">
+    <xs:annotation>
+      <xs:documentation>Define a query that link one document to another document from same or different file cabinet</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="result">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ResultListQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="resultDialog">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identity of the document link</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the document link</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsInvalid" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Indicates whether the document relation is invalid</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TargetFileCabinet" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>File cabinet that the document is linked to</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TargetResultList" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Identity of the result list that will be used to show the linked documents</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="WordSearchResultWordHit">
+    <xs:annotation>
+      <xs:documentation>Define a word and specific location where it is found</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Text" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Contains the text matching the query.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attributeGroup ref="intellix:RectangleAttributes" />
+  </xs:complexType>
+  <xs:complexType name="WordSearchResultWordHits">
+    <xs:annotation>
+      <xs:documentation>Define a a set of words and locations where they are found</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Wd" type="t:WordSearchResultWordHit">
+        <xs:annotation>
+          <xs:documentation>Define a a set of words and locations where they are found</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WordSearchResultPageHit">
+    <xs:annotation>
+      <xs:documentation>Define a a set of words and locations where they are found in a page</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Hits" type="t:WordSearchResultWordHits">
+        <xs:annotation>
+          <xs:documentation>Contains the sequence of words matching the search query.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="PageNum" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Page number where the hits a found</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentWordSearchResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.section.documentwordsearchresult+xml</ann:ContentType>
+        <xs:documentation>Define a a set of words and locations where they are found in a document</xs:documentation>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Search" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Contains the search query leading to this result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SectionHits">
+        <xs:annotation>
+          <xs:documentation>Define a a set of words and locations where they are found in a section</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PageHits" type="t:PageHits">
+              <xs:annotation>
+                <xs:documentation>Contains a set pages where of words are found</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="SectionId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The id of the section containing a hit.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentWordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WordSearchResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.section.searchresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a a set of words and locations where they are found in a section</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Search" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Contains the search query leading to this result.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PageHits" type="t:PageHits">
+        <xs:annotation>
+          <xs:documentation>Contains a set pages where of words are found</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:WordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PageHits">
+    <xs:annotation>
+      <xs:documentation>Contains a set pages where of words are found</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PageHit" type="t:WordSearchResultPageHit">
+        <xs:annotation>
+          <xs:documentation>Define a set pages where of words are found</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SignatureStatus">
+    <xs:annotation>
+      <xs:documentation>Define allowed operations when there is signature</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Allow_Annotations">
+        <xs:annotation>
+          <xs:documentation>Allow placing of annotations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Allow_Stamps">
+        <xs:annotation>
+          <xs:documentation>Allow placing of stamps</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Allow_Signature_Stamps">
+        <xs:annotation>
+          <xs:documentation>Allow placing of signature stamps</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Section">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.section+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a single section of a document</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SignatureStatus" type="t:SignatureStatus">
+        <xs:annotation>
+          <xs:documentation>Define allowed operations when there is signature</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Pages" type="t:Pages">
+        <xs:annotation>
+          <xs:documentation>Contains one or more pages of the document, if there are pages available.</xs:documentation>
+          <xs:documentation>
+            Note that not all pages are necessarily listed here; it depends on the server's choice. However you still can get all
+            pages of a document when you follow the links specified in the Pages date.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Thumbnails" type="t:Pages">
+        <xs:annotation>
+          <xs:documentation>Similar to Pages, but contains only links and page number.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FileChunk" type="t:UploadedFileChunk">
+        <xs:annotation>
+          <xs:documentation>Contains data for a file chunk during a big file upload. This data is created on the server of every chunk request.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="document">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImage">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="deepZoomImageWithAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="positions">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:WordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SearchPositionQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:WordSearchResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="textshot">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>intellix:DocumentContent</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>intellix:DocumentContent</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="content">
+                <Invoke>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Section</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Section</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fileDownload">
+                <Invoke>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FileDownload</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Section</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Delete">
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="thumbnail">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="icon">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="textAnnotation">
+                <Invoke>
+                  <Produces>
+                    <ContentType>text/string</ContentType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>text/string</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/string</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="pagesBlock">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:PagesBlockQuery</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Pages</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="annotationAsSvg">
+                <Invoke>
+                  <Produces>
+                    <ContentType>image/svg+xml</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="appProperties">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentApplicationProperties</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Identity of the section</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ContentType" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The Internet media type of the section. If there is no section this value is missing.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HaveMorePages" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if all pages are known so PageCount contains exact number the pages in section. If the value is set to false there are more pagesm but at least the number set in PageCount
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="-1" name="PageCount" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>
+          The number of pages of this section, if known. If it is unknown, this value is -1.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="FileSize" type="xs:long">
+      <xs:annotation>
+        <xs:documentation>
+          The size of the file in bytes.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="OriginalFileName" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Original file name with extension</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ContentModified" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>Time when content is last modified</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasTextAnnotation" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+					Contains true if the section has text annotation.
+				</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AnnotationsPreview" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Contains true if the section may contain any annotations on the first page.
+          If this is false there is no need the AnnotationsAsImage link to be called.
+        </xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ContentMergeOperation">
+    <xs:annotation>
+      <xs:documentation>Subset of content operations.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Clip">
+        <xs:annotation>
+          <xs:documentation>Merge documents in one document with multiple sections. Accept list of documents. Produce a document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Staple">
+        <xs:annotation>
+          <xs:documentation>Merge documents as one section with multiple pages. Accept list of documents. Produce a document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ContentDivideOperation">
+    <xs:annotation>
+      <xs:documentation>Subset of content operations.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unclip">
+        <xs:annotation>
+          <xs:documentation>Split every section as a new document. Accept no arguments. Produce list of documents</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unstaple">
+        <xs:annotation>
+          <xs:documentation>Split every page as a new document. Accept no arguments. Produce list of documents</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Split">
+        <xs:annotation>
+          <xs:documentation>Split document on specific pages as new documents. Accept list of pages. Produce list of documents</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ContentMergeOperationInfo">
+    <xs:annotation>
+      <xs:documentation>Models a DocuWare content merge operation.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.contentmergeoperationinfo+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Documents" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Collection of documents to be used in the operation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Operation" type="t:ContentMergeOperation" use="required">
+      <xs:annotation>
+        <xs:documentation>Operation that have to be executed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Force" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Force merge operation even if possible loss of data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ContentDivideOperationInfo">
+    <xs:annotation>
+      <xs:documentation>Models a DocuWare content divide operation.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.contentdivideoperationinfo+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Pages" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Collection of pages to be used in the operation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResultNames" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Define document names to be used for the result documents. Original document name is not changed</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Operation" type="t:ContentDivideOperation" use="required">
+      <xs:annotation>
+        <xs:documentation>Operation that have to be executed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Force" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Force divide operation even if possible loss of data</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ChecksumStatusType">
+    <xs:annotation>
+      <xs:documentation>Define a result from a checksum</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotChecked">
+        <xs:annotation>
+          <xs:documentation>
+            The checksums is not checked.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Ok">
+        <xs:annotation>
+          <xs:documentation>
+            All checksums are correct.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="NoChecksum">
+        <xs:annotation>
+          <xs:documentation>
+            There are no checksums.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WrongChecksum">
+        <xs:annotation>
+          <xs:documentation>
+            As least one of the checksum is wrong.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FailedToCheck">
+        <xs:annotation>
+          <xs:documentation>
+            A problem has occurred while checking the checksum.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FileDownloadType">
+    <xs:annotation>
+      <xs:documentation>Define the format that will be used to download a document</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Auto">
+        <xs:annotation>
+          <xs:documentation>
+            The type of the downloaded file determined by the server automatically.
+            In case of a single file this is directly downloaded, otherwise a ZIP file is created.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Zip">
+        <xs:annotation>
+          <xs:documentation>
+            The files are always downloaded as ZIP file.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PDF">
+        <xs:annotation>
+          <xs:documentation>
+            The files are always downloaded as PDF file. If more than one document is downloaded then every document is converted to PDF and the PDF files are packed in a ZIP file.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="FileDownload" type="t:FileDownload" />
+  <xs:complexType name="FileDownload">
+    <xs:annotation>
+      <xs:documentation>Define how a document can be downloaded</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FileDownloadBase">
+        <xs:attribute default="Auto" name="TargetFileType" type="t:FileDownloadType">
+          <xs:annotation>
+            <xs:documentation>Specifies the target format (target file type) of the downloaded file.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="DirectDownload" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>If this flag is true then the file is directly downloaded, even if the browser provides a plugin for this file.</xs:documentation>
+            <xs:documentation>
+          If you have a browser plugin installed which shows you the content a PDF file in the browser directly then this
+          flag can be used to override this behaviour and let the browser open a "Save file" box.
+        </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="AutoPrint" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>If this flag is true then the PDF will have a script which opens the print dialog immediately.</xs:documentation>
+            <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="SendByEmail" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>This flag should be true if the document will be sent by email.</xs:documentation>
+            <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="FileDownloadPage" type="t:FileDownloadPage" />
+  <xs:complexType name="FileDownloadPage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:FileDownloadBase">
+        <xs:attribute default="false" name="AutoPrint" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>If this flag is true then the PDF will have a script which opens the print dialog immediately.</xs:documentation>
+            <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="SendByEmail" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>This flag should be true if the document will be sent by email.</xs:documentation>
+            <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FileDownloadBase" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Define how a page of a document can be downloaded</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="5" name="Layers" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Specifies the annotation layers to be included in the output file.</xs:documentation>
+          <xs:documentation>
+						This list is used only when KeepAnnotations flag is set to true; if this flag is set to false, then this list is ignored and no layers are included.
+						In order to keep all layers, just set KeepAnnotations to true and pass an empty list or do not specify a list at all.
+					</xs:documentation>
+          <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="true" name="KeepAnnotations" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true then the annotations are rendered in the PDF file, otherwise the annotations are removed.</xs:documentation>
+        <xs:documentation>This flag applies only to the PDF target format.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="LockInfo">
+    <xs:annotation>
+      <xs:documentation>Define how a document will be locked</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Interval" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          Define the lifetime interval for the lock.
+          This parameter contains a time interval specification in the form:
+          [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
+          Elements in square brackets ([ and ]) are optional. One selection from the list of alternatives enclosed in braces ({ and }) and separated by vertical bars (|) is required.
+          For more details check http://msdn.microsoft.com/en-us/library/se73z7b9.aspx
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Operation" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>
+          Optional arbitrary string that define the purpose of the lock operation. Only one operation will successfully apply a lock on one document at same time.
+        </xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SearchPositionQuery">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.searchpositionquery+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define a query for searching words in phrase</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Phrase" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Define the search phrase (words) </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="true" name="IgnoreCase" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define if case is ignored</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="WholeWord" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Define if search for whole words only</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="StartPage" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Define a starting page for the search</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="0" name="StartSectionNumber" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Define a starting section for the search</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="1" name="PageCount" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Search this number of pages after the first page where a hit occur. If value is less than zero then all pages will be returned</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Backward" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true then the search will be executed in the previous pages.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="RangeSearch" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true then only the specified page range is searched. Otherwise the whole document starting at the specified page is serched until the specified number of pages are found.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Normalize" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true then the result coordinates orientation will be alligned with the page</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="IntellixTrust">
+    <xs:annotation>
+      <xs:documentation>Define how much the intellix result is reliable</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None">
+        <xs:annotation>
+          <xs:documentation>No intelix</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Failed">
+        <xs:annotation>
+          <xs:documentation>Intelix failed</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="InProgress">
+        <xs:annotation>
+          <xs:documentation>Intelix still in progress</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Red">
+        <xs:annotation>
+          <xs:documentation>Unrecognized</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Yellow">
+        <xs:annotation>
+          <xs:documentation>Predicted</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Green">
+        <xs:annotation>
+          <xs:documentation>Recognized</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DocumentActionInfo">
+    <xs:annotation>
+      <xs:documentation>Information about the action pereformed on document</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DocumentActionParameters" type="t:DocumentActionParameters">
+        <xs:annotation>
+          <xs:documentation>Specific data for the action</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="DocumentAction" type="t:DocumentAction" use="required">
+      <xs:annotation>
+        <xs:documentation>Actions pereformed on document</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="DocumentAction">
+    <xs:annotation>
+      <xs:documentation>Actions pereformed on document (ReIntellix e.g.)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ReIntellix">
+        <xs:annotation>
+          <xs:documentation>Resend textshots to Intellix</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Append">
+        <xs:annotation>
+          <xs:documentation>Append documents form other cabinet to document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SetLatestVersion">
+        <xs:annotation>
+          <xs:documentation>Set document as latest version</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UndoCheckOut">
+        <xs:annotation>
+          <xs:documentation>Undo check out of the document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CheckOut">
+        <xs:annotation>
+          <xs:documentation>Check out document to specific cabinet. Accept CheckOutActionParameters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CheckIn">
+        <xs:annotation>
+          <xs:documentation>Check in document to the original cabinet. Accept CheckInActionParameters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EnhanceImage">
+        <xs:annotation>
+          <xs:documentation>Enchance section image by applying deskew and rotate. Accept EnhanceImageParameters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MergeAnnotations">
+        <xs:annotation>
+          <xs:documentation>Merge annotations into section image. Aplicable only for PDFs. Accept MergeAnnotationsParameters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RotatePage">
+        <xs:annotation>
+          <xs:documentation>Rotate section page (image + annotations). Aplicable only for raster files and PDFs. Accept RotatePageParameters</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DocumentActionParameters">
+    <xs:annotation>
+      <xs:documentation>Basic parameters for specific action</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="CheckOutActionParameters">
+    <xs:annotation>
+      <xs:documentation>Parameters for CheckOut action</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:attribute name="FileCabinetId" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Identity of the destination cabinet.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CheckInActionParameters">
+    <xs:annotation>
+      <xs:documentation>Parameters for CheckIn action</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:sequence>
+          <xs:element name="DocumentVersion" type="t:DocumentVersion">
+            <xs:annotation>
+              <xs:documentation>Check in version of the document</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element default="Original" name="CheckInReturnDocument" type="t:CheckInReturnDocument">
+            <xs:annotation>
+              <xs:documentation>Defines which document to be returned.</xs:documentation>
+              <xs:appinfo>
+                <ann:IntroducedIn>Impala</ann:IntroducedIn>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Comments" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Minor version of the document.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="CheckInReturnDocument">
+    <xs:annotation>
+      <xs:documentation>The CheckInRequestDocument enumeration specifies the document that has to be returned by check in operation.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Impala</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Original">
+        <xs:annotation>
+          <xs:documentation>Specifies that the original document should be returned.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CheckedIn">
+        <xs:annotation>
+          <xs:documentation>Specifies that the currently checked in document should be returned.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CheckOutToFileSystemInfo">
+    <xs:annotation>
+      <xs:documentation>Empty structure for checkout to file system operation</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="CheckOutResult">
+    <xs:annotation>
+      <xs:documentation>Result from a checkout. Contains link where document can be downloaded</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="content" IntroducedIn="Eagle">
+                <Invoke IntroducedIn="Eagle">
+                  <Produces IntroducedIn="Eagle">
+                    <ContentType IntroducedIn="Eagle">*/*</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EnhanceImageParameters">
+    <xs:annotation>
+      <xs:documentation>Parameters for EnhanceImage action</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:attribute default="0" name="SectionNumber" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Number of the section to process.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MergeAnnotationsParameters">
+    <xs:annotation>
+      <xs:documentation>Parameters for MergeAnnotations action</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:attribute default="0" name="SectionNumber" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Number of the section to process.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RotatePageParameters">
+    <xs:annotation>
+      <xs:documentation>Parameters for RotatePage action</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:attribute default="0" name="SectionNumber" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Number of the section to process.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="0" name="PageNumber" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Page to be rotated.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="0" name="Rotation" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Angle divisible by 90. Counterclockwise. DocuWare legacy.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DocumentVersion">
+    <xs:annotation>
+      <xs:documentation>Document version info </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Major" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Major version of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Minor" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Minor version of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AppendActionParameters">
+    <xs:annotation>
+      <xs:documentation>Specific data for append action</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentActionParameters">
+        <xs:sequence>
+          <xs:element default="true" name="RemoveSourceDocuments" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Indicates whether to delete the documents from source cabinet</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentsInFront" type="t:AppendActionDocuments">
+              <xs:annotation>
+                <xs:documentation>Info for the documents to be attached before the target document</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentsAtBack" type="t:AppendActionDocuments">
+              <xs:annotation>
+                <xs:documentation>Info for the documents to be attached after the target document</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AppendActionDocuments">
+    <xs:annotation>
+      <xs:documentation>Cabinet specific document info needed for document append action</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SourceCabinetId" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Id of the source cabinet/basket</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Documents" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Ids of the documents to be attached</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentFlags">
+    <xs:annotation>
+      <xs:documentation>Define possible flags for a document</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="false" name="IsCold" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsDBRecord" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsCheckedOut" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsCopyRightProtected" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsVoiceAvailable" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasAppendedDocuments" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsProtected" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsDeleted" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Readonly flag. It will be overriden if set.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="IsEmail" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Read-write flag.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentApplicationProperty">
+    <xs:annotation>
+      <xs:documentation>Define application specific property</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:ApplicationProperty" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DocumentApplicationProperties">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentapplicationproperties+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Define application specific properties. Different applications store specific application here</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentApplicationProperty" type="t:DocumentApplicationProperty">
+        <xs:annotation>
+          <xs:documentation>Define application specific properties. Different applications store specific application here</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="XmlDSigStatusType">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotChecked">
+        <xs:annotation>
+          <xs:documentation>
+            Not checked.
+          </xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Ok">
+        <xs:annotation>
+          <xs:documentation>
+            Okay.
+          </xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="NotOk">
+        <xs:annotation>
+          <xs:documentation>
+            Failed. Details in ErrorInfo.
+          </xs:documentation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="XmlDSigContentType">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Nodes" type="t:XmlDSigContentType">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Status" type="t:XmlDSigStatusType" use="required">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Description" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ErrorInfo" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="Warning" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="VersionManagementStatus">
+    <xs:annotation>
+      <xs:documentation>Define the version management status of a document</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation>Version management is disabled.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Initial">
+        <xs:annotation>
+          <xs:documentation>The initial version of the document.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="InProgress">
+        <xs:annotation>
+          <xs:documentation>Manual version management is in progress.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Manual">
+        <xs:annotation>
+          <xs:documentation>Manual version of the document.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Automatic">
+        <xs:annotation>
+          <xs:documentation>Automatic version of the document.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ExportSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.exportsettings+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute default="true" name="IncludeDataFiles" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document's section data files has to be exported.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ExportHistory" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document's versions has to be exported.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ExportTextshots" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document's textshot has to be exported.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ImportSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.importsettings+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FieldMappings" type="t:FieldMappings">
+        <xs:annotation>
+          <xs:documentation>Gets or sets field mappings.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="false" name="PreserveSystemFields" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document' system fields to be replaced.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SynchronizationSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.synchronizationsettings+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FieldMappings" type="t:FieldMappings">
+        <xs:annotation>
+          <xs:documentation>Gets or sets field mappings.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="Add" name="SynchronizationOperation" type="t:SynchronizationOperation">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document' system fields to be replaced.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="-1" name="Id" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>Document identity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="PreserveSystemFields" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the document' system fields to be replaced.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="ImportNotMappedFields" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether the fields which do not have mapping to be imported. If they are imported they will be imported with the same name.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="SynchronizeFiles" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Gets or sets a value indicating whether it is necessary to synchronize the files.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FieldMappings">
+    <xs:annotation>
+      <xs:documentation>Define fields mapping between source and destination file cabinets.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Mapping" type="t:FieldMapping">
+        <xs:annotation>
+          <xs:documentation>Gets or sets field mappings.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FieldMapping">
+    <xs:annotation>
+      <xs:documentation>Define fields mapping between source and destination file cabinets.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Source" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the source field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Destination" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Name of the destination field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="SynchronizationOperation">
+    <xs:annotation>
+      <xs:documentation>Define the operation that will be applied on synchronizing.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add">
+        <xs:annotation>
+          <xs:documentation>Specifies that the synchronization will apply ADD opration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Replace">
+        <xs:annotation>
+          <xs:documentation>Specifies that the synchronization will apply Replace opration.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BatchUpdateResultItem">
+    <xs:sequence>
+      <xs:element name="Document" type="t:Document">
+        <xs:annotation>
+          <xs:documentation>The document after it has been updated.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ErrorMessage" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error message of the failed update operation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BatchUpdateIndexFieldsResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.batchupdateindexfieldsresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Structure for the result of batch update operations.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:BatchUpdateResultItem">
+        <xs:annotation>
+          <xs:documentation>List of the resulting documents and errors.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="next">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchUpdateProcessData</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="SuccessCount" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>The number of successful updated documents.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="DocumentActionInfo" type="t:DocumentActionInfo" />
+  <xs:element name="Document" type="t:Document" />
+  <xs:element name="InputDocument" type="t:InputDocument" />
+  <xs:element name="Section" type="t:Section" />
+  <xs:element name="Sections" type="t:Sections" />
+  <xs:element name="DocumentsQueryResult" type="t:DocumentsQueryResult" />
+  <xs:element name="ContentMergeOperationInfo" type="t:ContentMergeOperationInfo" />
+  <xs:element name="ContentDivideOperationInfo" type="t:ContentDivideOperationInfo" />
+  <xs:element name="LockInfo" type="t:LockInfo" />
+  <xs:element name="SearchPositionQuery" type="t:SearchPositionQuery" />
+  <xs:element name="WordSearchResult" type="t:WordSearchResult" />
+  <xs:element name="DocumentWordSearchResult" type="t:DocumentWordSearchResult" />
+  <xs:element name="DocumentApplicationProperty" type="t:DocumentApplicationProperty" />
+  <xs:element name="DocumentApplicationProperties" type="t:DocumentApplicationProperties" />
+  <xs:element name="DocumentLink" type="t:DocumentLink" />
+  <xs:element name="DocumentLinks" type="t:DocumentLinks" />
+  <xs:element name="XmlDSigContentType" type="t:XmlDSigContentType" />
+  <xs:element name="CheckOutToFileSystemInfo" type="t:CheckOutToFileSystemInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="BatchUpdateIndexFieldsResult" type="t:BatchUpdateIndexFieldsResult" />
+</xs:schema>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns="http://dev.docuware.com/settings/interop" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/settings/interop" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="DWFieldType">
+    <xs:annotation>
+      <xs:documentation>
+				Type of a DocuWare file cabinet field.
+				Please Do Not Change order because it matches DocuWare.FileCabinet.Settings.DocuWareType
+			</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Text" />
+      <xs:enumeration value="Numeric" />
+      <xs:enumeration value="Memo" />
+      <xs:enumeration value="Date" />
+      <xs:enumeration value="Keyword" />
+      <xs:enumeration value="Decimal" />
+      <xs:enumeration value="DateTime" />
+      <xs:enumeration value="Table" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

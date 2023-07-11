@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?>
+<xs:schema xmlns:c="http://dev.docuware.com/settings/common" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types"
+  xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform"
+  elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-27.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:import schemaLocation="schema-28.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:import schemaLocation="schema-29.xsd" namespace="http://dev.docuware.com/settings/interop" />
+  <xs:include schemaLocation="schema-9.xsd" />
+  <xs:include schemaLocation="schema-30.xsd" />
+  <xs:include schemaLocation="schema-31.xsd" />
+  <xs:include schemaLocation="schema-32.xsd" />
+  <xs:complexType name="FileCabinet">
+    <xs:annotation>
+      <xs:documentation>Models a DocuWare file cabinet or a web basket(document tray).</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.filecabinet+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="documents">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Document</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="documentsTable">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryTableResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="contentMergeOperation">
+                <Invoke Verb="Put">
+                  <Accepts>
+                    <SchemaType>t:ContentMergeOperationInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="advancedDocumentUpload">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="importDocuments">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:ImportSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:ImportResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SynchronizationSettings</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:ImportResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="unprocessedDocumentUpload">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>*/*</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Document</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="query">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <!--
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FunctionExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                  -->
+              </Relation>
+              <Relation Name="dialogs">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="searches">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="customSearch">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Dialog</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="resultTrees">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stores">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="taskLists">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfos</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="self">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:FileCabinet</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="stamps">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Stamps</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="notifications">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:Notifications</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:Notifications</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:Notifications</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="transfer">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FileCabinetTransferInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:DocumentsTransferInfo</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:DocumentsQueryResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="versionHistoryResultList">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:DialogInfo</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="batchUpdate">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchUpdateProcess</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:BatchAppendKeywordValues</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:BatchUpdateIndexFieldsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="fieldValueStatistics">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:FieldValueStatisticsExpression</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:FieldValueStatisticsResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="replicationData">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/xml</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>application/octet-stream</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="replicationDeleteData">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/xml</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>application/octet-stream</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="setupReplication">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <ContentType>application/xml</ContentType>
+                  </Accepts>
+                  <Produces>
+                    <ContentType>text/plain</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="replicationInfo">
+                <Invoke>
+                  <Produces>
+                    <ContentType>application/octet-stream</ContentType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+              <Relation Name="nextSequenceElement">
+                <Invoke Verb="Post">
+                  <Accepts>
+                    <SchemaType>t:SequenceRequest</SchemaType>
+                  </Accepts>
+                  <Produces>
+                    <SchemaType>t:SequenceResult</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Fields" type="t:FileCabinetFields">
+        <xs:annotation>
+          <xs:documentation>List of the fields of the cabinet.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Rights" type="t:Rights">
+        <xs:annotation>
+          <xs:documentation>List of the rights that the current user has for this cabinet.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExtendedUserRights" type="t:ExtendedUserRights">
+        <xs:annotation>
+          <xs:documentation>Gets a sets the extended user rights.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the name of the file cabinet.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Id" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the id of the file.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IsBasket" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a flag indicating whether this file cabinet is a basket or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="Usable" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets if user has usage right for web basket. For file cabinets it's always true</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Default" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a flag indicating whether this cabinet is default or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AssignedCabinetId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a flag indicating whether this cabinet is default or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="IntellixDialogId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a flag indicating whether this cabinet is default or not.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Disable" name="VersionManagement" type="t:VersionManagementMode">
+      <xs:annotation>
+        <xs:documentation>Version management mode.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="VersionHistoryResultListId" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets the id of version history result list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="WindowsExplorerClientAccess" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets whether the file cabinet can be accessed by windows explorer client.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Dolphin</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="AddIndexEntriesInUpperCase" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets whether all letters are input in upper case, regardless of how they were entered on the keyboard</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="DocumentAuditingEnabled" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether the document auditing is enabled for that file cabinet.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Koala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="HasFullTextSupport" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether the cabinet has fulltext search support.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Koala</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SequenceResult">
+    <xs:annotation>
+      <xs:documentation>Defines the result for requested next element of a sequence.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.sequenceresult+xml</ann:ContentType>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="NextElement" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The next element of the sequence.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SequenceRequest">
+    <xs:annotation>
+      <xs:documentation>Defines the request next element of a sequence.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.sequencerequest+xml</ann:ContentType>
+        <ann:IntroducedIn>Hawk</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute name="SequenceId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The global unique identifier of the sequence.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentsTransferInfo">
+    <xs:annotation>
+      <xs:documentation>Defines the parameters of a documents transfer.</xs:documentation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentstransferinfo+xml</ann:ContentType>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Documents">
+        <xs:annotation>
+          <xs:appinfo>
+            <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Document" type="t:Document">
+              <xs:annotation>
+                <xs:documentation>Gets information for the transfered documents (document id, new index entries, etc.). If the new index entries are empty then the original entries from the source document are used. If the document contains any system fields they will not be transfered.</xs:documentation>
+                <xs:appinfo>
+                  <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="SourceFileCabinetId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the id of the file cabinet which contains the document to be copied/moved.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="UseDefaultDialog" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets a value indicating whether a default store dialog, if such dialog is assing to the user, to be used.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="KeepSource" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true the source documents remain in the source file cabinet; otherwise they are removed from the source file cabinet.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="FillIntellix" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true the source document's metadata is adjusted with intellix suggestions using the intellix map for the default assigned file cabinet.</xs:documentation>
+        <xs:appinfo>
+          <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FileCabinetTransferInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.filecabinettransferinfo+xml</ann:ContentType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="SourceDocId" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Contains the identifiers of the documents to be copied/moved.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="SourceFileCabinetId" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the id of the file cabinet which contains the document to be copied/moved.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="KeepSource" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true the source documents remain in the source file cabinet; otherwise they are removed from the source file cabinet.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="FillIntellix" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>If this flag is true the source document's metadata is adjusted with intellix suggestions using the intellix map for the default assigned file cabinet.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="FileCabinets">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.filecabinets+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Lsit of file cabinets or document trays(web baskets).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FileCabinet" type="t:FileCabinet">
+        <xs:annotation>
+          <xs:documentation>Lsit of file cabinets or document trays(web baskets).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentsTransferInfo" type="t:DocumentsTransferInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="FileCabinetTransferInfo" type="t:FileCabinetTransferInfo" />
+  <xs:element name="FileCabinet" type="t:FileCabinet" />
+  <xs:element name="FileCabinets" type="t:FileCabinets" />
+  <xs:element name="SequenceResult" type="t:SequenceResult" />
+  <xs:element name="SequenceRequest" type="t:SequenceRequest" />
+  <xs:complexType name="ConfigurationRights">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.configurationrights+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of rights.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConfigurationRight" type="t:ConfigurationRight">
+        <xs:annotation>
+          <xs:documentation>List of configuration rights.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ConfigurationRight">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SmartConnect">
+        <xs:annotation>
+          <xs:documentation>Manage SmartConnect configurations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocumentTray">
+        <xs:annotation>
+          <xs:documentation>Manage Document Tray</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EmailNotification">
+        <xs:annotation>
+          <xs:documentation>Manage E-Mail Alert</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ConnectToMfp">
+        <xs:annotation>
+          <xs:documentation>Manage MFP Workflow</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OcrTemplate">
+        <xs:annotation>
+          <xs:documentation>Manage OCR template</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ConnectToOutlook">
+        <xs:annotation>
+          <xs:documentation>Manage Connect to Outlook configurations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Printer">
+        <xs:annotation>
+          <xs:documentation>Manage Printer configurations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Import">
+        <xs:annotation>
+          <xs:documentation>Manage Web Import configurations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DocuWareRequest">
+        <xs:annotation>
+          <xs:documentation>Manage REQUEST</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IntelligentIndexing">
+        <xs:annotation>
+          <xs:documentation>Manage Intelligent Indexing</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CONNECTToMail">
+        <xs:annotation>
+          <xs:documentation>Manage Connect to Mail configurations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FileCabinets">
+        <xs:annotation>
+          <xs:documentation>File cabinets</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Stamps">
+        <xs:annotation>
+          <xs:documentation>Manage stamps</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SelectLists">
+        <xs:annotation>
+          <xs:documentation>Manage select lists</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MaintainFixedSelectLists">
+        <xs:annotation>
+          <xs:documentation>Maintain fixed select lists</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UserManagement">
+        <xs:annotation>
+          <xs:documentation>User Management</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Rights">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.Rights+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of rights.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Right" type="t:Right">
+        <xs:annotation>
+          <xs:documentation>List of rights.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="Right">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Admin_Owner">
+        <xs:annotation>
+          <xs:documentation>Owner</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Admin_ModifyRight">
+        <xs:annotation>
+          <xs:documentation>Modify Rights</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Admin_Operator">
+        <xs:annotation>
+          <xs:documentation>Operator</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Admin_EditDialogs">
+        <xs:annotation>
+          <xs:documentation>Edit dialogs</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Admin_MigrationAdministration">
+        <xs:annotation>
+          <xs:documentation>Migration</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Store">
+        <xs:annotation>
+          <xs:documentation>Store</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Append">
+        <xs:annotation>
+          <xs:documentation>Append</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Search">
+        <xs:annotation>
+          <xs:documentation>Search</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Edit">
+        <xs:annotation>
+          <xs:documentation>Edit index data</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_DisplayDocument">
+        <xs:annotation>
+          <xs:documentation>Display document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_EditDocuments">
+        <xs:annotation>
+          <xs:documentation>Edit documents</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_DeleteDocuments">
+        <xs:annotation>
+          <xs:documentation>Delete documents</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Export">
+        <xs:annotation>
+          <xs:documentation>Export</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_AppendToReadOnly">
+        <xs:annotation>
+          <xs:documentation>Append to read only</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_ChangeToReadOnly">
+        <xs:annotation>
+          <xs:documentation>Modify read-only document</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_Checkout">
+        <xs:annotation>
+          <xs:documentation>Check out</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="General_AddEntries">
+        <xs:annotation>
+          <xs:documentation>(Obsolete.Moved on dialog level)Add Entries to Select-List-Only-Fields</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_New">
+        <xs:annotation>
+          <xs:documentation>New annotations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_Delete">
+        <xs:annotation>
+          <xs:documentation>Delete annotations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_All">
+        <xs:annotation>
+          <xs:documentation>Change annotations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_Hide">
+        <xs:annotation>
+          <xs:documentation>Hide annotations</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_Stamp_New">
+        <xs:annotation>
+          <xs:documentation>New stamp</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Annotation_Stamp_Hide">
+        <xs:annotation>
+          <xs:documentation>Hide a stamp</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ExtendedUserRights">
+    <xs:annotation>
+      <xs:documentation>Defines the extended rights of the user.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Koala</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:attribute default="false" name="AllowViewAuditData" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>Gets or sets a value indicating whether the right for viewing audit data is allowed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="VersionManagementMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation>Version management is disabled.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Manual">
+        <xs:annotation>
+          <xs:documentation>Version management is set to manual mode.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Automatic">
+        <xs:annotation>
+          <xs:documentation>Version management is set to automatic mode.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ImportResult">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.importresult+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines the result of the imported archive.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Results" type="t:ImportResultEntry">
+        <xs:annotation>
+          <xs:documentation>A list with the sequence value of the documents that are not imported.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FileChunk" type="t:UploadedFileChunk">
+        <xs:annotation>
+          <xs:documentation>Contains data for a file chunk during a big file upload. This data is created on the server of every chunk request.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ImportResultEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.importresultentry+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines the result of the imported archive.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EntryVersions" type="t:ImportEntryVersion">
+        <xs:annotation>
+          <xs:documentation>A list with the sequence value of the documents that are not imported.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="ErrorMessage" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the error message if the import operation fails.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Status" type="t:ImportEntryStatus" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the status of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ImportEntryStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Succeeded">
+        <xs:annotation>
+          <xs:documentation>A value that inticates whether importing of the document is successful.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Failed">
+        <xs:annotation>
+          <xs:documentation>A value that inticates whether importing of the document failed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ImportEntryVersion">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.importentryversion+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines the result of the imported archive.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Id" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the error message if the import operation fails.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Status" type="t:ImportEntryVersionStatus" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets or sets the status of the document.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="ImportEntryVersionStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Succeeded">
+        <xs:annotation>
+          <xs:documentation>A value that indicates whether importing of the version is successful.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Failed">
+        <xs:annotation>
+          <xs:documentation>A value that indicates whether importing of the version failed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Aborted">
+        <xs:annotation>
+          <xs:documentation>A value that indicates whether importing of the version is not started.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

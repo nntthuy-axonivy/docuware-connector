@@ -2,17 +2,36 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.axonivy.market</groupId>
+  <groupId>com.axonivy.connector.docuware</groupId>
   <artifactId>docuware-connector</artifactId>
-  <version>9.3.4-SNAPSHOT</version>
+  <version>10.0.5-SNAPSHOT</version>
   <packaging>iar</packaging>
   <build>
     <plugins>
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>9.3.1</version>
+        <version>10.0.6</version>
         <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>copy-file</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${basedir}/../docuware-connector-openapi/target/docuware-openapi-${project.version}.jar</sourceFile>
+              <destinationFile>${basedir}/lib/generated/rest/jaxRsClient_02d1eec1-32e9-4316-afc3-793448486203.jar</destinationFile>
+              <overWrite>true</overWrite>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

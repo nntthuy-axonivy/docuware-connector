@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:interop="http://dev.docuware.com/settings/interop" xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:complexType name="SubstitutionList">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.substitutionlist+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a substitution list for an organization.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="svc:Links">
+        <xs:annotation>
+          <xs:appinfo>
+            <Relations xmlns="http://dev.docuware.com/schema/public/services/annotations">
+              <Relation Name="substitutionRules">
+                <Invoke>
+                  <Produces>
+                    <SchemaType>t:SubstitutionRules</SchemaType>
+                  </Produces>
+                </Invoke>
+              </Relation>
+            </Relations>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the name of the list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Active" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets a value indicating whether the list is active.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Guid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the Guid of the list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SubstitutionRule">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.substitutionrule+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a substitution list for an organization.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the name of the rule.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Active" type="xs:boolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets a value indicating whether the rule is active.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Guid" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Gets the Guid of the rule.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="SubstitutionLists">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.substitutionlists+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a list from substitution list objects for an organization.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:SubstitutionList" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubstitutionRules">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.substitutionroles+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Defines a list from substitution role objects.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" type="t:SubstitutionRule" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

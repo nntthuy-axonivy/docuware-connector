@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="/DocuWare/Platform/Content/schemadoc.xslt"?><xs:schema xmlns:svc="http://dev.docuware.com/schema/public/services" xmlns:t="http://dev.docuware.com/schema/public/services/platform" xmlns:types="http://dev.docuware.com/types" xmlns:common="http://dev.docuware.com/settings/common" xmlns:ann="http://dev.docuware.com/schema/public/services/annotations" xmlns:intellix="http://dev.docuware.com/public/intellix" xmlns:int="http://dev.docuware.com/settings/interop" xmlns="http://dev.docuware.com/schema/public/services/platform" elementFormDefault="qualified" targetNamespace="http://dev.docuware.com/schema/public/services/platform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="schema-2.xsd" namespace="http://dev.docuware.com/schema/public/services" />
+  <xs:import schemaLocation="schema-3.xsd" namespace="http://dev.docuware.com/types" />
+  <xs:import schemaLocation="schema-4.xsd" namespace="http://dev.docuware.com/settings/common" />
+  <xs:complexType name="DocumentIndexFields">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentfields+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>List of index fields.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" type="t:DocumentIndexField">
+        <xs:annotation>
+          <xs:documentation>List of index fields.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexFieldKeywords">
+    <xs:annotation>
+      <xs:documentation>List of keywords.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Keyword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>List of keywords.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexFieldTable">
+    <xs:annotation>
+      <xs:documentation>List of column values for table field.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Row" type="t:DocumentIndexFieldTableRow">
+          <xs:annotation>
+            <xs:documentation>List of values for table field.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexFieldTableRow">
+    <xs:annotation>
+      <xs:documentation>List of column values for table field.</xs:documentation>
+      <xs:appinfo>
+        <ann:IntroducedIn>Lobster</ann:IntroducedIn>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="ColumnValue" type="t:DocumentIndexField">
+          <xs:annotation>
+            <xs:documentation>List of column values for table field.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexFieldValueBase" abstract="true">
+    <xs:choice minOccurs="1">
+      <xs:element name="Int" type="xs:long" />
+      <xs:element name="Decimal" type="xs:decimal" />
+      <xs:element name="String" type="xs:string" />
+      <xs:element name="Memo" type="xs:string" />
+      <xs:element name="Keywords" type="t:DocumentIndexFieldKeywords" />
+      <xs:element name="Date" type="xs:date" />
+      <xs:element name="DateTime" type="xs:dateTime" />
+      <xs:element name="Table" type="t:DocumentIndexFieldTable" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexFieldValue" final="extension">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentIndexFieldValueBase" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PointAndShootInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Box" type="common:DWRectangle">
+        <xs:annotation>
+          <xs:documentation>The bounding box of the selected content.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute default="0" name="PageNumber" type="xs:int">
+      <xs:annotation>
+        <xs:documentation>The number of the page on which the selected content is.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DocumentIndexField" final="#all">
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentIndexFieldValueBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PointAndShootInfo" type="t:PointAndShootInfo">
+            <xs:annotation>
+              <xs:documentation>Contains one rectangle value for scalar field values and one or more values for keyword fields.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="FieldName" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Contains the internal name of the field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="FieldLabel" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Contains the label of the field.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="IsNull" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Indicates whether the field value is null or non-null.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="ReadOnly" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Indicates whether this field is readonly or not.</xs:documentation>
+            <xs:documentation>
+              The value of this property can depend on the document. There might be documents which have a certain field set as read only while other
+              documents have these fields writable.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="UpdateIndexFieldsInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <ann:ContentType>application/vnd.docuware.platform.documentfieldsinfo+xml</ann:ContentType>
+      </xs:appinfo>
+      <xs:documentation>Structure for updating index fields, including the index fields values and the dialog used for updating.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent mixed="false">
+      <xs:extension base="t:DocumentIndexFields">
+        <xs:sequence />
+        <xs:attribute name="DialogId" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Define dialog which is used to update the fields. Used to override data that is not exposed to the user.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="NormalizeCoordinates" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>If this flag is true then the orientation of the coordinates in PointAndShootInfo will be aligned with the page.</xs:documentation>
+            <xs:appinfo>
+              <ann:IntroducedIn>Eagle</ann:IntroducedIn>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DocumentIndexFields" type="t:DocumentIndexFields" />
+  <xs:element name="UpdateIndexFieldsInfo" type="t:UpdateIndexFieldsInfo" />
+</xs:schema>
