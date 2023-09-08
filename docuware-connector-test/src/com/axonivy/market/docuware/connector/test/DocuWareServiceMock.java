@@ -25,9 +25,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;
 import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;
@@ -143,12 +143,18 @@ public class DocuWareServiceMock {
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{fileCabinetId}/Documents")
   public Response upload(@Context HttpServletRequest req,
-          @PathParam(value = "fileCabinetId") String fileCabinetId) {
+          @PathParam(value = "fileCabinetId") String fileCabinetId, @QueryParam(value = "storeDialogId") String storeDialogId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
     } else {
-      return Response.ok(load("xml/document.xml")).type(MediaType.APPLICATION_XML).build();
+      String path = "xml/document.xml";
+      if(StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1)) {
+    	path = "xml/documentStoreDialogId.xml";
+      } else if(StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2)) {
+    	path = "xml/documentStoreDialogId2.xml";
+      }
+	  return Response.ok(load(path)).type(MediaType.APPLICATION_XML).build();
     }
   }
 

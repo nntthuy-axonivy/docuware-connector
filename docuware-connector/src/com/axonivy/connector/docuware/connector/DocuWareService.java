@@ -43,7 +43,7 @@ import ch.ivyteam.ivy.scripting.objects.File;
 
 public class DocuWareService {
 
-  /*
+/*
    * This is the format: /Date(1652285631000)/
    */
   private static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
@@ -53,6 +53,7 @@ public class DocuWareService {
   private static final String CONTENT_DISPOSITION = "Content-Disposition";
   private static final String RESPONSE_XML_ERROR_NODE = "Error";
   private static final String RESPONSE_XML_MESSAGE_NODE = "Message";
+  private static final String STORE_DIALOG_ID = "storeDialogId";
   private static final DocuWareService INSTANCE = new DocuWareService();
 
   public static DocuWareService get() {
@@ -127,6 +128,9 @@ public class DocuWareService {
     }
     MediaType contentType = MediaType.MULTIPART_FORM_DATA_TYPE;
     contentType = Boundary.addBoundary(contentType);
+    if(StringUtils.isNotBlank(configuration.getStoreDialogId())) {
+  	  target = target.queryParam(STORE_DIALOG_ID, configuration.getStoreDialogId());
+  	}
     Response response = prepareRestClient(target, configuration).post(Entity.entity(multipart, contentType));
     FileUtils.forceDelete(propertiesFile.getJavaFile());
     Document document = null;
@@ -201,6 +205,7 @@ public class DocuWareService {
   public static DocuWareEndpointConfiguration initializeDefaultConfiguration() {
     DocuWareEndpointConfiguration config = new DocuWareEndpointConfiguration();
     config.setFileCabinetId(Ivy.var().get("docuware-connector_filecabinetid"));
+    config.setStoreDialogId(Ivy.var().get("docuware-connector_storedialogid"));
     return config;
   }
 
@@ -208,6 +213,9 @@ public class DocuWareService {
     DocuWareEndpointConfiguration defaultConfig = initializeDefaultConfiguration();
     if (StringUtils.isBlank(config.getFileCabinetId())) {
       config.setFileCabinetId(defaultConfig.getFileCabinetId());
+    }
+    if (StringUtils.isBlank(config.getStoreDialogId())) {
+      config.setStoreDialogId(defaultConfig.getStoreDialogId());
     }
     return config;
   }

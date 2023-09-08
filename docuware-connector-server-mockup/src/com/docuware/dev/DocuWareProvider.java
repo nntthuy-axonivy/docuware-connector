@@ -20,16 +20,16 @@ import com.docuware.dev.model.container.DocumentIndexFieldContainer;
 import com.docuware.dev.model.container.FileCabinetContainer;
 import com.docuware.dev.model.container.OrganizationContainer;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Path("")
-@Api(value = "DocuWare")
+@Tag(name="Docuware", description = "DocuWare")
 public class DocuWareProvider {
 	@GET
 	@Path("Organizations")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Get all organizations.")
+	@Operation(description = "Get all organizations.")
 	public OrganizationContainer getOrganizations() {
 		return null;
 	}
@@ -37,7 +37,7 @@ public class DocuWareProvider {
 	@GET
 	@Path("FileCabinets")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Get all file cabinets.")
+	@Operation(description = "Get all file cabinets.")
 	public FileCabinetContainer getFileCabinets() {
 		return null;
 	}
@@ -46,7 +46,7 @@ public class DocuWareProvider {
 	@Path("FileCabinets/{fileCabinetId}/Documents")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Upload a document to a file cabinet.")
+	@Operation(description = "Upload a document to a file cabinet.")
 	public Document postFileCabinetDocuments(
 			@PathParam("fileCabinetId") String fileCabinetId,
 			@FormDataParam("file") InputStream inputStream,
@@ -60,7 +60,7 @@ public class DocuWareProvider {
 	@Path("FileCabinets/{fileCabinetId}/Documents/{documentId}/Fields")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Put fields to a document.")
+	@Operation(description = "Put fields to a document.")
 	public Response putDocumentFields(
 			@PathParam("fileCabinetId") String fileCabinetId,
 			@PathParam("documentId") String documentId,

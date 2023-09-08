@@ -65,6 +65,38 @@ public class TestUploadService extends TestDocuWareConnector {
     assertThat(data.getDocument()).isNotNull();
     assertThat(data.getDocument().getId()).isEqualTo(Constants.EXPECTED_DOCUMENT_ID);
   }
+  
+  @Test
+  public void uploadFileWithEndpointConfigurationWithStoreDialogFromVariable(BpmClient bpmClient, ISession session, AppFixture fixture,
+          IApplication app) throws IOException {
+	fixture.var("docuware-connector.storedialogid", "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1);  
+    prepareRestClient(app, fixture);
+    List<DocuWareProperty> propertyList = prepareDocuWareProperties();
+    DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
+    File pdf = DocuWareDemoService.exportFromCMS("/Files/uploadSample", "pdf");
+    ExecutionResult result = bpmClient.start().subProcess(testeeUploadFile_2)
+            .withParam("indexFields", propertyList)
+            .withParam("file", pdf).withParam("configuration", configuration).execute();
+    UploadServiceData data = result.data().last();
+    assertThat(data.getDocument()).isNotNull();
+    assertThat(data.getDocument().getId()).isEqualTo(Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1);
+  }
+  
+  @Test
+  public void uploadFileWithEndpointConfigurationWithCustomStoreDialog(BpmClient bpmClient, ISession session, AppFixture fixture,
+          IApplication app) throws IOException {
+    prepareRestClient(app, fixture);
+    List<DocuWareProperty> propertyList = prepareDocuWareProperties();
+    DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
+    configuration.setStoreDialogId("" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2);
+    File pdf = DocuWareDemoService.exportFromCMS("/Files/uploadSample", "pdf");
+    ExecutionResult result = bpmClient.start().subProcess(testeeUploadFile_2)
+            .withParam("indexFields", propertyList)
+            .withParam("file", pdf).withParam("configuration", configuration).execute();
+    UploadServiceData data = result.data().last();
+    assertThat(data.getDocument()).isNotNull();
+    assertThat(data.getDocument().getId()).isEqualTo(Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2);
+  }
 
   @Test
   public void uploadFileStream(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
