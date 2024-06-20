@@ -28,3 +28,7 @@ Variables:
     
     filecabinetid: ''
     
+    # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+    # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+    connectTimeout: 0
+    

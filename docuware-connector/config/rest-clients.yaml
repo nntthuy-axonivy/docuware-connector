@@ -16,6 +16,7 @@ RestClients:
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
       JSON.Serialization.PROPERTY_INCLUSION: NON_NULL
+      jersey.config.client.connectTimeout: ${ivy.var.docuware-connector.connectTimeout}
     OpenAPI:
       SpecUrl: file:///X:/AxonIvy/marketplace/docuware/openapi-handmade.json
       Namespace: com.axonivy.connector.docuware.connector.model
