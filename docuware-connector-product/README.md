@@ -10,7 +10,28 @@ This connector:
 ## Demo
 
 1. Upload a document to a DocuWare file cabinet.
+
+Upload result
+
+![demo-dialog](images/demo1.png)
+
+![demo-dialog](images/demo2.png)
+
+The uploaded file in Docuware dashboard.
+
+![demo-dialog](images/demo3.png)
+
 2. Provide a GUI to test some basic DocuWare calls.
+
+![demo-dialog](images/demo4.png)
+
+Get Organizations: click on Organizations button to get the organization id and automatically add to the request when upload file.
+
+![demo-dialog](images/demo5.png)
+
+Get File Cabinets: click on File Cabinets button to get the cabinet ID of the organization to locate which cabinet that the file will be uploaded.
+
+![demo-dialog](images/demo6.png)
 
 ## Setup
 
