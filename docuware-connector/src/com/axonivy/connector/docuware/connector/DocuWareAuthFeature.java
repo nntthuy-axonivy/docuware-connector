@@ -2,6 +2,7 @@ package com.axonivy.connector.docuware.connector;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ivyteam.ivy.data.cache.IDataCacheEntry;
@@ -122,10 +124,12 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
     }
     int status = rspContext.getStatus();
     if (rspContext.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
-      Ivy.log().error("DocuWare logon unsuccessful, URI: {0} Status: {1}", reqContext.getUri(), status);
+      String message = IOUtils.toString(rspContext.getEntityStream(), StandardCharsets.UTF_8);
+      Ivy.log().error("DocuWare logon unsuccessful, URI: {0} Status: {1}, message:{2}", reqContext.getUri(), status,
+          message);
       return;
     }
-    Ivy.log().info("DocuWare logon successful: Status: {1}", status);
+    Ivy.log().info("DocuWare logon successful: Status: {0}", status);
     DocuWareCookies docuWareCookies = DocuWareCookies.create(rspContext.getCookies());
     if (docuWareCookies.isValid()) {
       setCookiesCacheEntry(docuWareCookies);
