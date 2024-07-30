@@ -17,7 +17,7 @@ import ch.ivyteam.ivy.rest.client.RestClient.Builder;
 import ch.ivyteam.ivy.rest.client.RestClients;
 import ch.ivyteam.ivy.security.ISession;
 
-@IvyProcessTest
+@IvyProcessTest(enableWebServer = true)
 public class TestDocuWareDemo {
 
   @Test

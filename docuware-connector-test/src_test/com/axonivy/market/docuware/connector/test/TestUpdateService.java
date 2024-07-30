@@ -20,7 +20,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.security.ISession;
 
-@IvyProcessTest
+@IvyProcessTest(enableWebServer = true)
 public class TestUpdateService extends TestDocuWareConnector {
 
   private static final int DOCUMENT_ID = 1;

@@ -12,7 +12,7 @@ import ch.ivyteam.ivy.rest.client.RestClient.Builder;
 import ch.ivyteam.ivy.rest.client.RestClients;
 import ch.ivyteam.ivy.scripting.objects.List;
 
-@IvyProcessTest
+@IvyProcessTest(enableWebServer = true)
 public class TestDocuWareConnector {
 
   protected void prepareRestClient(IApplication app, AppFixture fixture) {

@@ -25,7 +25,7 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.scripting.objects.List;
 import ch.ivyteam.ivy.security.ISession;
 
-@IvyProcessTest
+@IvyProcessTest(enableWebServer = true)
 public class TestUploadService extends TestDocuWareConnector {
 
   private static final BpmElement testeeUploadFile_1 = BpmProcess.path("UploadService")
