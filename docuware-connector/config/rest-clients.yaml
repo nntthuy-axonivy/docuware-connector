@@ -13,6 +13,7 @@ RestClients:
       Password: ${ivy.var.docuware-connector.password}
       HostId: ${ivy.var.docuware-connector.hostid}
       LogonUrl: ${ivy.var.docuware-connector.logonurl}
+      Organization: ${ivy.var.docuware-connector.organization}
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
       JSON.Serialization.PROPERTY_INCLUSION: NON_NULL

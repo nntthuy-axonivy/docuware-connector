@@ -11,3 +11,4 @@ Variables:
     username: ''
     password: ''
     hostid: ''
+    organization: ''
