@@ -1,11 +1,13 @@
 # DocuWare Connector
-Axon Ivy’s [DocuWare](https://start.docuware.com/) connector helps you accelerate your process automation initiatives by integrating DocuWare with your process application in the shortest possible time.
+[DocuWare](https://start.docuware.com/) is a software solution for document management and workflow automation. It allows businesses to capture, organize, store, and securely manage digital documents. Additionally, DocuWare helps automate business processes by creating workflows that reduce manual tasks and improve efficiency.
+
+Axon Ivy’s connector integrates DocuWare with your into you business processes.
 
 This connector:
 
--	Is based on REST webservice technologies.
--	Gives you access to sample DocuWare functionality
--	reduces the integration effort to a minimum: Use the demo implementation, there you will find examples for the calls
+-	is based on REST webservice technologies.
+-	gives you access to sample DocuWare functionality
+-	can be used to upload documents, get organizations and file cabinets
 
 ## Demo
 
