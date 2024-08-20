@@ -1,7 +1,5 @@
 # DocuWare Connector
-[DocuWare](https://start.docuware.com/) is a software solution for document management and workflow automation. It allows businesses to capture, organize, store, and securely manage digital documents. Additionally, DocuWare helps automate business processes by creating workflows that reduce manual tasks and improve efficiency.
-
-Axon Ivy’s connector integrates DocuWare with your into you business processes.
+[DocuWare](https://start.docuware.com/) is a software solution for document management. It allows businesses to capture, organize, store, and securely manage digital documents. Axon Ivy’s Docuware connector integrates DocuWares' document management solutions with your business processes.
 
 This connector:
 
