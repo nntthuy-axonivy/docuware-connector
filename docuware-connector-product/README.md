@@ -44,7 +44,7 @@ Before any interactions between the Axon Ivy Engine and DocuWare services can be
 ```
 Variables:
   
-  docuware-connector:
+  docuwareConnector:
   
     host: <myhost>.docuware.cloud
 

@@ -33,7 +33,7 @@ public class TestDocuWareAuthFeature {
                     .property(Property.PASSWORD, "notMySecret").property(Property.HOSTID, "axoooooniiiivy")
                     .target("someResource").request().get())
             .isInstanceOf(ProcessingException.class)
-            .hasMessageContaining("variable 'docuware-connector.host'");
+            .hasMessageContaining("variable 'docuwareConnector.host'");
   }
 
   @Test

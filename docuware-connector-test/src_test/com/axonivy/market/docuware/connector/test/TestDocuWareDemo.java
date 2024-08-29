@@ -29,10 +29,10 @@ public class TestDocuWareDemo {
   }
 
   private void prepareRestClient(IApplication app, AppFixture fixture) {
-    fixture.var("docuware-connector.host", "TESTHOST");
-    fixture.var("docuware-connector.username", "TESTUSER");
-    fixture.var("docuware-connector.password", "TESTPASS");
-    fixture.var("docuware-connector.hostid", "TESTHOSTID");
+    fixture.var("docuwareConnector.host", "TESTHOST");
+    fixture.var("docuwareConnector.username", "TESTUSER");
+    fixture.var("docuwareConnector.password", "TESTPASS");
+    fixture.var("docuwareConnector.hostid", "TESTHOSTID");
     RestClient restClient = RestClients.of(app).find("DocuWare");
     // change created client: use test url and a slightly different version of
     // the
