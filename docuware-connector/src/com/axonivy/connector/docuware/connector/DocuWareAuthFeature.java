@@ -94,7 +94,7 @@ public class DocuWareAuthFeature implements Feature, ClientRequestFilter, Client
     }
     String host = reqContext.getUri().getHost();
     if (StringUtils.isBlank(host)) {
-      throw new IllegalStateException("The variable 'docuware-connector.host' is missing or undefined!");
+      throw new IllegalStateException("The variable 'docuwareConnector.host' is missing or undefined!");
     }
     try {
       UUID clientId = UUID.fromString(config.readMandatory(RestClientFactoryConstants.PROPERTY_CLIENT_ID));

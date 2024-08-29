@@ -50,10 +50,10 @@
         "input" : {
           "code" : [
             "import org.apache.commons.lang3.StringUtils;",
-            "ivy.log.info(\"Username: {0}\", ivy.var.get(\"docuware-connector.username\"));",
-            "ivy.log.info(\"Password set: {0}\", StringUtils.isNotBlank(ivy.var.get(\"docuware-connector_password\")));",
-            "ivy.log.info(\"HostId: {0}\", ivy.var.get(\"docuware-connector_hostid\"));",
-            "ivy.log.info(\"BaseUrl: {0}\", ivy.var.get(\"docuware-connector_baseurl\"));"
+            "ivy.log.info(\"Username: {0}\", ivy.var.get(\"docuwareConnector.username\"));",
+            "ivy.log.info(\"Password set: {0}\", StringUtils.isNotBlank(ivy.var.get(\"docuwareConnector_password\")));",
+            "ivy.log.info(\"HostId: {0}\", ivy.var.get(\"docuwareConnector_hostid\"));",
+            "ivy.log.info(\"BaseUrl: {0}\", ivy.var.get(\"docuwareConnector_baseurl\"));"
           ]
         },
         "startName" : "Log Organization names"
