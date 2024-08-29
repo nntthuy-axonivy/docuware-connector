@@ -7,17 +7,17 @@
 #
 Variables:
   
-  docuware-connector:
+  docuwareConnector:
   
     # your docuware instance: e.g. 'acme.docuware.cloud'
     host: ''
     
-    username: 
-  
-    # [password]
-    password: 
+    username: ''
     
-    hostid: 
+    # [password]
+    password: ''
+    
+    hostid: ''
     
     # The Logon URL will be automatically determined.
     # If this variable is set (not-empty), this URL

@@ -204,8 +204,8 @@ public class DocuWareService {
 
   public static DocuWareEndpointConfiguration initializeDefaultConfiguration() {
     DocuWareEndpointConfiguration config = new DocuWareEndpointConfiguration();
-    config.setFileCabinetId(Ivy.var().get("docuware-connector_filecabinetid"));
-    config.setStoreDialogId(Ivy.var().get("docuware-connector_storedialogid"));
+    config.setFileCabinetId(Ivy.var().get("docuwareConnector_filecabinetid"));
+    config.setStoreDialogId(Ivy.var().get("docuwareConnector_storedialogid"));
     return config;
   }
 
