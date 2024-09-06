@@ -12,3 +12,4 @@ Variables:
     password: ''
     hostid: ''
     organization: ''
+    fileCabinetId: ''

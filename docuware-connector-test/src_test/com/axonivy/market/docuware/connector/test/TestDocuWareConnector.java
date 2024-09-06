@@ -2,6 +2,7 @@ package com.axonivy.market.docuware.connector.test;
 
 import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;
 import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;
+import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
 
 import ch.ivyteam.ivy.application.IApplication;
@@ -47,8 +48,18 @@ public class TestDocuWareConnector {
     dwp.setItem("3");
     dwp.setItemElementName("String");
     propertyList.add(dwp);
+    
+    DocuWareFieldTableItem dwt = new DocuWareFieldTableItem();
+    dwt.createRow()
+      .addColumnValue("NOTES__CONTENT", "HR input profile.", "String")
+      .addColumnValue("NOTES__AUTHOR", "PTA", "String")
+    ;
+    DocuWareProperty dwtp = new DocuWareProperty("EMPLOYEE_NOTES", dwt, "Table");
+    propertyList.add(dwtp);
+    
     return propertyList;
   }
+
 
   protected DocuWareEndpointConfiguration prepareDocuWareEndpointConfiguration() {
     DocuWareEndpointConfiguration configuration = new DocuWareEndpointConfiguration();

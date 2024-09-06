@@ -72,4 +72,24 @@
     <Field FieldName="DWDISKNO" FieldLabel="Disk number" ReadOnly="true">
         <Int>1</Int>
     </Field>
+    <Field FieldName="EMPLOYEE_NOTES" FieldLabel="Employee Notes" ReadOnly="true">
+        <Table>
+            <Row>
+                <ColumnValue FieldName="NOTES__CONTENT" FieldLabel="Content">
+                    <String>HR input profile.</String>
+                </ColumnValue>
+                <ColumnValue FieldName="NOTES__AUTHOR" FieldLabel="Author">
+                    <String>PTA</String>
+                </ColumnValue>
+            </Row>
+            <Row>
+                <ColumnValue FieldName="NOTES__CONTENT" FieldLabel="Content">
+                    <String>HR Manager check profile: OK</String>
+                </ColumnValue>
+                <ColumnValue FieldName="NOTES__AUTHOR" FieldLabel="Author">
+                    <String>LSA</String>
+                </ColumnValue>
+            </Row>
+        </Table>
+    </Field>
 </DocumentIndexFields>

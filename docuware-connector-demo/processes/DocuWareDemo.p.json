@@ -13,7 +13,8 @@
         "startDescription" : "Start a UI to demonstrate some basic UI calls.",
         "outLink" : "start.ivp",
         "startName" : "Start some DocuWare calls",
-        "tags" : "demo"
+        "tags" : "demo",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 },
@@ -56,7 +57,8 @@
             "ivy.log.info(\"BaseUrl: {0}\", ivy.var.get(\"docuwareConnector_baseurl\"));"
           ]
         },
-        "startName" : "Log Organization names"
+        "startName" : "Log Organization names",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 224 },
@@ -121,7 +123,8 @@
           "Load FileCabinets",
           "from your Organization"
         ],
-        "startName" : "Load File Cabinets"
+        "startName" : "Load File Cabinets",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 352 },
@@ -326,7 +329,8 @@
             "out.document.id" : "165"
           }
         },
-        "outLink" : "downloadFile.ivp"
+        "outLink" : "downloadFile.ivp",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 720, "y" : 536 },
@@ -466,7 +470,8 @@
             "out.document.id" : "165"
           }
         },
-        "outLink" : "sections.ivp"
+        "outLink" : "sections.ivp",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 904, "y" : 712 },
@@ -568,7 +573,8 @@
             "out.document.id" : "165"
           }
         },
-        "outLink" : "dialogs.ivp"
+        "outLink" : "dialogs.ivp",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 1216, "y" : 768 },
@@ -709,7 +715,8 @@
       "name" : "fileIndexFields.ivp",
       "config" : {
         "callSignature" : "fileIndexFields",
-        "outLink" : "fileIndexFields.ivp"
+        "outLink" : "fileIndexFields.ivp",
+        "case" : { }
       },
       "visual" : {
         "at" : { "x" : 176, "y" : 848 }
@@ -755,10 +762,17 @@
         },
         "resultType" : "com.docuware.dev.schema._public.services.platform.FileCabinets",
         "responseCode" : [
+          "import com.docuware.dev.schema._public.services.platform.FileCabinet;",
           "import org.apache.commons.collections4.CollectionUtils;",
           "",
-          "if(result != null && CollectionUtils.isNotEmpty(result.getFileCabinet())){  ",
-          " in.cabinet =  result.getFileCabinet().get(0);",
+          "if(result != null && CollectionUtils.isNotEmpty(result.getFileCabinet())){",
+          "  for(FileCabinet fileCabinet : result.getFileCabinet()) { ",
+          "    // check with global variable fileCabinetId ",
+          "     if(ivy.var.docuwareConnector_fileCabinetId.equalsIgnoreCase(fileCabinet.#id)) {",
+          "       in.cabinet = fileCabinet;",
+          "       break;",
+          "     }",
+          "   }",
           "}"
         ]
       },
@@ -778,7 +792,11 @@
             { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>" },
             { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
           ],
+          "map" : {
+            "param.configuration.fileCabinetId" : "in.cabinet.id"
+          },
           "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
             "import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;",
             "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
             "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
@@ -790,10 +808,20 @@
             "List properties = new ArrayList();",
             "//Note IndexFields are individual for each docuware instance. This is just an example",
             "DocuWareProperty dp = new DocuWareProperty();",
-            "dp.setFieldName(\"DOCUMENTTYPE\");",
-            "dp.setItem(\"CORRESPONDENCE\");",
+            "dp.setFieldName(\"VENDOR_NAME\");",
+            "dp.setItem(\"DUMMY INC.\");",
             "dp.setItemElementName(\"String\");",
             "properties.add(dp);",
+            "",
+            "DocuWareFieldTableItem dwt = new DocuWareFieldTableItem();",
+            "dwt.createRow()",
+            "  .addColumnValue(\"LINE__INVOICE_LINE_NUMBER\", \"1\", \"String\")",
+            "  .addColumnValue(\"LINE__QTY\", \"3\", \"String\")",
+            "  .addColumnValue(\"LINE__UNIT_PRICE\", \"18.00\", \"String\")",
+            ";",
+            "",
+            "DocuWareProperty dwtp = new DocuWareProperty(\"LINE___ITEM\", dwt, \"Table\");",
+            "properties.add(dwtp);",
             "",
             "param.indexFields = properties;"
           ]
@@ -828,6 +856,7 @@
             { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
           ],
           "map" : {
+            "param.documentId" : "String.valueOf(in.document.id)",
             "param.configuration.fileCabinetId" : "in.cabinet.id"
           },
           "code" : [
@@ -840,8 +869,8 @@
             "List properties = new ArrayList();",
             "DocuWareProperty dp = new DocuWareProperty();",
             "",
-            "dp.setFieldName(\"DOCUMENTTYPE\");",
-            "dp.setItem(\"CONTRACT\");",
+            "dp.setFieldName(\"VENDOR_NAME\");",
+            "dp.setItem(\"EXAMPLE\");",
             "dp.setItemElementName(\"String\");",
             "properties.add(dp);",
             "",
@@ -852,7 +881,7 @@
         "output" : {
           "map" : {
             "out" : "in",
-            "out.error" : "result.error"
+            "out.error" : "result.#error"
           }
         }
       },
@@ -869,8 +898,8 @@
         "output" : {
           "map" : {
             "out" : "in",
-            "out.error" : "result.error",
-            "out.file" : "result.file"
+            "out.error" : "result.#error",
+            "out.file" : "result.#file"
           }
         },
         "call" : {
