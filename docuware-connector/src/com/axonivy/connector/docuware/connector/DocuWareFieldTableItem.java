@@ -76,14 +76,14 @@ public class DocuWareFieldTableItem {
     public DocuWareTableRow addColumnValue(String fieldName, Object item, String itemElementName) {
       columnValues.add(new DocuWareProperty(fieldName, item, itemElementName));
       return this;
-	}
+    }
 	
     public List<DocuWareProperty> getColumnValues() {
       return columnValues;
-	}
+    }
 
     public void setColumnValues(List<DocuWareProperty> columnValues) {
       this.columnValues = columnValues;
-	}
+    }
   }
 }
