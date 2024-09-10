@@ -62,12 +62,10 @@ public class DocuWareFieldTableItem {
 	private List<DocuWareProperty> columnValues;
 	
 	public DocuWareTableRow() {
-		rows.add(this);
 		initialize(true);
 	}
 
 	public DocuWareTableRow(List<DocuWareProperty> columnValues) {
-		rows.add(this);
 		this.columnValues = columnValues;
 	}
 
