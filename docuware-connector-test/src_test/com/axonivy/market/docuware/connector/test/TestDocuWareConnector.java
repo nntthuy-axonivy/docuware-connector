@@ -60,7 +60,6 @@ public class TestDocuWareConnector {
     return propertyList;
   }
 
-
   protected DocuWareEndpointConfiguration prepareDocuWareEndpointConfiguration() {
     DocuWareEndpointConfiguration configuration = new DocuWareEndpointConfiguration();
     return configuration;
