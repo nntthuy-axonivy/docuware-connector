@@ -44,46 +44,46 @@ public class DocuWareFieldTableItem {
   }
 
   public List<DocuWareTableRow> getRows() {
-	return rows;
+    return rows;
   }
 
   public void setRows(List<DocuWareTableRow> rows) {
-	this.rows = rows;
+    this.rows = rows;
   }
 
   public DocuWareTableRow createRow() {
-	  DocuWareTableRow row = new DocuWareTableRow();
-	  this.rows.add(row);
-	  return row;
+    DocuWareTableRow row = new DocuWareTableRow();
+    this.rows.add(row);
+    return row;
   }
   
   public class DocuWareTableRow {
-	@JsonProperty(value = "ColumnValue")
-	private List<DocuWareProperty> columnValues;
+    @JsonProperty(value = "ColumnValue")
+    private List<DocuWareProperty> columnValues;
 	
-	public DocuWareTableRow() {
-		initialize(true);
-	}
+    public DocuWareTableRow() {
+      initialize(true);
+    }
 
-	public DocuWareTableRow(List<DocuWareProperty> columnValues) {
-		this.columnValues = columnValues;
-	}
+    public DocuWareTableRow(List<DocuWareProperty> columnValues) {
+      this.columnValues = columnValues;
+    }
 
-	private void initialize(boolean initiateContentProperties) {
-		columnValues = new ArrayList<>();
-	}
+    private void initialize(boolean initiateContentProperties) {
+      columnValues = new ArrayList<>();
+    }
 	
-	public DocuWareTableRow addColumnValue(String fieldName, Object item, String itemElementName) {
-		columnValues.add(new DocuWareProperty(fieldName, item, itemElementName));
-		return this;
-	}
+    public DocuWareTableRow addColumnValue(String fieldName, Object item, String itemElementName) {
+      columnValues.add(new DocuWareProperty(fieldName, item, itemElementName));
+      return this;
+    }
 	
-	public List<DocuWareProperty> getColumnValues() {
-		return columnValues;
-	}
+    public List<DocuWareProperty> getColumnValues() {
+      return columnValues;
+    }
 
-	public void setColumnValues(List<DocuWareProperty> columnValues) {
-		this.columnValues = columnValues;
-	}
+    public void setColumnValues(List<DocuWareProperty> columnValues) {
+      this.columnValues = columnValues;
+    }
   }
 }
