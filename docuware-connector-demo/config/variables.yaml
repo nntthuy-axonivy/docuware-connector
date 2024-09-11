@@ -6,9 +6,10 @@
 # '<project>/Config/_<environment>/variables.yaml
 #
 Variables:
-  docuware-connector:
+  docuwareConnector:
     host: ''
     username: ''
     password: ''
     hostid: ''
     organization: ''
+    fileCabinetId: ''

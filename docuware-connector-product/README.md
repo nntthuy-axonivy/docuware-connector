@@ -42,18 +42,7 @@ Before any interactions between the Axon Ivy Engine and DocuWare services can be
 1. Override the global variables for `host-name`, `user-name`, `password` and `host-id` in the demo project as shown in the example below.
 
 ```
-Variables:
-  
-  docuware-connector:
-  
-    host: <myhost>.docuware.cloud
-
-    username: <myuser>
-  
-    # [password]
-    password: <mypass>
-    
-    hostid: <mhostid>
+@variables.yaml@
 ```
 
 If your REST URL does not follow the predefined REST URL pattern of this connector, you can change the URL in the Engine Cockpit. To change the URL in the Designer, you have to unpack the connector project and change it there.

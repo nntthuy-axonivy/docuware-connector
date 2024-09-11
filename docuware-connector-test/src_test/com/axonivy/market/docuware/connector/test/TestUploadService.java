@@ -69,7 +69,7 @@ public class TestUploadService extends TestDocuWareConnector {
   @Test
   public void uploadFileWithEndpointConfigurationWithStoreDialogFromVariable(BpmClient bpmClient, ISession session, AppFixture fixture,
           IApplication app) throws IOException {
-	fixture.var("docuware-connector.storedialogid", "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1);  
+	fixture.var("docuwareConnector.storedialogid", "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1);  
     prepareRestClient(app, fixture);
     List<DocuWareProperty> propertyList = prepareDocuWareProperties();
     DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();

@@ -2,6 +2,7 @@ package com.axonivy.market.docuware.connector.test;
 
 import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;
 import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;
+import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
 
 import ch.ivyteam.ivy.application.IApplication;
@@ -16,11 +17,11 @@ import ch.ivyteam.ivy.scripting.objects.List;
 public class TestDocuWareConnector {
 
   protected void prepareRestClient(IApplication app, AppFixture fixture) {
-    fixture.var("docuware-connector.host", "TESTHOST");
-    fixture.var("docuware-connector.username", "TESTUSER");
-    fixture.var("docuware-connector.password", "TESTPASS");
-    fixture.var("docuware-connector.hostid", "TESTHOSTID");
-    fixture.var("docuware-connector.filecabinetid", "123");
+    fixture.var("docuwareConnector.host", "TESTHOST");
+    fixture.var("docuwareConnector.username", "TESTUSER");
+    fixture.var("docuwareConnector.password", "TESTPASS");
+    fixture.var("docuwareConnector.hostid", "TESTHOSTID");
+    fixture.var("docuwareConnector.filecabinetid", "123");
     RestClient restClient = RestClients.of(app).find("DocuWare");
     // change created client: use test url and a slightly different version of
     // the
@@ -47,6 +48,15 @@ public class TestDocuWareConnector {
     dwp.setItem("3");
     dwp.setItemElementName("String");
     propertyList.add(dwp);
+    
+    DocuWareFieldTableItem dwt = new DocuWareFieldTableItem();
+    dwt.createRow()
+      .addColumnValue("NOTES__CONTENT", "HR input profile.", "String")
+      .addColumnValue("NOTES__AUTHOR", "PTA", "String")
+    ;
+    DocuWareProperty dwtp = new DocuWareProperty("EMPLOYEE_NOTES", dwt, "Table");
+    propertyList.add(dwtp);
+    
     return propertyList;
   }
 
