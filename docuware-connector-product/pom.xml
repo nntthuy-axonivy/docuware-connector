@@ -41,6 +41,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${skip-readme}</skip>
               <target>
                 <unzip dest="${basedir}">
                   <fileset dir="${basedir}/..">
@@ -51,6 +52,12 @@
                   </patternset>
                   <mapper type="flatten" />
                 </unzip>
+                <copy todir="${project.build.directory}">
+                  <fileset dir="../../" includes="doc/**" />
+                </copy>
+                <copy file="README.md" tofile="${project.build.directory}/README.md" />
+                <loadfile property="variables.yaml" srcFile="${variables.yaml.file}" encoding="UTF-8" failonerror="false" />
+                <replace file="${project.build.directory}/README.md" token="@variables.yaml@" value="${variables.yaml}" />
               </target>
             </configuration>
           </execution>
