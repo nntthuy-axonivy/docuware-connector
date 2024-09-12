@@ -3,7 +3,7 @@
   <groupId>com.axonivy.connector.docuware</groupId>
   <name>docuware-connector</name>
   <artifactId>docuware-connector-modules</artifactId>
-  <version>10.0.23-SNAPSHOT</version>
+  <version>10.0.24-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
