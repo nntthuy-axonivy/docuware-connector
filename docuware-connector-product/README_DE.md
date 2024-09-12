@@ -1,14 +1,14 @@
-# DocuWare Connector
+# DocuWare Konnektor
 
-[DocuWare](https://start.docuware.com/) offers cloud-based document management and workflow automation software. It can be used to digitize, archive and process any business documents in an audit-proof manner to optimize your company's core processes.
+ [DocuWare](https://start.docuware.com/) bietet Cloud-basiertes Dokumenten-Management und Software zur Workflow-Automation. Damit lassen sich beliebige Geschäftsdokumente digitalisieren, revisionssicher archivieren und bearbeiten, um so die Kernprozesse deines Unternehmens zu optimieren.
 
-The Axon Ivy DocuWare connector enables efficient integration of DocuWare functionalities into your Axon Ivy process applications
+**Der Axon Ivy DocuWare Konnektor ermöglicht eine effiziente Integration von DocuWare Funktionalitäten in Deine Prozessanwendungen**
 
-This connector:
+Dieser Konnektor:
 
-- minimizes your integration effort: use the demo version, which contains examples of the API calls.
-- is based on REST web service technologies.
-- gives you access to basic DocuWare functions.
+- minimiert deinen Integrationsaufwand: Nutze die Demoversion, die Beispiele für die API-Aufrufe enthält.
+- basiert auf REST-Webservice-Technologien.
+- ermöglicht dir den Zugriff auf grundlegende DocuWare-Funktionen.
 
 ## Demo
 
@@ -45,10 +45,22 @@ Before any interactions between the Axon Ivy Engine and DocuWare services can be
 1. Override the global variables for `host-name`, `user-name`, `password` and `host-id` in the demo project as shown in the example below.
 
 ```
-@variables.yaml@
+Variables:
+  
+  docuware-connector:
+  
+    host: <myhost>.docuware.cloud
+
+    username: <myuser>
+  
+    # [password]
+    password: <mypass>
+    
+    hostid: <mhostid>
 ```
 
 If your REST URL does not follow the predefined REST URL pattern of this connector, you can change the URL in the Engine Cockpit. To change the URL in the Designer, you have to unpack the connector project and change it there.
 
 Run `start.ivp` of the DocuWareDemo demo process to test your setup.
+
 
