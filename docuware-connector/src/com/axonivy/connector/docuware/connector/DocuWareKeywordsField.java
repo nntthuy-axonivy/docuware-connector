@@ -46,6 +46,11 @@ public class DocuWareKeywordsField {
 		return type;
 	}
 
+	/**
+	 * 
+	 * @param value
+	 * Utility function to add keyword to the list
+	 */
 	public void append(String value) {
 		if (Objects.isNull(keywords)) {
 			keywords = new ArrayList<>();
