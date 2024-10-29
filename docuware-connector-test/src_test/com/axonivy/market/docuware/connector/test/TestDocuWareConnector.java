@@ -3,6 +3,7 @@ package com.axonivy.market.docuware.connector.test;
 import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;
 import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;
 import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;
+import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
 
 import ch.ivyteam.ivy.application.IApplication;
@@ -56,6 +57,12 @@ public class TestDocuWareConnector {
     ;
     DocuWareProperty dwtp = new DocuWareProperty("EMPLOYEE_NOTES", dwt, "Table");
     propertyList.add(dwtp);
+    
+    DocuWareKeywordsField keywordField = new DocuWareKeywordsField();
+    keywordField.append("1st Keyword");
+    keywordField.append("2nd Keyword");
+    DocuWareProperty keywordProperty = new DocuWareProperty("TAGS", keywordField, "Keywords");
+    propertyList.add(keywordProperty);
     
     return propertyList;
   }
