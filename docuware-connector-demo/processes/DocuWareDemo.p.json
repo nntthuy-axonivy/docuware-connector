@@ -796,6 +796,7 @@
             "param.configuration.fileCabinetId" : "in.cabinet.id"
           },
           "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;",
             "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
             "import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;",
             "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
@@ -822,6 +823,13 @@
             "",
             "DocuWareProperty dwtp = new DocuWareProperty(\"LINE___ITEM\", dwt, \"Table\");",
             "properties.add(dwtp);",
+            "",
+            "DocuWareKeywordsField keywordField = new DocuWareKeywordsField();",
+            "keywordField.append(\"1st Keyword\");",
+            "keywordField.append(\"2nd Keyword\");",
+            "",
+            "DocuWareProperty keywordProperty = new DocuWareProperty(\"VALIDATION_CHECK\", keywordField, \"Keywords\");",
+            "properties.add(keywordProperty);",
             "",
             "param.indexFields = properties;"
           ]
