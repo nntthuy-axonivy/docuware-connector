@@ -1,0 +1,18 @@
+Dialogs:
+  com:
+    axonivy:
+      connector:
+        docuware:
+          connector:
+            demo:
+              DocuWareDemo:
+                Title: DocuWare Demo
+                UploadMessageFailed: Upload doc to Docuware failed
+                UploadMessageOK: Upload doc to Docuware successful
+Labels:
+  CabinetId: 'Cabinet Id: {0}'
+  Close: Close
+  FileCabinets: File Cabinets
+  Organizations: Organizations
+  Result: Result
+  Upload: Upload

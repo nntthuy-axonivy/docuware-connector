@@ -11,6 +11,11 @@
       "name" : "start()",
       "config" : {
         "callSignature" : "start",
+        "input" : {
+          "map" : {
+            "out.fileCabinetId" : "\"\""
+          }
+        },
         "guid" : "1811FCF74DD97A8C"
       },
       "visual" : {
@@ -169,9 +174,22 @@
         "bodyObjectType" : "com.docuware.dev.schema._public.services.platform.FileCabinetIdDocumentsBody",
         "bodyInputType" : "FORM",
         "responseCode" : [
+          "import org.apache.http.HttpStatus;",
+          "import javax.faces.application.FacesMessage;",
+          "import javax.faces.context.FacesContext;",
           "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
           "",
-          "out.result = DocuWareDemoService.get().getLog(response, result);"
+          "out.result = DocuWareDemoService.get().getLog(response, result);",
+          "FacesMessage message;",
+          "if (HttpStatus.SC_OK != response.getStatus()) {",
+          "  message.severity = FacesMessage.SEVERITY_ERROR;",
+          "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageFailed\");",
+          "} else {",
+          "  message.severity = FacesMessage.SEVERITY_INFO;",
+          "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageOK\");",
+          "}",
+          "",
+          "FacesContext.getCurrentInstance().addMessage(\"\", message);"
         ],
         "bodyForm" : {
           "document" : "",
