@@ -1,0 +1,24 @@
+Dialogs:
+  com:
+    axonivy:
+      market:
+        docuware:
+          connector:
+            RequestLoginToken:
+              GotLoginToken: Got a LoginToken
+              GotLoginTokenMessage: The new LoginToken is set to Ivy variable
+              HeaderHelpText: After generating a LoginToken, it will be set to ivy variable and use for GrantType is dwtoken
+              HeaderText: Use this form to generate a LoginToken of DocuWare for your account
+              LoginAndUpdateVar: Login and update to variable
+              PasswordValidateMessage: Password must not be empty!
+              PleaseFillAccountInfo: Please fill-in your username and password to request a new LoginToken for DocuWare
+              RequestLogin: Request LoginToken
+              TokenHelpText: You can copy and backup this token for other setup
+              UsernameValidateMessage: Username must not be empty!
+Labels:
+  Cancel: Cancel
+  Password: Password
+  Username: Username
+Processes:
+  LoginToken:
+    name: Start to request a LoginToken for DW-Token

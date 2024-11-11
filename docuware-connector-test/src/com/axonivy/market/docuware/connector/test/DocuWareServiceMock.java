@@ -4,14 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.security.PermitAll;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -19,17 +14,17 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;
+import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter;
 import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;
 
 import ch.ivyteam.ivy.environment.Ivy;
@@ -58,8 +53,8 @@ public class DocuWareServiceMock {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("Account/Logon")
   public Response accountLogon(@FormParam("UserName") String userName, @FormParam("Password") String password,
-          @FormParam("HostID") String hostId,
-          @FormParam("RedirectToMyselfInCaseOfError") String redirectToMyselfInCaseOfError) {
+      @FormParam("HostID") String hostId,
+      @FormParam("RedirectToMyselfInCaseOfError") String redirectToMyselfInCaseOfError) {
     return Response.ok(load("json/account/logon.json")).type(MediaType.APPLICATION_JSON).build();
   }
 
@@ -78,9 +73,8 @@ public class DocuWareServiceMock {
   @GET
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{FileCabinetId}/Documents/{DocumentId}")
-  public Response getDocument(@Context HttpServletRequest req,
-          @PathParam(value = "FileCabinetId") String fileCabinetId,
-          @PathParam(value = "DocumentId") String documentId) {
+  public Response getDocument(@Context HttpServletRequest req, @PathParam(value = "FileCabinetId") String fileCabinetId,
+      @PathParam(value = "DocumentId") String documentId) {
     Ivy.log().fatal("22222!!!!!!!!!in mock" + documentId);
     if (!isAuthenticated(req)) {
       // note: the real service would send details
@@ -94,8 +88,8 @@ public class DocuWareServiceMock {
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{fileCabinetId}/Documents/{documentId}/FileDownload")
   public Response downloadFile(@Context HttpServletRequest req,
-          @PathParam(value = "fileCabinetId") String fileCabinetId,
-          @PathParam(value = "documentId") String documentId) throws IOException {
+      @PathParam(value = "fileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId)
+      throws IOException {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
@@ -111,8 +105,7 @@ public class DocuWareServiceMock {
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{fileCabinetId}/Documents/{documentId}/Fields")
   public Response updateDocument(@Context HttpServletRequest req,
-          @PathParam(value = "fileCabinetId") String fileCabinetId,
-          @PathParam(value = "documentId") String documentId) {
+      @PathParam(value = "fileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
@@ -125,8 +118,7 @@ public class DocuWareServiceMock {
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{FileCabinetId}/Documents/{DocumentId}")
   public Response deleteDocument(@Context HttpServletRequest req,
-          @PathParam(value = "FileCabinetId") String fileCabinetId,
-          @PathParam(value = "DocumentId") String documentId) {
+      @PathParam(value = "FileCabinetId") String fileCabinetId, @PathParam(value = "DocumentId") String documentId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
@@ -142,27 +134,24 @@ public class DocuWareServiceMock {
   @POST
   @Produces(MediaType.APPLICATION_XML)
   @Path("FileCabinets/{fileCabinetId}/Documents")
-  public Response upload(@Context HttpServletRequest req,
-          @PathParam(value = "fileCabinetId") String fileCabinetId, @QueryParam(value = "storeDialogId") String storeDialogId) {
+  public Response upload(@Context HttpServletRequest req, @PathParam(value = "fileCabinetId") String fileCabinetId,
+      @QueryParam(value = "storeDialogId") String storeDialogId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
     } else {
       String path = "xml/document.xml";
-      if(StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1)) {
-    	path = "xml/documentStoreDialogId.xml";
-      } else if(StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2)) {
-    	path = "xml/documentStoreDialogId2.xml";
+      if (StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1)) {
+        path = "xml/documentStoreDialogId.xml";
+      } else if (StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2)) {
+        path = "xml/documentStoreDialogId2.xml";
       }
-	  return Response.ok(load(path)).type(MediaType.APPLICATION_XML).build();
+      return Response.ok(load(path)).type(MediaType.APPLICATION_XML).build();
     }
   }
 
   private boolean isAuthenticated(HttpServletRequest req) {
-    Map<String, Cookie> cookies = Stream.of(req.getCookies())
-            .collect(Collectors.toMap(c -> c.getName(), c -> c));
-    return cookies.containsKey(DocuWareAuthFeature.DocuWareCookies.DW_PLATFORM_AUTH_COOKIE)
-            && cookies.containsKey(DocuWareAuthFeature.DocuWareCookies.DW_PLATFORM_BROWSER_ID);
+    return StringUtils.isNoneBlank(req.getHeader(OAuth2BearerFilter.AUTHORIZATION));
   }
 
   private String load(String path) {

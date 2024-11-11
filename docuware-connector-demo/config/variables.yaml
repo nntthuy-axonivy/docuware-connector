@@ -10,6 +10,5 @@ Variables:
     host: ''
     username: ''
     password: ''
-    hostid: ''
     organization: ''
     fileCabinetId: ''

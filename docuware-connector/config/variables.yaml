@@ -6,31 +6,36 @@
 # '<project>/Config/_<environment>/variables.yaml
 #
 Variables:
-  
   docuwareConnector:
-  
     # your docuware instance: e.g. 'acme.docuware.cloud'
     host: ''
-    
+
+    # The type of authorization grant to provide.
+    # [enum: password, trusted, dwtoken ]
+    grantType: 'password'
+
+    # The username used for authenticating to DocuWare.
     username: ''
-    
+
+    # The password used for authenticating to DocuWare.
     # [password]
     password: ''
-    
-    hostid: ''
-    
-    # The Logon URL will be automatically determined.
-    # If this variable is set (not-empty), this URL
-    # will be taken as the Logon URL. It typically looks like
-    # https://.../Acount/Logon
-    # Only set this value, if the automatic determination does not work.
-    logonurl: ''
-    
+
+    # The Trusted username used for authenticating to DocuWare when GrantType is trusted.
+    trustedUserName: ''
+
+    # The password used for authenticating to DocuWare  when GrantType is trusted.
+    trustedUserPassword: ''
+
+    # Use for getting a new DocuWare token by GrantType is dwtoken
+    # Please start process startRequestALoginToken.ivp to generate a new LoginToken
+    loginToken: ''
+
     # Your organization name
     organization: ''
-    
+
     filecabinetid: ''
-    
+
     # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
     # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
-    connectTimeout: 0    
+    connectTimeout: 0

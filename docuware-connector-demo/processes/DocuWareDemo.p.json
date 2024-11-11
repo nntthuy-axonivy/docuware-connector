@@ -54,7 +54,6 @@
             "import org.apache.commons.lang3.StringUtils;",
             "ivy.log.info(\"Username: {0}\", ivy.var.get(\"docuwareConnector.username\"));",
             "ivy.log.info(\"Password set: {0}\", StringUtils.isNotBlank(ivy.var.get(\"docuwareConnector_password\")));",
-            "ivy.log.info(\"HostId: {0}\", ivy.var.get(\"docuwareConnector_hostid\"));",
             "ivy.log.info(\"BaseUrl: {0}\", ivy.var.get(\"docuwareConnector_baseurl\"));"
           ]
         },
@@ -658,89 +657,6 @@
             "name" : "no"
           } }
       ]
-    }, {
-      "id" : "f81",
-      "type" : "RequestStart",
-      "name" : "cleanCookiesCache.ivp",
-      "config" : {
-        "callSignature" : "cleanCookiesCache",
-        "outLink" : "cleanCookiesCache.ivp",
-        "startName" : "Clean CookiesCache",
-        "case" : { }
-      },
-      "visual" : {
-        "at" : { "x" : 664, "y" : 64 }
-      },
-      "connect" : { "id" : "f51", "to" : "S10" }
-    }, {
-      "id" : "f84",
-      "type" : "TaskEnd",
-      "visual" : {
-        "at" : { "x" : 944, "y" : 64 }
-      }
-    }, {
-      "id" : "S10",
-      "type" : "ServiceBpmnElement",
-      "name" : "Remove all cookies",
-      "elements" : [ {
-          "id" : "S10-f82",
-          "type" : "Script",
-          "name" : "Invalidate the CookiesCache entry",
-          "config" : {
-            "security" : "system",
-            "output" : {
-              "code" : [
-                "import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;",
-                "DocuWareAuthFeature feature = new DocuWareAuthFeature();",
-                "feature.invalidateCookiesCacheEntry();"
-              ]
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 184, "y" : 160 }
-          },
-          "connect" : { "id" : "S10-f3", "to" : "S10-f2" }
-        }, {
-          "id" : "S10-g0",
-          "type" : "EmbeddedStart",
-          "name" : "in 1",
-          "visual" : {
-            "at" : { "x" : 64, "y" : 160 }
-          },
-          "parentConnector" : "f51",
-          "connect" : { "id" : "S10-f0", "to" : "S10-f82" }
-        }, {
-          "id" : "S10-g1",
-          "type" : "EmbeddedEnd",
-          "name" : "out 1",
-          "visual" : {
-            "at" : { "x" : 480, "y" : 160 }
-          },
-          "parentConnector" : "f93"
-        }, {
-          "id" : "S10-f2",
-          "type" : "Script",
-          "name" : "Get and print CookiesCache",
-          "config" : {
-            "security" : "system",
-            "output" : {
-              "code" : [
-                "import com.axonivy.connector.docuware.connector.DocuWareAuthFeature;",
-                "DocuWareAuthFeature feature = new DocuWareAuthFeature();",
-                "feature.getCookies();"
-              ]
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 360, "y" : 160 }
-          },
-          "connect" : { "id" : "S10-f1", "to" : "S10-g1" }
-        } ],
-      "visual" : {
-        "at" : { "x" : 784, "y" : 64 },
-        "icon" : "res:/webContent/icons/docuware.png"
-      },
-      "connect" : { "id" : "f93", "to" : "f84" }
     }, {
       "id" : "f9",
       "type" : "TaskEnd",

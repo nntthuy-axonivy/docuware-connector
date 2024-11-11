@@ -21,33 +21,31 @@ import ch.ivyteam.ivy.security.ISession;
 @IvyProcessTest(enableWebServer = true)
 public class TestDownloadService extends TestDocuWareConnector {
 
-  private static final BpmElement testeeDownload = BpmProcess.path("DownloadService")
-          .elementName("getDocument");
+  private static final BpmElement testeeDownload = BpmProcess.path("DownloadService").elementName("getDocument");
   private static final BpmElement testeeDownload_2 = BpmProcess.path("DownloadService")
-          .elementName("getDocument(String,DocuWareEndpointConfiguration)");
+      .elementName("getDocument(String,DocuWareEndpointConfiguration)");
   private static final BpmElement testeeDownload_3 = BpmProcess.path("DownloadService")
-          .elementName("downloadFile(String)");
+      .elementName("downloadFile(String)");
   private static final BpmElement testeeDownload_4 = BpmProcess.path("DownloadService")
-          .elementName("downloadFile(String,DocuWareEndpointConfiguration)");
+      .elementName("downloadFile(String,DocuWareEndpointConfiguration)");
 
   @Test
   public void downloadDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
-          throws IOException {
+      throws IOException {
     prepareRestClient(app, fixture);
     ExecutionResult result = bpmClient.start().subProcess(testeeDownload)
-            .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID)).execute();
+        .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID)).execute();
     DownloadServiceData data = result.data().last();
     assertThat(data.getDocument()).isNotNull();
     assertThat(data.getDocument().getId()).isEqualTo(Constants.EXPECTED_DOCUMENT_ID);
   }
 
   @Test
-  public void downloadDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session,
-          AppFixture fixture,
-          IApplication app) throws IOException {
+  public void downloadDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture,
+      IApplication app) throws IOException {
     prepareRestClient(app, fixture);
     ExecutionResult result = bpmClient.start().subProcess(testeeDownload_2)
-            .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID)).execute();
+        .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID)).execute();
     DownloadServiceData data = result.data().last();
     assertThat(data.getDocument()).isNotNull();
     assertThat(data.getDocument().getId()).isEqualTo(Constants.EXPECTED_DOCUMENT_ID);
@@ -55,12 +53,12 @@ public class TestDownloadService extends TestDocuWareConnector {
 
   @Test
   public void downloadFile(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
-          throws IOException {
+      throws IOException {
     prepareRestClient(app, fixture);
     DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
     ExecutionResult result = bpmClient.start().subProcess(testeeDownload_3)
-            .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID))
-            .withParam("configuration", configuration).execute();
+        .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID))
+        .withParam("configuration", configuration).execute();
     DownloadServiceData data = result.data().last();
     assertThat(data.getFile()).isNotNull();
     assertThat(data.getFile().getName()).isEqualTo(Constants.EXPECTED_FILE_NAME);
@@ -68,12 +66,12 @@ public class TestDownloadService extends TestDocuWareConnector {
 
   @Test
   public void downloadFileWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture,
-          IApplication app) throws IOException {
+      IApplication app) throws IOException {
     prepareRestClient(app, fixture);
     DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
     ExecutionResult result = bpmClient.start().subProcess(testeeDownload_4)
-            .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID))
-            .withParam("configuration", configuration).execute();
+        .withParam("documentId", String.valueOf(Constants.EXPECTED_DOCUMENT_ID))
+        .withParam("configuration", configuration).execute();
     DownloadServiceData data = result.data().last();
     assertThat(data.getFile()).isNotNull();
     assertThat(data.getFile().getName()).isEqualTo(Constants.EXPECTED_FILE_NAME);

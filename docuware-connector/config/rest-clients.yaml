@@ -5,19 +5,18 @@ RestClients:
     Icon: res:/webContent/icons/docuware.png
     Features:
     - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
-    - com.axonivy.connector.docuware.connector.DocuWareAuthFeature
     - org.glassfish.jersey.media.multipart.MultiPartFeature
+    - com.axonivy.connector.docuware.connector.auth.OAuth2Feature
     Properties:
       PATH.host: ${ivy.var.docuwareConnector.host}
       UserName: ${ivy.var.docuwareConnector.username}
       Password: ${ivy.var.docuwareConnector.password}
-      HostId: ${ivy.var.docuwareConnector.hostid}
-      LogonUrl: ${ivy.var.docuwareConnector.logonurl}
-      Organization: ${ivy.var.docuwareConnector.organization}
+      TrustedUserName: ${ivy.var.docuwareConnector.trustedUsername}
+      TrustedUserPassword: ${ivy.var.docuwareConnector.trustedUserPassword}
+      jersey.config.client.connectTimeout: ${ivy.var.docuwareConnector.connectTimeout}
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
       JSON.Serialization.PROPERTY_INCLUSION: NON_NULL
-      jersey.config.client.connectTimeout: ${ivy.var.docuwareConnector.connectTimeout}
     OpenAPI:
       SpecUrl: file:///X:/AxonIvy/marketplace/docuware/openapi-handmade.json
       Namespace: com.axonivy.connector.docuware.connector.model
