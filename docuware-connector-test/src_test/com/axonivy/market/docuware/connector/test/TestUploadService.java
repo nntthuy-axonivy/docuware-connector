@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
-import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;
+import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;
 import com.axonivy.market.docuware.connector.UploadServiceData;
 
 import ch.ivyteam.ivy.application.IApplication;

@@ -1,0 +1,10 @@
+.document-viewer {
+	box-sizing: border-box;
+	border: none;
+}
+
+.action-column {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+}

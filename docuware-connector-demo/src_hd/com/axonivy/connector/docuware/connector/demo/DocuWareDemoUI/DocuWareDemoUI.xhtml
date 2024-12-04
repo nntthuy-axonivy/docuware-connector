@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/layouts/frame-10.xhtml">
+		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Title')}</ui:define>
+		<ui:define name="content">
+
+			<h3>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/ContentTitle',
+				[data.fileCabinet.name])}</h3>
+
+			<h:form id="form">
+				<p:growl id="growl" showDetail="true" life="3000" />
+				<p:dataTable id="filesTable" var="document"
+					value="#{data.documents}" showGridlines="true"
+					resizableColumns="true" resizeMode="fit" paginator="true" rows="10"
+					paginatorPosition="bottom" rowsPerPageTemplate="10,25,50"
+					rowKey="#{document.id}"
+					emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}">
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/IdHeaderText')}"
+						width="30" filterBy="#{document.id}" filterMatchMode="contains">
+						<h:outputText value="#{document.id}" />
+					</p:column>
+
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ContentTypeHeaderText')}"
+						filterBy="#{document.contentType}" filterMatchMode="contains">
+						<h:outputText value="#{document.contentType}" />
+					</p:column>
+
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/TitleHeaderText')}"
+						filterBy="#{document.title}" filterMatchMode="contains">
+						<h:outputText value="#{document.title}" />
+					</p:column>
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/HeaderText')}"
+						width="150">
+						<div class="action-column">
+							<p:commandButton icon="pi pi-eye"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
+								actionListener="#{docuWareDemoBean.buildDocumentUrl(document.id, data.fileCabinet.id)}"
+								oncomplete="PF('viewDocumentDialog').show()"
+								update=":form:viewDocumentDialog" />
+							<p:commandButton icon="pi pi-pencil"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/EditPropertiesBtnTitle')}"
+								actionListener="#{logic.onClickEditDocument(document.id)}"
+								oncomplete="PF('editIndexFieldsDialog').show()"
+								update=":form:editIndexFieldsDialog" />
+							<p:commandButton icon="pi pi-trash"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/DeleteDocumentBtnTitle')}"
+								update=":form:filesTable"
+								actionListener="#{logic.deleteDocument(document.id)}">
+								<p:confirm header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteHeader')}"
+									message="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteMessage')}"
+									icon="fa fa-exclamation-triangle" />
+							</p:commandButton>
+						</div>
+					</p:column>
+				</p:dataTable>
+				<br />
+				<div class="command-btns">
+					<p:commandButton id="cancel"
+						actionListener="#{ivyWorkflowView.cancel()}" process="@this"
+						value="#{ivy.cms.co('/Labels/Cancel')}" />
+				</div>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+					responsive="true" width="350">
+					<p:commandButton value="#{ivy.cms.co('/Labels/NO/name')}" type="button"
+						styleClass="ui-confirmdialog-no ui-button-flat" />
+					<p:commandButton value="#{ivy.cms.co('/Labels/YES/name')}" type="button"
+						styleClass="ui-confirmdialog-yes" />
+				</p:confirmDialog>
+				<p:dialog id="viewDocumentDialog" widgetVar="viewDocumentDialog"
+					modal="true" resizable="false"
+					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/ViewHeader')}"
+					width="90vw" height="80vh">
+					<iframe src="#{docuWareDemoBean.documentUrl}" width="100%"
+						height="99%" class="document-viewer" />
+				</p:dialog>
+				<p:dialog id="editIndexFieldsDialog"
+					widgetVar="editIndexFieldsDialog" modal="true" resizable="false"
+					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/EditHeader')}"
+					width="90vw" height="80vh">
+					<ic:com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields
+						documentId="#{data.documentId}"
+						fileCabinetId="#{data.fileCabinet.id}"
+						documentProperties="#{data.properties}" />
+				</p:dialog>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

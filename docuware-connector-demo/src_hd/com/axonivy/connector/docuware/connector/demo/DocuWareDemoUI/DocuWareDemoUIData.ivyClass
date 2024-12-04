@@ -1,0 +1,12 @@
+DocuWareDemoUIData #class
+com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI #namespace
+fileCabinet com.docuware.dev.schema._public.services.platform.FileCabinet #field
+fileCabinet PERSISTENT #fieldModifier
+documents List<com.docuware.dev.schema._public.services.platform.Document> #field
+documents PERSISTENT #fieldModifier
+documentId String #field
+documentId PERSISTENT #fieldModifier
+properties com.axonivy.connector.docuware.connector.DocuWareProperties #field
+properties PERSISTENT #fieldModifier
+error ch.ivyteam.ivy.bpm.error.BpmError #field
+error PERSISTENT #fieldModifier

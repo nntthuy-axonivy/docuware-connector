@@ -1,0 +1,16 @@
+UpdateDocumentFieldsData #class
+com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields #namespace
+propertiesUpdate com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate #field
+propertiesUpdate PERSISTENT #fieldModifier
+documentId String #field
+documentId PERSISTENT #fieldModifier
+fileCabinetId String #field
+fileCabinetId PERSISTENT #fieldModifier
+error ch.ivyteam.ivy.bpm.error.BpmError #field
+error PERSISTENT #fieldModifier
+property com.axonivy.connector.docuware.connector.DocuWareProperty #field
+property PERSISTENT #fieldModifier
+propertiesJson String #field
+propertiesJson PERSISTENT #fieldModifier
+isUpdateSuccess Boolean #field
+isUpdateSuccess PERSISTENT #fieldModifier

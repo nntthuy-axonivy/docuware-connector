@@ -9,6 +9,29 @@ Dialogs:
                 Title: DocuWare Demo
                 UploadMessageFailed: Upload doc to Docuware failed
                 UploadMessageOK: Upload doc to Docuware successful
+              DocuWareDemoUI:
+                Title: DocuWare Demo UI
+                ContentTitle: 'Documents in {0}'
+                DocumentTable:
+                  IdHeaderText: Id
+                  ContentTypeHeaderText: Content Type
+                  TitleHeaderText: Title
+                  ActionColumn:
+                    HeaderText: Action
+                    ViewDocumentBtnTitle: View Document
+                    EditPropertiesBtnTitle: Edit Properties
+                    DeleteDocumentBtnTitle: Delete Document
+                PropertyTable:
+                  IndexHeaderText: Index
+                  FieldNameHeaderText: Field Name
+                  UpdateValueHeaderText: Update Value
+                Dialog:
+                  DeleteHeader: Delete Document
+                  DeleteMessage: Are you sure you want to delete this document?
+                  ViewHeader: Document Preview
+                  EditHeader: Edit Document Properties
+                  SuccessEditMessage: Update completed successfully!
+                  FailedEditMessage: Update unsuccessful!
 Labels:
   CabinetId: 'Cabinet Id: {0}'
   Close: Close
@@ -16,3 +39,12 @@ Labels:
   Organizations: Organizations
   Result: Result
   Upload: Upload
+  NoRecordsFound: No records found. Please try a different search.
+  Cancel: Cancel
+  Save: Save
+  Success: Success
+  Failed: Failed
+  'YES':
+    name: 'Yes'
+  'NO':
+    name: 'No'

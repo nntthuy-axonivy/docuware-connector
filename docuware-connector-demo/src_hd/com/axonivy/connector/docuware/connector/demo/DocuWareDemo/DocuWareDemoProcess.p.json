@@ -118,7 +118,7 @@
         },
         "resultType" : "com.docuware.dev.schema._public.services.platform.Organizations",
         "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
+          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
           "",
           "out.result = DocuWareDemoService.get().getLog(response, result);"
         ]
@@ -148,7 +148,7 @@
         },
         "resultType" : "com.docuware.dev.schema._public.services.platform.FileCabinets",
         "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
+          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
           "",
           "out.result = DocuWareDemoService.get().getLog(response, result);"
         ]
@@ -177,7 +177,7 @@
           "import org.apache.http.HttpStatus;",
           "import javax.faces.application.FacesMessage;",
           "import javax.faces.context.FacesContext;",
-          "import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;",
+          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
           "",
           "out.result = DocuWareDemoService.get().getLog(response, result);",
           "FacesMessage message;",

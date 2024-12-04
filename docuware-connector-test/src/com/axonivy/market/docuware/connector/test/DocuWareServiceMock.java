@@ -25,7 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter;
-import com.axonivy.connector.docuware.connector.demo.DocuWareDemoService;
+import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;
 
 import ch.ivyteam.ivy.environment.Ivy;
 import io.swagger.v3.oas.annotations.Hidden;

@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.demo;
+package com.axonivy.connector.docuware.connector.demo.service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

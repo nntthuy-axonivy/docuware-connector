@@ -1,0 +1,191 @@
+{
+  "format" : "10.0.0",
+  "id" : "1934E36FC1255A2B",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields.UpdateDocumentFieldsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "callSignature" : "start",
+        "guid" : "1934E36FC13A6D02"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : { "id" : "f2", "to" : "f1" }
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "HtmlDialogEventStart",
+      "name" : "close",
+      "config" : {
+        "guid" : "1934E36FC144A7F0"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : { "id" : "f5", "to" : "f4" }
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      }
+    }, {
+      "id" : "f13",
+      "type" : "HtmlDialogMethodStart",
+      "name" : "updateDocumentProperties",
+      "config" : {
+        "callSignature" : "updateDocumentProperties",
+        "input" : {
+          "params" : [
+            { "name" : "documentId", "type" : "String" },
+            { "name" : "fileCabinetId", "type" : "String" }
+          ],
+          "map" : {
+            "out.documentId" : "param.documentId",
+            "out.fileCabinetId" : "param.fileCabinetId"
+          }
+        },
+        "guid" : "1935F882222B281C"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 256 },
+        "labelOffset" : { "x" : 11, "y" : 35 }
+      },
+      "connect" : { "id" : "f9", "to" : "f8" }
+    }, {
+      "id" : "f14",
+      "type" : "RestClientCall",
+      "name" : "Update Document Properties",
+      "config" : {
+        "bodyRaw" : "<%=in.propertiesJson%>",
+        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}/Fields",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "method" : "PUT",
+        "statusErrorCode" : "ivy:error:rest:client",
+        "bodyObjectType" : "com.docuware.dev.schema._public.services.platform.DocumentIndexFields",
+        "templateParams" : {
+          "DocumentId" : "in.documentId",
+          "FileCabinetId" : "in.fileCabinetId"
+        },
+        "bodyInputType" : "RAW",
+        "responseCode" : [
+          "import javax.faces.application.FacesMessage;",
+          "import javax.faces.context.FacesContext;",
+          "import com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate;",
+          "import javax.ws.rs.core.Response.Status.Family;",
+          "",
+          "out.propertiesUpdate = new DocuWarePropertiesUpdate();",
+          "out.isUpdateSuccess = false;",
+          "if (response != null) {",
+          "  if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {",
+          "    ivy.log.info(\"in\");",
+          "    out.isUpdateSuccess = true;",
+          "  }",
+          "}"
+        ]
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 256 }
+      },
+      "connect" : { "id" : "f7", "to" : "f6" }
+    }, {
+      "id" : "f11",
+      "type" : "HtmlDialogMethodStart",
+      "name" : [
+        "addToPropertiesUpdate",
+        "(DocuWareProperty)"
+      ],
+      "config" : {
+        "callSignature" : "addToPropertiesUpdate",
+        "input" : {
+          "params" : [
+            { "name" : "property", "type" : "com.axonivy.connector.docuware.connector.DocuWareProperty" }
+          ],
+          "map" : {
+            "out.property" : "param.property"
+          }
+        },
+        "guid" : "1936471C245963B2"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 360 },
+        "labelOffset" : { "x" : 11, "y" : 35 }
+      },
+      "connect" : { "id" : "f15", "to" : "f12" }
+    }, {
+      "id" : "f12",
+      "type" : "Script",
+      "name" : "Add to Properties",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
+            "",
+            "boolean isPropertyExisted = false;",
+            "",
+            "for (DocuWareProperty property : in.propertiesUpdate.properties) {",
+            "    if (in.property.fieldName.equals(property.fieldName)) {",
+            "        isPropertyExisted = true;",
+            "        in.property.item = property.item.toString();",
+            "        break;",
+            "    }",
+            "}",
+            "",
+            "if (!isPropertyExisted) {",
+            "    in.propertiesUpdate.addProperty(",
+            "        in.property.fieldName, ",
+            "        in.property.item, ",
+            "        in.property.itemElementName.toString()",
+            "    );",
+            "}"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 288, "y" : 360 }
+      },
+      "connect" : { "id" : "f19", "to" : "f17" }
+    }, {
+      "id" : "f17",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 480, "y" : 360 }
+      }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Prepare Properties Json",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.docuware.connector.utils.JsonUtils;",
+            "import com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate;",
+            "",
+            "in.propertiesJson = JsonUtils.serializeProperties(in.propertiesUpdate);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 256 }
+      },
+      "connect" : { "id" : "f10", "to" : "f14" }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 576, "y" : 256 }
+      }
+    } ]
+}

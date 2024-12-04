@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<cc:interface componentType="IvyComponent">
+	<cc:attribute name="documentId" required="true" />
+	<cc:attribute name="fileCabinetId" required="true" />
+	<cc:attribute name="documentProperties" required="true" />
+</cc:interface>
+
+<cc:implementation>
+	<c:set var="documentId" value="#{cc.attrs.documentId}" />
+	<c:set var="fileCabinetId" value="#{cc.attrs.fileCabinetId}" />
+	<c:set var="documentProperties" value="#{cc.attrs.documentProperties}" />
+	<p:dataTable value="#{documentProperties.properties}" var="field"
+		showGridlines="true" resizableColumns="true" resizeMode="fit"
+		emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}"
+		rowIndexVar="rowIndex" lazy="false">
+		<p:column width="30"
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/IndexHeaderText')}">
+			<h:outputText value="#{rowIndex}" />
+		</p:column>
+
+		<p:column
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/FieldNameHeaderText')}">
+			<h:outputText value="#{field.fieldName}" />
+		</p:column>
+
+		<p:column
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/UpdateValueHeaderText')}">
+			<h:panelGroup>
+				<p:inputNumber value="#{field.item}" minValue="0"
+					rendered="#{docuWareDemoBean.isFieldNameTypeNumber(field) and !field.isReadOnly()}">
+					<p:ajax event="change"
+						listener="#{logic.addToPropertiesUpdate(field)}" />
+				</p:inputNumber>
+
+				<p:inputText value="#{field.item}"
+					rendered="#{docuWareDemoBean.isFieldNameTypeString(field) and !field.isReadOnly()}">
+					<p:ajax event="change"
+						listener="#{logic.addToPropertiesUpdate(field)}" />
+				</p:inputText>
+
+				<h:outputText value="#{field.item}" rendered="#{field.isReadOnly()}" />
+			</h:panelGroup>
+		</p:column>
+
+	</p:dataTable>
+	<br />
+	<div class="command-btns">
+		<p:commandButton id="save"
+			actionListener="#{logic.updateDocumentProperties(documentId, fileCabinetId)}"
+			process="@this" value="Save" oncomplete="updateGrowlMessageForEditAction()"
+			update="updateGrowlMessageForEditActionCommand" />
+	</div>
+	<p:remoteCommand id="updateGrowlMessageForEditActionCommand" name="updateGrowlMessageForEditAction"
+		actionListener="#{docuWareDemoBean.updateGrowlMessageForEditAction(data.isUpdateSuccess)}"
+		update=":form:growl" />
+</cc:implementation>
+
+</html>

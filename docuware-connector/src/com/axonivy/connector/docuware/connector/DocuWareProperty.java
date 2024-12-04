@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"FieldName", "Item", "ItemElementName"})
+@JsonPropertyOrder({"FieldName", "Item", "ItemElementName", "ReadOnly"})
 public class DocuWareProperty {
 
   @JsonProperty("FieldName")
@@ -19,6 +19,8 @@ public class DocuWareProperty {
   private Object item;
   @JsonProperty("ItemElementName")
   private Object itemElementName;
+  @JsonProperty("ReadOnly")
+  private Boolean isReadOnly;
 
   public DocuWareProperty() {}
 
@@ -26,6 +28,13 @@ public class DocuWareProperty {
     this.fieldName = fieldName;
     this.item = item;
     this.itemElementName = itemElementName;
+  }
+
+  public DocuWareProperty(String fieldName, Object item, String itemElementName, Boolean isReadOnly) {
+    this.fieldName = fieldName;
+    this.item = item;
+    this.itemElementName = itemElementName;
+    this.isReadOnly = isReadOnly;
   }
 
   public String getFieldName() {
@@ -50,5 +59,13 @@ public class DocuWareProperty {
 
   public void setItemElementName(Object itemElementName) {
     this.itemElementName = itemElementName;
+  }
+
+  public Boolean isReadOnly() {
+    return isReadOnly;
+  }
+
+  public void setReadOnly(Boolean isReadOnly) {
+    this.isReadOnly = isReadOnly;
   }
 }

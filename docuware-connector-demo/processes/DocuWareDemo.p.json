@@ -507,7 +507,7 @@
             { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
           ],
           "map" : {
-            "param.file" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoService.exportFromCMS(\"/Files/uploadSample\", \"pdf\")",
+            "param.file" : "com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService.exportFromCMS(\"/Files/uploadSample\", \"pdf\")",
             "param.indexFields" : "in.properties",
             "param.configuration.fileCabinetId" : "in.configuration.fileCabinetId"
           }
@@ -974,5 +974,167 @@
       "visual" : {
         "at" : { "x" : 1312, "y" : 768 }
       }
+    }, {
+      "id" : "f51",
+      "type" : "RequestStart",
+      "name" : "viewAndEditDocument.ivp",
+      "config" : {
+        "callSignature" : "viewAndEditDocument",
+        "input" : {
+          "map" : {
+            "out.cabinetId" : "ivy.var.docuwareConnector_filecabinetid",
+            "out.organizationId" : "ivy.var.docuwareConnector_organization"
+          }
+        },
+        "outLink" : "viewAndEditDocument.ivp",
+        "startDescription" : "UI for viewing or editing document",
+        "startName" : "DocuWare View/Edit Document",
+        "case" : { }
+      },
+      "visual" : {
+        "at" : { "x" : 80, "y" : 880 }
+      },
+      "connect" : { "id" : "f91", "to" : "f84" }
+    }, {
+      "id" : "f69",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1120, "y" : 880 }
+      }
+    }, {
+      "id" : "f74",
+      "type" : "RestClientCall",
+      "name" : [
+        "Load",
+        "Organizations"
+      ],
+      "config" : {
+        "path" : "/Organizations",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "statusErrorCode" : "ivy:error:rest:client",
+        "responseMapping" : {
+          "out.organizationId" : "result.getOrganization().get(0).getId()"
+        },
+        "resultType" : "com.docuware.dev.schema._public.services.platform.Organizations"
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 880 }
+      },
+      "connect" : { "id" : "f98", "to" : "f81" }
+    }, {
+      "id" : "f81",
+      "type" : "RestClientCall",
+      "name" : "Get FileCabinets By Org",
+      "config" : {
+        "path" : "/FileCabinets",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "queryParams" : {
+          "orgid" : "in.organizationId"
+        },
+        "statusErrorCode" : "ivy:error:rest:client",
+        "responseMapping" : {
+          "out.cabinetId" : "result.getFileCabinet().get(0).getId()"
+        },
+        "resultType" : "com.docuware.dev.schema._public.services.platform.FileCabinets"
+      },
+      "visual" : {
+        "at" : { "x" : 456, "y" : 880 }
+      },
+      "connect" : { "id" : "f92", "to" : "f83" }
+    }, {
+      "id" : "f83",
+      "type" : "RestClientCall",
+      "name" : [
+        "Query",
+        "Documents"
+      ],
+      "config" : {
+        "path" : "/FileCabinets/{FileCabinetId}/Documents",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "queryParams" : {
+          "q" : "",
+          "fields" : "",
+          "sortOrder" : ""
+        },
+        "statusErrorCode" : "ivy:error:rest:client",
+        "responseMapping" : {
+          "out.documents" : "result.items.getItem()"
+        },
+        "templateParams" : {
+          "FileCabinetId" : "in.cabinetId"
+        },
+        "resultType" : "com.docuware.dev.schema._public.services.platform.DocumentsQueryResult"
+      },
+      "visual" : {
+        "at" : { "x" : 632, "y" : 880 }
+      },
+      "connect" : { "id" : "f93", "to" : "f89" }
+    }, {
+      "id" : "f84",
+      "type" : "Alternative",
+      "name" : "Check variables exist",
+      "visual" : {
+        "at" : { "x" : 160, "y" : 880 },
+        "labelOffset" : { "x" : 16, "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f97", "to" : "f83", "via" : [ { "x" : 160, "y" : 816 }, { "x" : 640, "y" : 816 } ], "label" : {
+            "name" : "Already has cabinetId",
+            "segment" : 0.5,
+            "offset" : { "x" : 241, "y" : -26 }
+          }, "condition" : "org.apache.commons.lang3.StringUtils.isNotBlank(in.cabinetId)" },
+        { "id" : "f90", "to" : "f81", "via" : [ { "x" : 160, "y" : 944 }, { "x" : 456, "y" : 944 } ], "label" : {
+            "name" : "Already has organizationId",
+            "segment" : 0.5,
+            "offset" : { "x" : 145, "y" : 30 }
+          }, "condition" : "org.apache.commons.lang3.StringUtils.isNotBlank(in.organizationId)" },
+        { "id" : "f96", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f87",
+      "type" : "DialogCall",
+      "name" : "DocuWareDemoUI",
+      "config" : {
+        "dialogId" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI",
+        "startMethod" : "start(com.docuware.dev.schema._public.services.platform.FileCabinet,List<com.docuware.dev.schema._public.services.platform.Document>)",
+        "call" : {
+          "params" : [
+            { "name" : "fileCabinet", "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet" },
+            { "name" : "documents", "type" : "List<com.docuware.dev.schema._public.services.platform.Document>" }
+          ],
+          "map" : {
+            "param.fileCabinet" : "in.cabinet",
+            "param.documents" : "in.documents"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 984, "y" : 880 }
+      },
+      "connect" : { "id" : "f100", "to" : "f69" }
+    }, {
+      "id" : "f89",
+      "type" : "RestClientCall",
+      "name" : "Read Cabinet",
+      "config" : {
+        "path" : "/FileCabinets/{FileCabinetId}",
+        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+        "clientErrorCode" : "ivy:error:rest:client",
+        "statusErrorCode" : "ivy:error:rest:client",
+        "responseMapping" : {
+          "out.cabinet" : "result"
+        },
+        "templateParams" : {
+          "FileCabinetId" : "in.cabinetId"
+        },
+        "resultType" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
+      },
+      "visual" : {
+        "at" : { "x" : 808, "y" : 880 }
+      },
+      "connect" : { "id" : "f101", "to" : "f87" }
     } ]
 }
