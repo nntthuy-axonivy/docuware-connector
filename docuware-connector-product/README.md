@@ -12,29 +12,46 @@ This connector:
 
 ## Demo
 
-1. Upload a document to a DocuWare file cabinet.
+### Features
 
-Upload result
+1. **Organization Retrieval**  
+   Click the **Organizations** button to retrieve the organization ID. The system will automatically include this ID in subsequent requests.
 
-![demo-dialog](images/demo1.png)
+    ![organization-result](images/get-organization-result.png)
 
-![demo-dialog](images/demo2.png)
+2. **File Cabinets Retrieval**  
+    Click the **File Cabinets** button to fetch the cabinet Id of the selected organization. The cabinet Id determines where the file will be uploaded.
 
-The uploaded file in Docuware dashboard.
+    ![file-cabinet-result](images/get-file-cabinet-result.png)
 
-![demo-dialog](images/demo3.png)
+3. **Document Uploading**  
+    Select a file to upload to the chosen DocuWare file cabinet. You can verify the uploaded file on the DocuWare dashboard.
 
-2. Provide a GUI to test some basic DocuWare calls.
+    ![upload-document](images/upload-document-result.png)
 
-![demo-dialog](images/demo4.png)
+4. **Document Retrieval**  
+   Automatically fetch documents using the predefined **organization** and **fileCabinetId** fields from the `variables.yaml` file.
 
-Get Organizations: click on Organizations button to get the organization id and automatically add to the request when upload file.
+   ![fetch-documents](images/fetch-documents.png)
 
-![demo-dialog](images/demo5.png)
+5. **Document Viewing**  
+   View documents directly within the interface using DocuWare’s document viewer.
 
-Get File Cabinets: click on File Cabinets button to get the cabinet ID of the organization to locate which cabinet that the file will be uploaded.
+   ![view-document](images/view-document.png)
 
-![demo-dialog](images/demo6.png)
+6. **Document Properties Editing**  
+   Modify document properties, including metadata and custom fields.
+
+   ![edit-document-properties](images/edit-document-properties.png)
+
+7. **Document Deletion**  
+   Delete documents from the file cabinet.
+
+   ![delete-document](images/delete-document.png)
+
+To view and edit documents and their properties, run the process named **DocuWare View/Edit Document**.
+
+To upload documents and perform actions like retrieving organizations, getting file cabinets, and uploading documents, run the process named **Start some DocuWare calls**.
 
 ## Setup
 

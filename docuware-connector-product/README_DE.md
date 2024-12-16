@@ -1,76 +1,79 @@
-# DocuWare Konnektor
+# DocuWare Connector
 
- [DocuWare](https://start.docuware.com/) bietet Cloud-basiertes Dokumenten-Management und Software zur Workflow-Automation. Damit lassen sich beliebige Geschäftsdokumente digitalisieren, revisionssicher archivieren und bearbeiten, um so die Kernprozesse deines Unternehmens zu optimieren.
+[DocuWare](https://start.docuware.com/) bietet cloudbasierte Dokumentenverwaltung und Workflow-Automatisierungssoftware. Es kann verwendet werden, um alle Geschäftsdokumente revisionssicher zu digitalisieren, zu archivieren und zu verarbeiten, um die Kernprozesse Ihres Unternehmens zu optimieren.
 
-**Der Axon Ivy DocuWare Konnektor ermöglicht eine effiziente Integration von DocuWare Funktionalitäten in Deine Prozessanwendungen**
+Der Axon Ivy DocuWare-Connector ermöglicht eine effiziente Integration von DocuWare-Funktionalitäten in deine Axon Ivy Prozessanwendungen.
 
-Dieser Konnektor:
+Dieser Connector:
 
-- minimiert deinen Integrationsaufwand: Nutze die Demoversion, die Beispiele für die API-Aufrufe enthält.
-- basiert auf REST-Webservice-Technologien.
-- ermöglicht dir den Zugriff auf grundlegende DocuWare-Funktionen.
+- minimiert den Integrationsaufwand: Verwende die Demo-Version, die Beispiele für API-Aufrufe enthält.
+- basiert auf REST-Webdienst-Technologien.
+- gibt dir Zugriff auf grundlegende DocuWare-Funktionen.
 
 ## Demo
 
-1. Upload a document to a DocuWare file cabinet.
+### Funktionen
 
-Upload result
+1. **Abruf von Organisationen**  
+   Klicke auf die Schaltfläche **Organisationen**, um die Organisations-ID abzurufen. Das System fügt diese ID automatisch in nachfolgende Anfragen ein.
 
-![demo-dialog](images/demo1.png)
+    ![organization-result](images/get-organization-result.png)
 
-![demo-dialog](images/demo2.png)
+2. **Abruf von Dateiablagen**  
+    Klicke auf die Schaltfläche **Dateiablagen**, um die Ablagen-ID der ausgewählten Organisation abzurufen. Die Ablagen-ID bestimmt, wohin die Datei hochgeladen wird.
 
-The uploaded file in Docuware dashboard.
+    ![file-cabinet-result](images/get-file-cabinet-result.png)
 
-![demo-dialog](images/demo3.png)
+3. **Hochladen von Dokumenten**  
+    Wähle eine Datei aus, die in die ausgewählte DocuWare-Dateiablage hochgeladen werden soll. Du kannst die hochgeladene Datei auf dem DocuWare-Dashboard überprüfen.
 
-2. Provide a GUI to test some basic DocuWare calls.
+    ![upload-document](images/upload-document-result.png)
 
-![demo-dialog](images/demo4.png)
+4. **Abruf von Dokumenten**  
+   Dokumente werden automatisch abgerufen, indem die vordefinierten Felder **organization** und **fileCabinetId** aus der Datei `variables.yaml` verwendet werden.
 
-Get Organizations: click on Organizations button to get the organization id and automatically add to the request when upload file.
+   ![fetch-documents](images/fetch-documents.png)
 
-![demo-dialog](images/demo5.png)
+5. **Anzeigen von Dokumenten**  
+   Dokumente können direkt in der Benutzeroberfläche mithilfe des DocuWare-Dokumentenbetrachters angezeigt werden.
 
-Get File Cabinets: click on File Cabinets button to get the cabinet ID of the organization to locate which cabinet that the file will be uploaded.
+   ![view-document](images/view-document.png)
 
-![demo-dialog](images/demo6.png)
+6. **Bearbeiten von Dokumenteigenschaften**  
+   Ändere die Dokumenteigenschaften, einschließlich Metadaten und benutzerdefinierter Felder.
+
+   ![edit-document-properties](images/edit-document-properties.png)
+
+7. **Löschen von Dokumenten**  
+   Lösche die Dokumente aus der Dateiablage.
+
+   ![delete-document](images/delete-document.png)
+
+Um Dokumente anzuzeigen und deren Eigenschaften zu bearbeiten, starte den Prozess mit dem Namen **DocuWare View/Edit Document**.
+
+Um Dokumente hochzuladen und Aktionen wie Abruf von Organisationen, Abruf von Dateiablagen und Hochladen von Dokumenten auszuführen, starte den Prozess mit dem Namen **Start some DocuWare calls**.
 
 ## Setup
 
-Before any interactions between the Axon Ivy Engine and DocuWare services can be run, they have to be introducted to each other. This can be done as follows:
+Bevor eine Interaktion zwischen der Axon Ivy Engine und den DocuWare-Diensten ausgeführt werden kann, müssen diese mit einander verknüpft werden. Dies kann wie folgt durchgeführt werden:
 
-1. Get a DocuWare account and the DocuWare cloud `host-name`, `user-name`, `password` and `host-id` to use.
+1. Erstelle ein DocuWare-Konto und nutze den DocuWare-Cloud-`host`, `user-name` und das `password`.
 
-1. Override the global variables for `host-name`, `user-name`, `password` and `host-id` in the demo project as shown in the example below.
+2. Überschreibe die globalen Variablen für `host`, `username` und `password` im Demo-Projekt wie im folgenden Beispiel gezeigt:
 
-```
-Variables:
-  
-  docuware-connector:
-  
-    host: <myhost>.docuware.cloud
+   ```yaml
+   @variables.yaml@
+   
+3. DocuWare unterstützt 3 Methoden, um ein Zugriffstoken vom Identitätsdienst zu generieren:
 
-    username: <myuser>
-  
-    # [password]
-    password: <mypass>
+    3.a Zugriffstoken per Benutzername und Passwort anfordern - GrantType ist `password`
     
-    hostid: <mhostid>
-```
+    3.b Zugriffstoken mit einem DocuWare-Token anfordern - GrantType ist `dwtoken`
+    
+    3.c Zugriffstoken per Benutzername und Passwort (Trusted User) anfordern - GrantType ist `trusted`
 
-3. DocuWare unterstützt 3 Wege, um ein Access Token vom Identity Service zu generieren:
+4. Für GrantType `dwtoken` muss ein LoginToken generiert werden. Starte den Prozess `startRequestALoginToken.ivp` und folge der Anleitung, um ein neues LoginToken zu erstellen.
 
-    3.a Token anfordern durch Benutzername & Passwort - GrantType ist `password`
+Wenn deine REST-URL nicht dem vordefinierten REST-URL-Muster dieses Connectors entspricht, kannst du die URL im Engine Cockpit ändern. Um die URL im Designer zu ändern, musst du das Connector-Projekt entpacken und dort ändern.
 
-    3.b Token anfordern durch ein DocuWare-Token - GrantType ist `dwtoken`
-
-    3.c Token anfordern durch Username & Passwort (Trusted User) - GrantType ist `trusted`
-
-4. Für GrantType ist `dwtoken`, wir müssen ein LoginToken bekommen. Bitte starten Sie den Prozess startRequestALoginToken.ivp und folgen Sie der Anleitung, um ein neues LoginToken zu erzeugen
-
-If your REST URL does not follow the predefined REST URL pattern of this connector, you can change the URL in the Engine Cockpit. To change the URL in the Designer, you have to unpack the connector project and change it there.
-
-Run `start.ivp` of the DocuWareDemo demo process to test your setup.
-
-
+Starte `start.ivp` des DocuWareDemo-Demoprozesses, um deine Einrichtung zu testen.
