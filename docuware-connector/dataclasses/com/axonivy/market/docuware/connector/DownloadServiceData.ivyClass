@@ -1,8 +1,0 @@
-DownloadServiceData #class
-com.axonivy.market.docuware.connector #namespace
-documentId String #field
-document com.docuware.dev.schema._public.services.platform.Document #field
-file File #field
-configuration com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration #field
-error ch.ivyteam.ivy.bpm.error.BpmError #field
-downloadFolder String #field

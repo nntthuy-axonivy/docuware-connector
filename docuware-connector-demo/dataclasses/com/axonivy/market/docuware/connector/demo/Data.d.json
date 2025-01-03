@@ -1,0 +1,49 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "Data",
+  "namespace" : "com.axonivy.market.docuware.connector.demo",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "organizations",
+    "type" : "com.docuware.dev.schema._public.services.platform.Organizations"
+  }, {
+    "name" : "fileCabinets",
+    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinets"
+  }, {
+    "name" : "cabinet",
+    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
+  }, {
+    "name" : "document",
+    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+  }, {
+    "name" : "file",
+    "type" : "File"
+  }, {
+    "name" : "section",
+    "type" : "com.docuware.dev.schema._public.services.platform.Section"
+  }, {
+    "name" : "dialog",
+    "type" : "com.docuware.dev.schema._public.services.platform.Dialog"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "configuration",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
+  }, {
+    "name" : "properties",
+    "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>"
+  }, {
+    "name" : "cabinetId",
+    "type" : "String"
+  }, {
+    "name" : "organizationId",
+    "type" : "String"
+  }, {
+    "name" : "documentId",
+    "type" : "String"
+  }, {
+    "name" : "documents",
+    "type" : "java.util.List<com.docuware.dev.schema._public.services.platform.Document>"
+  } ]
+}

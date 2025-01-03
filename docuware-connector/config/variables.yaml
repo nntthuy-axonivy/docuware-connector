@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/variables.json
 # == Variables ==
 # 
 # You can define here your project Variables.
@@ -9,33 +10,33 @@ Variables:
   docuwareConnector:
     # your docuware instance: e.g. 'acme.docuware.cloud'
     host: ''
-
+    
     # The type of authorization grant to provide.
     # [enum: password, trusted, dwtoken ]
     grantType: 'password'
-
+    
     # The username used for authenticating to DocuWare.
     username: ''
-
+    
     # The password used for authenticating to DocuWare.
     # [password]
     password: ''
-
+    
     # The Trusted username used for authenticating to DocuWare when GrantType is trusted.
     trustedUserName: ''
-
+    
     # The password used for authenticating to DocuWare  when GrantType is trusted.
     trustedUserPassword: ''
-
+    
     # Use for getting a new DocuWare token by GrantType is dwtoken
     # Please start process startRequestALoginToken.ivp to generate a new LoginToken
     loginToken: ''
-
+    
     # Your organization name
     organization: ''
-
+    
     filecabinetid: ''
-
+    
     # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
     # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
     connectTimeout: 0

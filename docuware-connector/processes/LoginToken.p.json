@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "1931A02E32E55FFF",
   "config" : {
     "data" : "com.axonivy.market.docuware.connector.Data"
@@ -9,15 +9,17 @@
       "type" : "RequestStart",
       "name" : "startRequestALoginToken.ivp",
       "config" : {
-        "callSignature" : "startRequestALoginToken",
-        "outLink" : "startRequestALoginToken.ivp",
-        "startName" : "<%=ivy.cms.co(\"/Processes/LoginToken/name\")%>",
-        "case" : { }
+        "signature" : "startRequestALoginToken",
+        "request" : {
+          "name" : "<%=ivy.cms.co(\"/Processes/LoginToken/name\")%>"
+        }
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
       },
-      "connect" : { "id" : "f4", "to" : "f3" }
+      "connect" : [
+        { "id" : "f4", "to" : "f3" }
+      ]
     }, {
       "id" : "f1",
       "type" : "TaskEnd",
@@ -29,12 +31,13 @@
       "type" : "DialogCall",
       "name" : "Request a LoginToken",
       "config" : {
-        "dialogId" : "com.axonivy.market.docuware.connector.RequestLoginToken",
-        "startMethod" : "start()"
+        "dialog" : "com.axonivy.market.docuware.connector.RequestLoginToken:start()"
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 64 }
       },
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     } ]
 }

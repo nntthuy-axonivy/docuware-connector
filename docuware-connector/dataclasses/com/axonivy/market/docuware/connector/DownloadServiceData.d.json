@@ -1,0 +1,25 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "DownloadServiceData",
+  "namespace" : "com.axonivy.market.docuware.connector",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "documentId",
+    "type" : "String"
+  }, {
+    "name" : "document",
+    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+  }, {
+    "name" : "file",
+    "type" : "File"
+  }, {
+    "name" : "configuration",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "downloadFolder",
+    "type" : "String"
+  } ]
+}

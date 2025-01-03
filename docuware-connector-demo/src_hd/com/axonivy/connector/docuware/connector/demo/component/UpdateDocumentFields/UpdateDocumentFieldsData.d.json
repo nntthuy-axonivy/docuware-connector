@@ -1,0 +1,32 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "UpdateDocumentFieldsData",
+  "namespace" : "com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "propertiesUpdate",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate"
+  }, {
+    "name" : "documentId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "fileCabinetId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "property",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareProperty"
+  }, {
+    "name" : "propertiesJson",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "isUpdateSuccess",
+    "type" : "Boolean",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}

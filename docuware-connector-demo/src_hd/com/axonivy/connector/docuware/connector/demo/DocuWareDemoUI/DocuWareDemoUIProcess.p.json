@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "193491716B13EC6A",
   "kind" : "HTML_DIALOG",
   "config" : {
@@ -10,11 +10,11 @@
       "type" : "HtmlDialogStart",
       "name" : "start(FileCabinet,List<Document>)",
       "config" : {
-        "callSignature" : "start",
+        "signature" : "start",
         "input" : {
           "params" : [
-            { "name" : "fileCabinet", "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet" },
-            { "name" : "documents", "type" : "List<com.docuware.dev.schema._public.services.platform.Document>" }
+            { "name" : "fileCabinet", "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet", "desc" : "" },
+            { "name" : "documents", "type" : "List<com.docuware.dev.schema._public.services.platform.Document>", "desc" : "" }
           ],
           "map" : {
             "out.documents" : "param.documents",
@@ -26,7 +26,9 @@
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
       },
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     }, {
       "id" : "f1",
       "type" : "HtmlDialogEnd",
@@ -43,7 +45,9 @@
       "visual" : {
         "at" : { "x" : 96, "y" : 160 }
       },
-      "connect" : { "id" : "f5", "to" : "f4" }
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
     }, {
       "id" : "f4",
       "type" : "HtmlDialogExit",
@@ -55,10 +59,10 @@
       "type" : "HtmlDialogMethodStart",
       "name" : "deleteDocument(String)",
       "config" : {
-        "callSignature" : "deleteDocument",
+        "signature" : "deleteDocument",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String" }
+            { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "out.documentId" : "param.documentId"
@@ -69,56 +73,68 @@
       "visual" : {
         "at" : { "x" : 96, "y" : 256 }
       },
-      "connect" : { "id" : "f8", "to" : "f7" }
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
     }, {
       "id" : "f7",
       "type" : "RestClientCall",
       "name" : "Delete Document",
       "config" : {
-        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
-        "headers" : {
-          "Accept" : "application/xml"
-        },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
         "method" : "DELETE",
-        "templateParams" : {
-          "DocumentId" : "in.documentId",
-          "FileCabinetId" : "in.fileCabinet.getId()"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
+          "templateParams" : {
+            "DocumentId" : "in.documentId",
+            "FileCabinetId" : "in.fileCabinet.getId()"
+          },
+          "headers" : {
+            "Accept" : "application/xml"
+          }
         }
       },
       "visual" : {
         "at" : { "x" : 248, "y" : 256 }
       },
-      "connect" : { "id" : "f10", "to" : "f9" }
+      "connect" : [
+        { "id" : "f10", "to" : "f9" }
+      ]
     }, {
       "id" : "f9",
       "type" : "RestClientCall",
       "name" : "Query Documents",
       "config" : {
-        "path" : "/FileCabinets/{FileCabinetId}/Documents",
-        "headers" : {
-          "Accept" : "application/xml"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents",
+          "templateParams" : {
+            "FileCabinetId" : "in.fileCabinet.getId()"
+          },
+          "queryParams" : {
+            "q" : "",
+            "fields" : "",
+            "sortOrder" : ""
+          },
+          "headers" : {
+            "Accept" : "application/xml"
+          }
         },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
-        "clientErrorCode" : "ivy:error:rest:client",
-        "queryParams" : {
-          "q" : "",
-          "fields" : "",
-          "sortOrder" : ""
-        },
-        "statusErrorCode" : "ivy:error:rest:client",
-        "responseMapping" : {
-          "out.documents" : "result.items.getItem()"
-        },
-        "templateParams" : {
-          "FileCabinetId" : "in.fileCabinet.getId()"
-        },
-        "resultType" : "com.docuware.dev.schema._public.services.platform.DocumentsQueryResult"
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.DocumentsQueryResult",
+            "map" : {
+              "out.documents" : "result.items.getItem()"
+            }
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 440, "y" : 256 }
       },
-      "connect" : { "id" : "f12", "to" : "f11" }
+      "connect" : [
+        { "id" : "f12", "to" : "f11" }
+      ]
     }, {
       "id" : "f11",
       "type" : "HtmlDialogEnd",
@@ -130,10 +146,10 @@
       "type" : "HtmlDialogMethodStart",
       "name" : "onClickEditDocument(String)",
       "config" : {
-        "callSignature" : "onClickEditDocument",
+        "signature" : "onClickEditDocument",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String" }
+            { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "out.documentId" : "param.documentId"
@@ -144,37 +160,42 @@
       "visual" : {
         "at" : { "x" : 104, "y" : 368 }
       },
-      "connect" : { "id" : "f15", "to" : "f21" }
+      "connect" : [
+        { "id" : "f15", "to" : "f21" }
+      ]
     }, {
       "id" : "f21",
       "type" : "RestClientCall",
       "name" : "Fetch Document Properties",
       "config" : {
-        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
-        "headers" : {
-          "Accept" : "application/json"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
+          "templateParams" : {
+            "DocumentId" : "in.documentId",
+            "FileCabinetId" : "in.fileCabinet.id"
+          },
+          "headers" : {
+            "Accept" : "application/json"
+          }
         },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
-        "clientErrorCode" : "ivy:error:rest:client",
-        "method" : "GET",
-        "statusErrorCode" : "ivy:error:rest:client",
-        "templateParams" : {
-          "DocumentId" : "in.documentId",
-          "FileCabinetId" : "in.fileCabinet.id"
-        },
-        "resultType" : "com.axonivy.connector.docuware.connector.DocuWareProperties",
-        "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.demo.enums.ItemType;",
-          "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
-          "import com.axonivy.connector.docuware.connector.DocuWareProperties;",
-          "",
-          "out.properties = new DocuWareProperties();",
-          "for (DocuWareProperty property : result.properties) {",
-          "  if (ItemType.INT.getValue() == property.itemElementName || ItemType.DECIMAL.getValue() == property.itemElementName || ItemType.STRING.getValue() == property.itemElementName) {",
-          "    out.properties.properties.add(property);",
-          "  }",
-          "}"
-        ]
+        "response" : {
+          "entity" : {
+            "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties",
+            "code" : [
+              "import com.axonivy.connector.docuware.connector.demo.enums.ItemType;",
+              "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
+              "import com.axonivy.connector.docuware.connector.DocuWareProperties;",
+              "",
+              "out.properties = new DocuWareProperties();",
+              "for (DocuWareProperty property : result.properties) {",
+              "  if (ItemType.INT.getValue() == property.itemElementName || ItemType.DECIMAL.getValue() == property.itemElementName || ItemType.STRING.getValue() == property.itemElementName) {",
+              "    out.properties.properties.add(property);",
+              "  }",
+              "}"
+            ]
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 248, "y" : 368 }
@@ -185,9 +206,13 @@
           "visual" : {
             "at" : { "x" : 280, "y" : 410 }
           },
-          "connect" : { "id" : "f18", "to" : "f14", "via" : [ { "x" : 440, "y" : 410 } ] }
+          "connect" : [
+            { "id" : "f18", "to" : "f14", "via" : [ { "x" : 440, "y" : 410 } ] }
+          ]
         } ],
-      "connect" : { "id" : "f16", "to" : "f14" }
+      "connect" : [
+        { "id" : "f16", "to" : "f14" }
+      ]
     }, {
       "id" : "f14",
       "type" : "HtmlDialogEnd",

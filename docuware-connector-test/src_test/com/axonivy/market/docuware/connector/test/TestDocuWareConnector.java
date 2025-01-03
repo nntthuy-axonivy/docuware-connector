@@ -11,6 +11,7 @@ import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.rest.client.RestClient;
 import ch.ivyteam.ivy.rest.client.RestClient.Builder;
+import ch.ivyteam.ivy.rest.client.RestClientFeature;
 import ch.ivyteam.ivy.rest.client.RestClients;
 import ch.ivyteam.ivy.scripting.objects.List;
 
@@ -30,11 +31,11 @@ public class TestDocuWareConnector {
         .uri("http://{ivy.engine.host}:{ivy.engine.http.port}/{ivy.request.application}/api/docuWareMock")
         .description(restClient.description()).properties(restClient.properties());
     // use test feature instead of real one
-    for (String feature : restClient.features()) {
-      if (feature.contains(OAuth2Feature.class.getCanonicalName())) {
-        feature = DocuWareOAuth2TestFeature.class.getCanonicalName();
+    for (RestClientFeature feature : restClient.features()) {
+      if (feature.clazz().contains(OAuth2Feature.class.getCanonicalName())) {
+        feature = new RestClientFeature(DocuWareOAuth2TestFeature.class.getCanonicalName());
       }
-      builder.feature(feature);
+      builder.feature(feature.clazz());
     }
     builder.feature("ch.ivyteam.ivy.rest.client.security.CsrfHeaderFeature");
     restClient = builder.toRestClient();

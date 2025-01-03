@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "18516121B5CC015E",
   "kind" : "CALLABLE_SUB",
   "config" : {
@@ -10,10 +10,10 @@
       "type" : "CallSubStart",
       "name" : "deleteDocument(String)",
       "config" : {
-        "callSignature" : "deleteDocument",
+        "signature" : "deleteDocument",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String" }
+            { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "out.documentId" : "param.#documentId"
@@ -21,7 +21,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
           ],
           "map" : {
             "result.error" : "in.#error"
@@ -31,7 +31,9 @@
       "visual" : {
         "at" : { "x" : 96, "y" : 64 }
       },
-      "connect" : { "id" : "f4", "to" : "f3" }
+      "connect" : [
+        { "id" : "f4", "to" : "f3" }
+      ]
     }, {
       "id" : "f1",
       "type" : "CallSubEnd",
@@ -53,36 +55,42 @@
       "visual" : {
         "at" : { "x" : 328, "y" : 64 }
       },
-      "connect" : { "id" : "f6", "to" : "f5" }
+      "connect" : [
+        { "id" : "f6", "to" : "f5" }
+      ]
     }, {
       "id" : "f5",
       "type" : "RestClientCall",
       "name" : "delete",
       "config" : {
-        "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
-        "clientErrorCode" : "ivy:error:rest:client",
         "method" : "DELETE",
-        "statusErrorCode" : "ivy:error:rest:client",
-        "templateParams" : {
-          "DocumentId" : "in.documentId",
-          "FileCabinetId" : "in.configuration.fileCabinetId"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
+          "templateParams" : {
+            "DocumentId" : "in.documentId",
+            "FileCabinetId" : "in.configuration.fileCabinetId"
+          }
         },
-        "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.DocuWareConstants;",
-          "import ch.ivyteam.ivy.bpm.error.BpmError;",
-          "import com.axonivy.connector.docuware.connector.DocuWareException;",
-          "import com.axonivy.connector.docuware.connector.DocuWareService;",
-          "import javax.ws.rs.core.Response.Status.Family;",
-          "",
-          "if(response != null){",
-          "  if(response.getStatusInfo().getFamily() != Family.SUCCESSFUL){",
-          "     DocuWareException dex = DocuWareService.handleError(response);",
-          "     out.error = BpmError.create(DocuWareConstants.ERROR_BASE).withMessage(dex.getErrorMessage()).build();",
-          "     out.error.setAttribute(DocuWareConstants.RESPONSE_STATUS_CODE_ATTRIBUTE, dex.getHttpCode());",
-          "  }",
-          "}"
-        ]
+        "response" : {
+          "entity" : {
+            "code" : [
+              "import com.axonivy.connector.docuware.connector.DocuWareConstants;",
+              "import ch.ivyteam.ivy.bpm.error.BpmError;",
+              "import com.axonivy.connector.docuware.connector.DocuWareException;",
+              "import com.axonivy.connector.docuware.connector.DocuWareService;",
+              "import javax.ws.rs.core.Response.Status.Family;",
+              "",
+              "if(response != null){",
+              "  if(response.getStatusInfo().getFamily() != Family.SUCCESSFUL){",
+              "     DocuWareException dex = DocuWareService.handleError(response);",
+              "     out.error = BpmError.create(DocuWareConstants.ERROR_BASE).withMessage(dex.getErrorMessage()).build();",
+              "     out.error.setAttribute(DocuWareConstants.RESPONSE_STATUS_CODE_ATTRIBUTE, dex.getHttpCode());",
+              "  }",
+              "}"
+            ]
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 544, "y" : 64 },
@@ -102,19 +110,23 @@
           "visual" : {
             "at" : { "x" : 576, "y" : 104 }
           },
-          "connect" : { "id" : "f12", "to" : "f1" }
+          "connect" : [
+            { "id" : "f12", "to" : "f1" }
+          ]
         } ],
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     }, {
       "id" : "f7",
       "type" : "CallSubStart",
       "name" : "deleteDocument(String, DocuWareEndpointConfiguration)",
       "config" : {
-        "callSignature" : "call",
+        "signature" : "call",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration" }
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "" }
           ],
           "map" : {
             "out.configuration" : "param.configuration",
@@ -123,7 +135,7 @@
         },
         "result" : {
           "params" : [
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError" }
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
           ],
           "map" : {
             "result.error" : "in.#error"
@@ -134,7 +146,9 @@
         "at" : { "x" : 96, "y" : 144 },
         "labelOffset" : { "x" : 17, "y" : 33 }
       },
-      "connect" : { "id" : "f9", "to" : "f8" }
+      "connect" : [
+        { "id" : "f9", "to" : "f8" }
+      ]
     }, {
       "id" : "f8",
       "type" : "Script",
@@ -151,6 +165,8 @@
       "visual" : {
         "at" : { "x" : 328, "y" : 144 }
       },
-      "connect" : { "id" : "f10", "to" : "f5", "via" : [ { "x" : 432, "y" : 144 }, { "x" : 432, "y" : 64 } ] }
+      "connect" : [
+        { "id" : "f10", "to" : "f5", "via" : [ { "x" : 432, "y" : 144 }, { "x" : 432, "y" : 64 } ] }
+      ]
     } ]
 }

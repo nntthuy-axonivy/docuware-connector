@@ -1,0 +1,31 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "UploadServiceData",
+  "namespace" : "com.axonivy.market.docuware.connector",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "uploadFile",
+    "type" : "java.io.File"
+  }, {
+    "name" : "propertiesList",
+    "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "document",
+    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+  }, {
+    "name" : "fileCabinetId",
+    "type" : "String"
+  }, {
+    "name" : "configuration",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
+  }, {
+    "name" : "file",
+    "type" : "List<Byte>"
+  }, {
+    "name" : "filename",
+    "type" : "String"
+  } ]
+}

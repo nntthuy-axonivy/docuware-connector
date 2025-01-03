@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "DocuWareDemoUIData",
+  "namespace" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI",
+  "annotations" : [ "", "" ],
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "fileCabinet",
+    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
+  }, {
+    "name" : "documents",
+    "type" : "List<com.docuware.dev.schema._public.services.platform.Document>"
+  }, {
+    "name" : "documentId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "properties",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties"
+  }, {
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  } ]
+}

@@ -1,5 +1,5 @@
 {
-  "format" : "10.0.0",
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "1811FCF74A58FA0C",
   "kind" : "HTML_DIALOG",
   "config" : {
@@ -10,7 +10,7 @@
       "type" : "HtmlDialogStart",
       "name" : "start()",
       "config" : {
-        "callSignature" : "start",
+        "signature" : "start",
         "input" : {
           "map" : {
             "out.fileCabinetId" : "\"\""
@@ -22,7 +22,9 @@
         "at" : { "x" : 96, "y" : 64 },
         "labelOffset" : { "x" : 12, "y" : 35 }
       },
-      "connect" : { "id" : "f2", "to" : "f1" }
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
     }, {
       "id" : "f1",
       "type" : "HtmlDialogEnd",
@@ -40,7 +42,9 @@
         "at" : { "x" : 96, "y" : 160 },
         "labelOffset" : { "x" : 9, "y" : 35 }
       },
-      "connect" : { "id" : "f5", "to" : "f4" }
+      "connect" : [
+        { "id" : "f5", "to" : "f4" }
+      ]
     }, {
       "id" : "f4",
       "type" : "HtmlDialogExit",
@@ -56,9 +60,11 @@
       },
       "visual" : {
         "at" : { "x" : 96, "y" : 256 },
-        "labelOffset" : { "x" : 13, "y" : 35 }
+        "labelOffset" : { "y" : 35 }
       },
-      "connect" : { "id" : "f16", "to" : "f15" }
+      "connect" : [
+        { "id" : "f16", "to" : "f15" }
+      ]
     }, {
       "id" : "f7",
       "type" : "HtmlDialogEnd",
@@ -76,7 +82,9 @@
         "at" : { "x" : 96, "y" : 352 },
         "labelOffset" : { "x" : 11, "y" : 35 }
       },
-      "connect" : { "id" : "f18", "to" : "f17" }
+      "connect" : [
+        { "id" : "f18", "to" : "f17" }
+      ]
     }, {
       "id" : "f10",
       "type" : "HtmlDialogEnd",
@@ -94,7 +102,9 @@
         "at" : { "x" : 96, "y" : 448 },
         "labelOffset" : { "x" : 11, "y" : 35 }
       },
-      "connect" : { "id" : "f20", "to" : "f19" }
+      "connect" : [
+        { "id" : "f20", "to" : "f19" }
+      ]
     }, {
       "id" : "f13",
       "type" : "HtmlDialogEnd",
@@ -106,110 +116,132 @@
       "type" : "RestClientCall",
       "name" : "Organizations",
       "config" : {
-        "path" : "/Organizations",
-        "headers" : {
-          "Accept" : "application/xml"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/Organizations",
+          "headers" : {
+            "Accept" : "application/xml"
+          }
         },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
-        "clientErrorCode" : "ivy:error:rest:client",
-        "statusErrorCode" : "ivy:error:rest:client",
-        "responseMapping" : {
-          "out.organizations" : "result"
-        },
-        "resultType" : "com.docuware.dev.schema._public.services.platform.Organizations",
-        "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
-          "",
-          "out.result = DocuWareDemoService.get().getLog(response, result);"
-        ]
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.Organizations",
+            "map" : {
+              "out.organizations" : "result"
+            },
+            "code" : [
+              "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
+              "",
+              "out.result = DocuWareDemoService.get().getLog(response, result);"
+            ]
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 256 }
       },
-      "connect" : { "id" : "f8", "to" : "f7" }
+      "connect" : [
+        { "id" : "f8", "to" : "f7" }
+      ]
     }, {
       "id" : "f17",
       "type" : "RestClientCall",
       "name" : "File Cabinets",
       "config" : {
-        "path" : "/FileCabinets",
-        "headers" : {
-          "Accept" : "application/xml"
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets",
+          "queryParams" : {
+            "orgid" : "in.organizations.getOrganization().get(0).id"
+          },
+          "headers" : {
+            "Accept" : "application/xml"
+          }
         },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
-        "clientErrorCode" : "ivy:error:rest:client",
-        "queryParams" : {
-          "orgid" : "in.organizations.getOrganization().get(0).id"
-        },
-        "statusErrorCode" : "ivy:error:rest:client",
-        "responseMapping" : {
-          "out.fileCabinetId" : "result.getFileCabinet().get(0).id",
-          "out.fileCabinets" : "result"
-        },
-        "resultType" : "com.docuware.dev.schema._public.services.platform.FileCabinets",
-        "responseCode" : [
-          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
-          "",
-          "out.result = DocuWareDemoService.get().getLog(response, result);"
-        ]
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.FileCabinets",
+            "map" : {
+              "out.fileCabinetId" : "result.getFileCabinet().get(0).id",
+              "out.fileCabinets" : "result"
+            },
+            "code" : [
+              "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
+              "",
+              "out.result = DocuWareDemoService.get().getLog(response, result);"
+            ]
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 352 }
       },
-      "connect" : { "id" : "f11", "to" : "f10" }
+      "connect" : [
+        { "id" : "f11", "to" : "f10" }
+      ]
     }, {
       "id" : "f19",
       "type" : "RestClientCall",
       "name" : "Document Upload",
       "config" : {
-        "headers" : {
-          "Accept" : "application/xml"
-        },
-        "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
         "method" : "POST",
-        "queryParams" : {
-          "StoreDialogId" : ""
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents",
+          "templateParams" : {
+            "fileCabinetId" : "",
+            "FileCabinetId" : "in.fileCabinetId"
+          },
+          "queryParams" : {
+            "StoreDialogId" : ""
+          },
+          "headers" : {
+            "Accept" : "application/xml"
+          }
         },
-        "statusErrorCode" : "ivy:error:rest:client",
-        "bodyObjectType" : "com.docuware.dev.schema._public.services.platform.FileCabinetIdDocumentsBody",
-        "bodyInputType" : "FORM",
-        "responseCode" : [
-          "import org.apache.http.HttpStatus;",
-          "import javax.faces.application.FacesMessage;",
-          "import javax.faces.context.FacesContext;",
-          "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
-          "",
-          "out.result = DocuWareDemoService.get().getLog(response, result);",
-          "FacesMessage message;",
-          "if (HttpStatus.SC_OK != response.getStatus()) {",
-          "  message.severity = FacesMessage.SEVERITY_ERROR;",
-          "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageFailed\");",
-          "} else {",
-          "  message.severity = FacesMessage.SEVERITY_INFO;",
-          "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageOK\");",
-          "}",
-          "",
-          "FacesContext.getCurrentInstance().addMessage(\"\", message);"
-        ],
-        "bodyForm" : {
-          "document" : "",
-          "file[]" : "in.file.getJavaFile()"
+        "body" : {
+          "type" : "FORM",
+          "mediaType" : "multipart/form-data",
+          "form" : {
+            "document" : [ "" ],
+            "file[]" : [ "in.file.getJavaFile()" ]
+          },
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.FileCabinetIdDocumentsBody"
+          }
         },
-        "path" : "/FileCabinets/{FileCabinetId}/Documents",
-        "clientErrorCode" : "ivy:error:rest:client",
-        "responseMapping" : {
-          "out.documentId" : "result.id.toString()"
-        },
-        "templateParams" : {
-          "fileCabinetId" : "",
-          "FileCabinetId" : "in.fileCabinetId"
-        },
-        "resultType" : "com.docuware.dev.schema._public.services.platform.Document",
-        "bodyMediaType" : "multipart/form-data"
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.Document",
+            "map" : {
+              "out.documentId" : "result.id.toString()"
+            },
+            "code" : [
+              "import org.apache.http.HttpStatus;",
+              "import javax.faces.application.FacesMessage;",
+              "import javax.faces.context.FacesContext;",
+              "import com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService;",
+              "",
+              "out.result = DocuWareDemoService.get().getLog(response, result);",
+              "FacesMessage message;",
+              "if (HttpStatus.SC_OK != response.getStatus()) {",
+              "  message.severity = FacesMessage.SEVERITY_ERROR;",
+              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageFailed\");",
+              "} else {",
+              "  message.severity = FacesMessage.SEVERITY_INFO;",
+              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageOK\");",
+              "}",
+              "",
+              "FacesContext.getCurrentInstance().addMessage(\"\", message);"
+            ]
+          }
+        }
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 448 }
       },
-      "connect" : { "id" : "f23", "to" : "f13" }
+      "connect" : [
+        { "id" : "f23", "to" : "f13" }
+      ]
     } ]
 }
