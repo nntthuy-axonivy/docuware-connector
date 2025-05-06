@@ -9,15 +9,24 @@ Dialogs:
               GotLoginTokenMessage: The new LoginToken is set to Ivy variable
               HeaderHelpText: After generating a LoginToken, it will be set to ivy variable and use for GrantType is dwtoken
               HeaderText: Use this form to generate a LoginToken of DocuWare for your account
+              InstanceValidateMessage: Instance could not be empty!
               LoginAndUpdateVar: Login and update to variable
+              LoginToken: Login Token
               PasswordValidateMessage: Password must not be empty!
               PleaseFillAccountInfo: Please fill-in your username and password to request a new LoginToken for DocuWare
+              PleaseSelect: Please select...
+              RequestInformation: Request information
               RequestLogin: Request LoginToken
               TokenHelpText: You can copy and backup this token for other setup
               UsernameValidateMessage: Username must not be empty!
 Labels:
+  ActiveInstanceDisplayNamePattern: '{0} ({1}) - Active'
   Cancel: Cancel
+  Instance: Instance
+  InstanceDisplayNamePattern: '{0} ({1})'
+  NoHost: No host
   Password: Password
+  PleaseSelect: Please select...
   Username: Username
 Processes:
   LoginToken:

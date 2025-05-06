@@ -32,6 +32,8 @@ This connector:
 4. **Document Retrieval**  
    Automatically fetch documents using the predefined **organization** and **fileCabinetId** fields from the `variables.yaml` file.
 
+   You also can change the **organization** and **fileCabinet** by changing the **Filter**. It supports multi-selection for both fields.
+
    ![fetch-documents](images/fetch-documents.png)
 
 5. **Document Viewing**  

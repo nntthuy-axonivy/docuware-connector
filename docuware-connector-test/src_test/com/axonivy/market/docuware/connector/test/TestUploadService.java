@@ -71,6 +71,7 @@ public class TestUploadService extends TestDocuWareConnector {
     prepareRestClient(app, fixture);
     List<DocuWareProperty> propertyList = prepareDocuWareProperties();
     DocuWareEndpointConfiguration configuration = prepareDocuWareEndpointConfiguration();
+    configuration.setStoreDialogId("" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1);
     File pdf = DocuWareDemoService.exportFromCMS("/Files/uploadSample", "pdf");
     ExecutionResult result = bpmClient.start().subProcess(testeeUploadFile_2).withParam("indexFields", propertyList)
         .withParam("file", pdf).withParam("configuration", configuration).execute();

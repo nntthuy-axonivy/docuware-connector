@@ -19,14 +19,30 @@
 
 			<h:form id="form">
 				<p:growl redisplay="false" showDetail="true" />
-				<p:fieldset legend="Account information">
+				<p:fieldset legend="#{ivy.cms.co('/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/RequestInformation')}">
 					<p>#{ivy.cms.co('/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/PleaseFillAccountInfo')}</p>
 					<p:panelGrid columns="2" layout="grid"
 						styleClass="ui-panelgrid-blank ui-fluid"
 						columnClasses="ui-g-12 ui-md-3 ui-lg-2 p-text-right, ui-g-12 ui-md-9 ui-lg-4 ui-fluid">
 
+						<p:outputLabel value="#{ivy.cms.co('/Labels/Instance')}" for="@next" />
+						<h:panelGroup>
+							<p:selectOneMenu id="instance" filter="true" filterMatchMode="contains"
+								placeholder="#{ivy.cms.co('/Labels/PleaseSelect')}"
+								value="#{requestLoginTokenBean.selectedInstance}"
+								converter="pojoConverter" required="true"
+								requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/InstanceValidateMessage')}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{requestLoginTokenBean.availableInstances}"
+									var="instance" itemLabel="#{instance.displayName}" itemValue="#{instance}" />
+								<p:ajax process="@this" update="form" partialSubmit="true"
+									listener="#{requestLoginTokenBean.onChangeInstance()}" />
+							</p:selectOneMenu>
+							<p:message for="instance" />
+						</h:panelGroup>
+
 						<p:outputLabel value="#{ivy.cms.co('/Labels/Username')}"
-							for="username" />
+							for="@next" />
 						<h:panelGroup>
 							<p:inputText id="username" required="true"
 								value="#{requestLoginTokenBean.username}"
@@ -35,7 +51,7 @@
 						</h:panelGroup>
 
 						<p:outputLabel value="#{ivy.cms.co('/Labels/Password')}"
-							for="password" />
+							for="@next" />
 						<h:panelGroup>
 							<p:inputText id="password" required="true" type="password"
 								value="#{requestLoginTokenBean.password}"
@@ -46,7 +62,7 @@
 					</p:panelGrid>
 				</p:fieldset>
 				<br />
-				<p:fieldset legend="Login Token">
+				<p:fieldset legend="#{ivy.cms.co('/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/LoginToken')}">
 					<div class="ui-g-12 ui-fluid">
 						<p>#{ivy.cms.co('/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/TokenHelpText')}</p>
 						<p:inputText readonly="true"

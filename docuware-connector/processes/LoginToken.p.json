@@ -31,10 +31,11 @@
       "type" : "DialogCall",
       "name" : "Request a LoginToken",
       "config" : {
-        "dialog" : "com.axonivy.market.docuware.connector.RequestLoginToken:start()"
+        "dialog" : "com.axonivy.connector.docuware.connector.RequestLoginToken:start()"
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
+        "at" : { "x" : 224, "y" : 64 },
+        "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
         { "id" : "f2", "to" : "f1" }

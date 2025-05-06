@@ -1,15 +1,36 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/variables.json
 # == Variables ==
-# 
+#
 # You can define here your project Variables.
 # If you want to define/override a Variable for a specific Environment, 
 # add an additional ‘variables.yaml’ file in a subdirectory in the ‘Config’ folder: 
 # '<project>/Config/_<environment>/variables.yaml
 #
 Variables:
-  docuwareConnector:
-    host: ''
-    username: ''
-    password: ''
-    organization: ''
-    fileCabinetId: ''
+  host: ""
+  grantType: password
+  username: ""
+  #[password]
+  password: ${decrypt:}
+  trustedUserName: ""
+  #[password]
+  trustedUserPassword: ${decrypt:}
+  fileCabinetId: ""
+  defaultInstance: primary
+  instances:
+    primary:
+      host: localhost
+      grantType: password
+      username: ""
+      password: ""
+      organization: ""
+      fileCabinetId: ""
+      connectTimeout: "0"
+    testCloud:
+      host: ""
+      grantType: password
+      username: ""
+      #[password]
+      password: ${decrypt:}
+      organization: ""
+      fileCabinetId: ""

@@ -1,11 +1,12 @@
 package com.axonivy.connector.docuware.connector.auth.oauth;
 
 import java.net.URI;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 import javax.ws.rs.core.UriBuilder;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 import com.axonivy.connector.docuware.connector.auth.OAuth2Feature.Property;
 import com.axonivy.connector.docuware.connector.exception.DocuWareException;
@@ -59,18 +60,18 @@ public class IdentityServiceContext {
   }
 
   public static URI buildIdentityServiceInfoURI(String host) {
-    Objects.requireNonNull(host, "Host must not be empty");
+    ObjectUtils.requireNonEmpty(host, "Host must not be empty");
     return UriBuilder.fromPath(HTTPS_PROTOCOL).path(host).path(DEFAULT_PLATFORM).path(IDENTITY_SERVICE_INFO_URL)
         .build();
   }
 
   public static URI buildOpenIdConfigurationURI(String identityServiceUrl) {
-    Objects.requireNonNull(identityServiceUrl, "IdentityServiceUrl must not be empty");
+    ObjectUtils.requireNonEmpty(identityServiceUrl, "IdentityServiceUrl must not be empty");
     return UriBuilder.fromPath(identityServiceUrl).path(OPEN_ID_CONFIGURATION_URL).build();
   }
 
   public static URI buildOrganizationLoginTokenURI(String host) {
-    Objects.requireNonNull(host, "Host must not be empty");
+    ObjectUtils.requireNonEmpty(host, "Host must not be empty");
     return UriBuilder.fromPath(HTTPS_PROTOCOL).path(host).path(DEFAULT_PLATFORM).path(ORG_LOGIN_TOKEN_URL)
         .build();
   }

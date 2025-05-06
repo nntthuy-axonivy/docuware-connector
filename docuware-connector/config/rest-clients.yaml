@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/rest-clients.json
 RestClients:
   DocuWare:
     UUID: 02d1eec1-32e9-4316-afc3-793448486203
@@ -9,10 +10,6 @@ RestClients:
     - com.axonivy.connector.docuware.connector.auth.OAuth2Feature
     Properties:
       PATH.host: ${ivy.var.docuwareConnector.host}
-      UserName: ${ivy.var.docuwareConnector.username}
-      Password: ${ivy.var.docuwareConnector.password}
-      TrustedUserName: ${ivy.var.docuwareConnector.trustedUsername}
-      TrustedUserPassword: ${ivy.var.docuwareConnector.trustedUserPassword}
       jersey.config.client.connectTimeout: ${ivy.var.docuwareConnector.connectTimeout}
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'

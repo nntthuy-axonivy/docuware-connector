@@ -4,8 +4,8 @@ import static com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFi
 import static com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter.BEARER;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -22,9 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.apache.commons.lang3.ObjectUtils;
+
+import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.auth.OAuth2Feature.AccessTokenByPasswordRequest;
 import com.axonivy.connector.docuware.connector.auth.oauth.IdentityServiceContext;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
+import com.axonivy.connector.docuware.connector.bo.DocuWareInstance;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.utils.DocuWareUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,6 +39,8 @@ import ch.ivyteam.ivy.environment.Ivy;
 @ViewScoped
 public class RequestLoginTokenBean {
 
+  private List<DocuWareInstance> availableInstances;
+  private DocuWareInstance selectedInstance;
   private String host;
   private String username;
   private String password;
@@ -42,12 +48,21 @@ public class RequestLoginTokenBean {
 
   @PostConstruct
   public void init() {
-    host = DocuWareUtils.getIvyVar(DocuWareVariable.HOST);
+    DocuWareService.unifyConfigurationByInstance();
+    availableInstances = DocuWareService.get().collectAvailableIntances();
+  }
+  
+  public void onChangeInstance() {
+    if (selectedInstance == null) {
+      host = null;
+      return;
+    }
+    host = DocuWareUtils.getVariableValueByInstance(selectedInstance.getInstance(), DocuWareVariable.HOST);
   }
 
   public void requestNewLoginToken() {
-    Objects.requireNonNull(username);
-    Objects.requireNonNull(password);
+    ObjectUtils.requireNonEmpty(username);
+    ObjectUtils.requireNonEmpty(password);
 
     Token token = generateNewIdentityToken();
 
@@ -64,7 +79,7 @@ public class RequestLoginTokenBean {
             Ivy.cms().co("/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/GotLoginToken"),
             Ivy.cms().co("/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/GotLoginTokenMessage"));
         FacesContext.getCurrentInstance().addMessage(null, message);
-        DocuWareUtils.setIvyVar(DocuWareVariable.LOGIN_TOKEN, loginToken);
+        DocuWareUtils.setVariableByInstance(selectedInstance.getInstance(), DocuWareVariable.LOGIN_TOKEN, loginToken);
       }
     } catch (Exception e) {
       Ivy.log().error(e);
@@ -107,6 +122,22 @@ public class RequestLoginTokenBean {
     URI openIdConfigURI = IdentityServiceContext.buildOpenIdConfigurationURI(identityURL);
     jsonData = DocuWareUtils.getWebTargetResponseAsJsonNode(openIdConfigURI);
     return Optional.ofNullable(jsonData).map(IdentityServiceContext.extractTokenEndpointProperty()).orElse(null);
+  }
+
+  public List<DocuWareInstance> getAvailableInstances() {
+    return availableInstances;
+  }
+
+  public void setAvailableInstances(List<DocuWareInstance> availableInstances) {
+    this.availableInstances = availableInstances;
+  }
+
+  public DocuWareInstance getSelectedInstance() {
+    return selectedInstance;
+  }
+
+  public void setSelectedInstance(DocuWareInstance selectedInstance) {
+    this.selectedInstance = selectedInstance;
   }
 
   public String getUsername() {

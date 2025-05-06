@@ -2,6 +2,8 @@
 package com.axonivy.connector.docuware.connector.auth.oauth;
 
 import static com.axonivy.connector.docuware.connector.utils.DocuWareUtils.getIvyVar;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 import java.io.IOException;
 import java.util.Map;
@@ -12,9 +14,14 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
+import com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration;
+import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2TokenRequester.AuthContext;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.enums.GrantType;
+import com.axonivy.connector.docuware.connector.utils.DocuWareUtils;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
@@ -46,7 +53,7 @@ public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilte
   }
 
   private final String getAccessToken(ClientRequestContext context) {
-    VarTokenStore accessTokenStore = VarTokenStore.get(DocuWareVariable.ACCESS_TOKEN.getVariableName());
+    VarTokenStore accessTokenStore = VarTokenStore.get();
     var accessToken = accessTokenStore.getToken();
 
     if (accessToken == null || accessToken.isExpired()) {
@@ -73,6 +80,7 @@ public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilte
   }
 
   private Token getNewAccessToken(Client client, FeatureConfig config) {
+    loadMandatoryConfigurationByActiveInstance();
     String type = getIvyVar(DocuWareVariable.GRANT_TYPE);
     GrantType grantType = Optional.ofNullable(GrantType.of(type)).orElse(GrantType.PASSWORD);
 
@@ -87,6 +95,29 @@ public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilte
     throw authError().withMessage("Failed to get access token: " + response)
         .withAttribute("status", response.getStatus()).withAttribute("payload", response.readEntity(String.class))
         .build();
+  }
+
+  private void loadMandatoryConfigurationByActiveInstance() {
+    DocuWareEndpointConfiguration defaultConfiguration = DocuWareUtils.getDefaultActiveInstance();
+    if (defaultConfiguration == null) {
+      DocuWareService.unifyConfigurationByInstance();
+      defaultConfiguration = DocuWareUtils.getDefaultActiveInstance();
+    }
+    if (defaultConfiguration != null) {
+      // Load configuration for Host
+      String activeHost = DocuWareUtils.getIvyVar(DocuWareVariable.HOST);
+      if (isNoneBlank(defaultConfiguration.getHost())
+          && (isBlank(activeHost) || !activeHost.equals(defaultConfiguration.getHost()))) {
+        DocuWareUtils.setIvyVar(DocuWareVariable.HOST, defaultConfiguration.getHost());
+      }
+      // Load configuration for connect timeout
+      String activeConnectTimeoutString = DocuWareUtils.getIvyVar(DocuWareVariable.CONNECT_TIMEOUT);
+      int activeConnectTimeout = NumberUtils.isCreatable(activeConnectTimeoutString) ? NumberUtils.toInt(activeConnectTimeoutString) : 0;
+      if (defaultConfiguration.getConnectTimeout() != null
+          && activeConnectTimeout != defaultConfiguration.getConnectTimeout()) {
+        DocuWareUtils.setIvyVar(DocuWareVariable.CONNECT_TIMEOUT, activeConnectTimeoutString);
+      }
+    }
   }
 
   private static BpmPublicErrorBuilder authError() {
