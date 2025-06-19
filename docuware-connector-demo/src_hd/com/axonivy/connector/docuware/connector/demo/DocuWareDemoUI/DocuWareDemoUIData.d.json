@@ -4,49 +4,20 @@
   "namespace" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "error",
-    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
-  }, {
-    "name" : "fileCabinetFilterKeyword",
-    "type" : "String"
-  }, {
-    "name" : "fileCabinetId",
-    "type" : "String"
-  }, {
-    "name" : "availableFileCabinets",
-    "type" : "List<com.docuware.dev.schema._public.services.platform.FileCabinet>"
-  }, {
-    "name" : "selectedFileCabinets",
-    "type" : "List<com.docuware.dev.schema._public.services.platform.FileCabinet>"
-  }, {
-    "name" : "orgFilterkeyword",
-    "type" : "String"
-  }, {
-    "name" : "organizationId",
-    "type" : "String"
-  }, {
-    "name" : "availableOrganizations",
-    "type" : "List<com.docuware.dev.schema._public.services.platform.Organization>"
-  }, {
-    "name" : "selectedOrganizations",
-    "type" : "List<com.docuware.dev.schema._public.services.platform.Organization>"
-  }, {
-    "name" : "documentId",
-    "type" : "String"
+    "name" : "fileCabinet",
+    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
   }, {
     "name" : "documents",
     "type" : "List<com.docuware.dev.schema._public.services.platform.Document>"
   }, {
+    "name" : "documentId",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
     "name" : "properties",
     "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties"
   }, {
-    "name" : "availableInstances",
-    "type" : "List<com.axonivy.connector.docuware.connector.bo.DocuWareInstance>"
-  }, {
-    "name" : "selectedInstance",
-    "type" : "com.axonivy.connector.docuware.connector.bo.DocuWareInstance"
-  }, {
-    "name" : "docuWareDocuments",
-    "type" : "List<com.axonivy.connector.docuware.connector.bo.DocuWareDocument>"
+    "name" : "error",
+    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
   } ]
 }

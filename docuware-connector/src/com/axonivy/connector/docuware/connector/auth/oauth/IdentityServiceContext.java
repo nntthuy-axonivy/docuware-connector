@@ -20,7 +20,6 @@ public class IdentityServiceContext {
 	private static final String DEFAULT_PLATFORM = "docuware/platform";
 	private static final String IDENTITY_SERVICE_INFO_URL = "Home/IdentityServiceInfo";
 	private static final String OPEN_ID_CONFIGURATION_URL = ".well-known/openid-configuration";
-	private static final String ORG_LOGIN_TOKEN_URL = "/Organization/LoginToken";
 
 	public final FeatureConfig config;
 

@@ -1,8 +1,5 @@
 package com.axonivy.connector.docuware.connector;
 
-import static com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter.AUTHORIZATION;
-import static com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter.BEARER;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +17,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -54,7 +50,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import com.axonivy.connector.docuware.connector.auth.oauth.IdentityServiceContext;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.enums.GrantType;

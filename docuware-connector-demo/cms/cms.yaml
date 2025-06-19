@@ -10,51 +10,41 @@ Dialogs:
                 UploadMessageFailed: Upload doc to Docuware failed
                 UploadMessageOK: Upload doc to Docuware successful
               DocuWareDemoUI:
-                ContentTitle: Available documents
+                Title: DocuWare Demo UI
+                ContentTitle: 'Documents in {0}'
+                DocumentTable:
+                  IdHeaderText: Id
+                  ContentTypeHeaderText: Content Type
+                  TitleHeaderText: Title
+                  ActionColumn:
+                    HeaderText: Action
+                    ViewDocumentBtnTitle: View Document
+                    EditPropertiesBtnTitle: Edit Properties
+                    DeleteDocumentBtnTitle: Delete Document
+                PropertyTable:
+                  IndexHeaderText: Index
+                  FieldNameHeaderText: Field Name
+                  UpdateValueHeaderText: Update Value
                 Dialog:
                   DeleteHeader: Delete Document
                   DeleteMessage: Are you sure you want to delete this document?
-                  EditHeader: Edit Document Properties
-                  FailedEditMessage: Update unsuccessful!
-                  SuccessEditMessage: Update completed successfully!
                   ViewHeader: Document Preview
-                DocumentTable:
-                  ActionColumn:
-                    DeleteDocumentBtnTitle: Delete Document
-                    EditPropertiesBtnTitle: Edit Properties
-                    HeaderText: Action
-                    ViewDocumentBtnTitle: View Document
-                  ContentTypeHeaderText: Content Type
-                  IdHeaderText: Id
-                  TitleHeaderText: Title
-                FileCabinet: File Cabinet
-                Filter: Filter
-                HelpText: This demo will show you how DocuWare is on for multi-instances by providing a selection dropdown to select a wish instance and query all documents belonging to that instance by organizations and file cabinet.
-                Organization: Organization
-                PleaseSelect: Please select...
-                PleaseSelectInstance: Please select the instance first...
-                PleaseSelectOrg: Please select the Organization first...
-                PropertyTable:
-                  FieldNameHeaderText: Field Name
-                  IndexHeaderText: Index
-                  UpdateValueHeaderText: Update Value
-                Refresh: Refresh
-                Title: DocuWare Demo UI
-                VariableHelpText: We can configure multi-instances via config/variables.yaml file.
+                  EditHeader: Edit Document Properties
+                  SuccessEditMessage: Update completed successfully!
+                  FailedEditMessage: Update unsuccessful!
 Labels:
   CabinetId: 'Cabinet Id: {0}'
-  Cancel: Cancel
   Close: Close
-  Failed: Failed
   FileCabinets: File Cabinets
-  Instance: Instance
-  'NO':
-    name: 'No'
-  NoRecordsFound: No records found. Please try a different search.
   Organizations: Organizations
   Result: Result
+  Upload: Upload
+  NoRecordsFound: No records found. Please try a different search.
+  Cancel: Cancel
   Save: Save
   Success: Success
-  Upload: Upload
+  Failed: Failed
   'YES':
     name: 'Yes'
+  'NO':
+    name: 'No'

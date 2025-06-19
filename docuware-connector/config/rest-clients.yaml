@@ -10,6 +10,10 @@ RestClients:
     - com.axonivy.connector.docuware.connector.auth.OAuth2Feature
     Properties:
       PATH.host: ${ivy.var.docuwareConnector.host}
+      UserName: ${ivy.var.docuwareConnector.username}
+      Password: ${ivy.var.docuwareConnector.password}
+      TrustedUserName: ${ivy.var.docuwareConnector.trustedUsername}
+      TrustedUserPassword: ${ivy.var.docuwareConnector.trustedUserPassword}
       jersey.config.client.connectTimeout: ${ivy.var.docuwareConnector.connectTimeout}
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
