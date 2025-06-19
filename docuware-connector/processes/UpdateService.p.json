@@ -6,40 +6,6 @@
     "data" : "com.axonivy.market.docuware.connector.UpdateServiceData"
   },
   "elements" : [ {
-      "id" : "f0",
-      "type" : "CallSubStart",
-      "name" : "updateDocument",
-      "config" : {
-        "signature" : "updateDocument",
-        "input" : {
-          "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" },
-            { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" }
-          ],
-          "map" : {
-            "out.documentId" : "param.#documentId",
-            "out.indexFields" : "param.#indexFields"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "documentIndexFields", "type" : "com.docuware.dev.schema._public.services.platform.DocumentIndexFields", "desc" : "" },
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
-          ],
-          "map" : {
-            "result.documentIndexFields" : "in.#documentIndexFields",
-            "result.error" : "in.#error"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 64 },
-        "labelOffset" : { "x" : 17, "y" : 33 }
-      },
-      "connect" : [
-        { "id" : "f8", "to" : "f7" }
-      ]
-    }, {
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
@@ -48,16 +14,16 @@
     }, {
       "id" : "f3",
       "type" : "Script",
-      "name" : "preparte index fields json",
+      "name" : "prepare index fields json",
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.connector.docuware.connector.utils.JsonUtils;",
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "import com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate;",
             "",
             "",
             "DocuWarePropertiesUpdate properties = new DocuWarePropertiesUpdate(in.indexFields);",
-            "in.propertiesJson = JsonUtils.serializeProperties(properties);"
+            "in.propertiesJson = DocuWareService.get().serializeProperties(properties);"
           ]
         }
       },
@@ -101,7 +67,7 @@
               "",
               "if(response != null){",
               "  if(response.getStatusInfo().getFamily() != Family.SUCCESSFUL){",
-              "     DocuWareException dex = DocuWareService.handleError(response);",
+              "     DocuWareException dex = DocuWareService.get().handleError(response);",
               "     out.error = BpmError.create(DocuWareConstants.ERROR_BASE).withMessage(dex.getErrorMessage()).build();",
               "     out.error.setAttribute(DocuWareConstants.RESPONSE_STATUS_CODE_ATTRIBUTE, dex.getHttpCode());",
               "  }else{",
@@ -139,25 +105,6 @@
         { "id" : "f2", "to" : "f1" }
       ]
     }, {
-      "id" : "f7",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "",
-            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "f4", "to" : "f3" }
-      ]
-    }, {
       "id" : "f9",
       "type" : "CallSubStart",
       "name" : "updateDocument(Integer, List<DocuWareProperty>, DocuWareEndpointConfiguration)",
@@ -167,10 +114,10 @@
           "params" : [
             { "name" : "documentId", "type" : "String", "desc" : "" },
             { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "" }
+            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "null for default values" }
           ],
           "map" : {
-            "out.configuration" : "param.configuration",
+            "out.configuration" : "param.#configuration",
             "out.documentId" : "param.#documentId",
             "out.indexFields" : "param.indexFields"
           }
@@ -186,8 +133,12 @@
           }
         }
       },
+      "tags" : [
+        "connector"
+      ],
       "visual" : {
-        "at" : { "x" : 88, "y" : 160 }
+        "at" : { "x" : 88, "y" : 64 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
         { "id" : "f11", "to" : "f10" }
@@ -201,15 +152,15 @@
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
+            "in.configuration = DocuWareService.get().initializeConfiguration(in.configuration);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 160 }
+        "at" : { "x" : 224, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f12", "to" : "f3", "via" : [ { "x" : 384, "y" : 160 } ] }
+        { "id" : "f12", "to" : "f3" }
       ]
     } ]
 }

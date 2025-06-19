@@ -190,10 +190,10 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.connector.docuware.connector.utils.JsonUtils;",
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "import com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate;",
             "",
-            "in.propertiesJson = JsonUtils.serializeProperties(in.propertiesUpdate);"
+            "in.propertiesJson = DocuWareService.get().serializeProperties(in.propertiesUpdate);"
           ]
         }
       },

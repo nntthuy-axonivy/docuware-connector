@@ -11,7 +11,8 @@
       "config" : {
         "signature" : "startRequestALoginToken",
         "request" : {
-          "name" : "<%=ivy.cms.co(\"/Processes/LoginToken/name\")%>"
+          "name" : "<%=ivy.cms.co(\"/Processes/LoginToken/name\")%>",
+          "description" : "<%=ivy.cms.co(\"/Processes/LoginToken/description\")%>"
         }
       },
       "visual" : {

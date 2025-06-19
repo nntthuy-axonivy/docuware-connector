@@ -4,7 +4,7 @@
   <artifactId>docuware-openapi</artifactId>
   <version>12.0.2-SNAPSHOT</version>
   <properties>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

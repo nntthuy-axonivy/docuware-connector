@@ -1,34 +1,34 @@
 {
   "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
-  "simpleName" : "UploadServiceData",
+  "simpleName" : "CheckinServiceData",
   "namespace" : "com.axonivy.market.docuware.connector",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "uploadFile",
-    "type" : "java.io.File"
+    "name" : "configuration",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
   }, {
-    "name" : "properties",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties"
+    "name" : "documentId",
+    "type" : "String"
   }, {
     "name" : "error",
     "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
   }, {
+    "name" : "file",
+    "type" : "File"
+  }, {
+    "name" : "checkInParameters",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters"
+  }, {
     "name" : "document",
     "type" : "com.docuware.dev.schema._public.services.platform.Document"
   }, {
-    "name" : "fileCabinetId",
-    "type" : "String"
+    "name" : "checkOutAsStream",
+    "type" : "Boolean"
   }, {
-    "name" : "configuration",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
-  }, {
-    "name" : "fileStream",
+    "name" : "stream",
     "type" : "java.io.InputStream"
   }, {
     "name" : "fileName",
     "type" : "String"
-  }, {
-    "name" : "file",
-    "type" : "List<java.lang.Byte>"
   } ]
 }

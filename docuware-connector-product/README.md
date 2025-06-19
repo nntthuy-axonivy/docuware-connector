@@ -6,78 +6,83 @@ The Axon Ivy DocuWare connector enables efficient integration of DocuWare functi
 
 This connector:
 
-- minimizes your integration effort: use the demo version, which contains examples of the API calls.
+- minimizes your integration effort: use the demo to see examples of API calls.
 - is based on REST web service technologies.
-- gives you access to basic DocuWare functions.
+- gives you access to the DocuWare REST API.
 
 ## Demo
 
-### Features
+The demo offers a GUI to guide you through some basic DocuWare features, a GUI to retrieve a list of documents from your default organization and the first file cabinet found and some workflows with examples of other calls.
 
-1. **Organization Retrieval**  
-   Click the **Organizations** button to retrieve the organization ID. The system will automatically include this ID in subsequent requests.
+### Basic Docuware Features
 
-    ![organization-result](images/get-organization-result.png)
+Start **Basic DocuWare Calls** and either configure a fixed organization and file cabinet in global variables or **Fetch Organizations** and **Fetch FileCabinets** to use the first objects found instead.
+Once you select a file cabinet id, additional functions to **Fetch Documents** will be available. The first document found will be used as the demo document. Nevertheless, you
+can enter ids manually for all input fields to use different objects. Once a document id is set, the document can be downloaded or attached to the current case. If you upload
+a document, it's documentId will be set automatically and you can directly work with it.
 
-2. **File Cabinets Retrieval**  
-    Click the **File Cabinets** button to fetch the cabinet Id of the selected organization. The cabinet Id determines where the file will be uploaded.
+### Document Viewing
 
-    ![file-cabinet-result](images/get-file-cabinet-result.png)
-
-3. **Document Uploading**  
-    Select a file to upload to the chosen DocuWare file cabinet. You can verify the uploaded file on the DocuWare dashboard.
-
-    ![upload-document](images/upload-document-result.png)
-
-4. **Document Retrieval**  
-   Automatically fetch documents using the predefined **organization** and **fileCabinetId** fields from the `variables.yaml` file.
-
-   You also can change the **organization** and **fileCabinet** by changing the **Filter**. It supports multi-selection for both fields.
-
-   ![fetch-documents](images/fetch-documents.png)
-
-5. **Document Viewing**  
-   View documents directly within the interface using DocuWare’s document viewer.
+Start **View/Edit Document** to get basic viewer showing how to add, change, view and delete documents. Note, that viewing of documents might require additional setup of your DocuWare installation to allow embedding
+of DocuWare frames into your AxonIvy frames.
 
    ![view-document](images/view-document.png)
 
-6. **Document Properties Editing**  
-   Modify document properties, including metadata and custom fields.
+**Document Properties Editing**  
+Modify document properties, including metadata and custom fields.
 
    ![edit-document-properties](images/edit-document-properties.png)
 
-7. **Document Deletion**  
-   Delete documents from the file cabinet.
+**Document Deletion**  
+Delete documents from the file cabinet.
 
    ![delete-document](images/delete-document.png)
 
-To view and edit documents and their properties, run the process named **DocuWare View/Edit Document**.
+### Other demos
 
-To upload documents and perform actions like retrieving organizations, getting file cabinets, and uploading documents, run the process named **Start some DocuWare calls**.
+Other process starts show examples of DocuWare usage.
 
 ## Setup
 
-Before any interactions between the Axon Ivy Engine and DocuWare services can be run, they have to be introducted to each other. This can be done as follows:
+Before any interactions between the Axon Ivy Engine and DocuWare services can be run, they have to be introducted to each other.
+All configurations are done in global variables. Whether cloud or on-premise, you must define the `host` which is the hostname of
+your DocuWare installation.
 
-1. Get a DocuWare account and the DocuWare cloud `host`, `user-name`, and `password` to use.
+The connector supports different grant-types. Depending on the grant-type, other credentials are used.
 
-2. Override the global variables for `host`, `username`, and `password` in the demo project as shown in the example below.
+### Grant type `password`
+
+This is the typical type used for cloud solutions. Ivy will use a technical user to connect to DocuWare and all
+calls will be done using this user. The history of a document will show this technical user independent of the
+real Ivy user. For this grant-type you need to set `username` and `password` of the DocuWare user.
+
+### Grant type `trusted`
+
+This can be used in on-premise solutions. It will use a trusted user to connect, but it will impersonate the current
+Ivy user name for calls. Therefore, the history of a document will show the real Ivy user. For this grant-type
+you need to set `trustedUserName`, `trustedUserPassword` and `username` (to be used for special users).
+
+Notes:
+
+* For this to work, the Ivy user must have the same name as the DocuWare user
+* For System user and unauthenticated users, the configured `username` will be used.
+
+### Grant type `dw_token`
+
+This can be used, if you got the user token by some other means. Note, that this use-case is probably not yet fully
+supported and should be seen as a demo. You can start the process **Request a LoginToken for DW-Token** to play
+around with this grant-type.
+
+### Other configuration variables
+
+Other configuration variables are documented directly in the variables supported by the connector. Please see there
+for a description and copy it to your project, if you are using it, so that it will be visible in the Engine cockpit
+for your application.
 
 ```
 @variables.yaml@
 ```
 
-3. DocuWare supports 3 ways to generate an Access Token from the Identity Service:
-
-    3.a Request Token by Username & Password - GrantType is `password`
-    
-    3.b Request Token by a DocuWare Token - GrantType is `dwtoken`
-    
-    3.c Request Token by Username & Password (Trusted User) - GrantType is `trusted`
-
-4. For GrantType is `dwtoken`, we must get a LoginToken. Please start the process startRequestALoginToken.ivp and follow the guide to generate a new LoginToken
-
-If your REST URL does not follow the predefined REST URL pattern of this connector, you can change the URL in the Engine Cockpit. To change the URL in the Designer, you have to unpack the connector project and change it there.
-
-Run `start.ivp` of the DocuWareDemo demo process to test your setup.
+If the connector misses features that you need, you can unpack it to your project and extend it there. In this case
+consider to propose/offer your change to the Axon Ivy market.
 

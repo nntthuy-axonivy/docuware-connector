@@ -6,60 +6,11 @@
     "data" : "com.axonivy.market.docuware.connector.DownloadServiceData"
   },
   "elements" : [ {
-      "id" : "f0",
-      "type" : "CallSubStart",
-      "name" : "getDocument",
-      "config" : {
-        "signature" : "getDocument",
-        "input" : {
-          "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "out.documentId" : "param.#documentId"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" },
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
-          ],
-          "map" : {
-            "result.document" : "in.#document",
-            "result.error" : "in.#error"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "f4", "to" : "f3" }
-      ]
-    }, {
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
         "at" : { "x" : 592, "y" : 64 }
       }
-    }, {
-      "id" : "f3",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "f6", "to" : "f5" }
-      ]
     }, {
       "id" : "f5",
       "type" : "RestClientCall",
@@ -108,60 +59,11 @@
         { "id" : "f2", "to" : "f1" }
       ]
     }, {
-      "id" : "f8",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 264 }
-      },
-      "connect" : [
-        { "id" : "f18", "to" : "f17" }
-      ]
-    }, {
       "id" : "f12",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 592, "y" : 256 }
+        "at" : { "x" : 592, "y" : 272 }
       }
-    }, {
-      "id" : "f7",
-      "type" : "CallSubStart",
-      "name" : "downloadFile(String)",
-      "config" : {
-        "signature" : "downloadFile",
-        "input" : {
-          "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "out.documentId" : "param.#documentId"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "file", "type" : "File", "desc" : "" },
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
-          ],
-          "map" : {
-            "result.file" : "in.#file",
-            "result.error" : "in.#error"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 88, "y" : 264 }
-      },
-      "connect" : [
-        { "id" : "f9", "to" : "f8" }
-      ]
     }, {
       "id" : "f17",
       "type" : "RestClientCall",
@@ -183,10 +85,9 @@
           "entity" : {
             "type" : "[B",
             "code" : [
-              "import org.apache.commons.lang3.StringUtils;",
               "import com.axonivy.connector.docuware.connector.DocuWareService;",
               "",
-              "String filename = DocuWareService.getFilenameFromResponseHeader(response);",
+              "String filename = DocuWareService.get().getFilenameFromResponseHeader(response);",
               "",
               "in.file = new File(filename, true);",
               "in.file.createNewFile();",
@@ -199,14 +100,14 @@
           "import com.axonivy.connector.docuware.connector.DocuWareDownloadResult;",
           "",
           "",
-          "DocuWareDownloadResult result = DocuWareService.downloadFile(client, in.configuration, in.downloadFolder);",
+          "DocuWareDownloadResult result = DocuWareService.get().downloadFile(client, in.configuration, in.downloadFolder);",
           "",
           "in.file = result.#file;",
           "in.error = result.#error;"
         ]
       },
       "visual" : {
-        "at" : { "x" : 456, "y" : 264 },
+        "at" : { "x" : 456, "y" : 272 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "boundaries" : [ {
@@ -221,7 +122,7 @@
             }
           },
           "visual" : {
-            "at" : { "x" : 488, "y" : 304 }
+            "at" : { "x" : 488, "y" : 312 }
           },
           "connect" : [
             { "id" : "f20", "to" : "f12" }
@@ -239,10 +140,10 @@
         "input" : {
           "params" : [
             { "name" : "documentId", "type" : "String", "desc" : "" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "" }
+            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "null for default values" }
           ],
           "map" : {
-            "out.configuration" : "param.configuration",
+            "out.configuration" : "param.#configuration",
             "out.documentId" : "param.#documentId"
           }
         },
@@ -257,8 +158,13 @@
           }
         }
       },
+      "tags" : [
+        "connector"
+      ],
       "visual" : {
-        "at" : { "x" : 96, "y" : 160 }
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : 137, "y" : -39 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
         { "id" : "f16", "to" : "f13" }
@@ -272,15 +178,15 @@
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
+            "in.configuration = DocuWareService.get().initializeConfiguration(in.configuration);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 160 }
+        "at" : { "x" : 224, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f21", "to" : "f5", "via" : [ { "x" : 336, "y" : 152 }, { "x" : 336, "y" : 64 } ] }
+        { "id" : "f21", "to" : "f5" }
       ]
     }, {
       "id" : "f22",
@@ -291,10 +197,10 @@
         "input" : {
           "params" : [
             { "name" : "documentId", "type" : "String", "desc" : "" },
-            { "name" : "configration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "" }
+            { "name" : "configration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "null for default values" }
           ],
           "map" : {
-            "out.configuration" : "param.configration",
+            "out.configuration" : "param.#configration",
             "out.documentId" : "param.#documentId"
           }
         },
@@ -309,8 +215,13 @@
           }
         }
       },
+      "tags" : [
+        "connector"
+      ],
       "visual" : {
-        "at" : { "x" : 80, "y" : 368 }
+        "at" : { "x" : 96, "y" : 272 },
+        "labelOffset" : { "x" : 137, "y" : -47 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
         { "id" : "f24", "to" : "f23" }
@@ -324,15 +235,15 @@
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
+            "in.configuration = DocuWareService.get().initializeConfiguration(in.configuration);"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 368 }
+        "at" : { "x" : 224, "y" : 272 }
       },
       "connect" : [
-        { "id" : "f25", "to" : "f17", "via" : [ { "x" : 336, "y" : 368 }, { "x" : 336, "y" : 264 } ] }
+        { "id" : "f25", "to" : "f17" }
       ]
     } ]
 }

@@ -6,126 +6,68 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
-	<ui:composition template="/layouts/frame-10-full-width.xhtml">
+	<ui:composition template="/layouts/frame-10.xhtml">
 		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Title')}</ui:define>
 		<ui:define name="content">
+
+			<h3>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/ContentTitle',
+				[data.fileCabinet.name])}</h3>
+
 			<h:form id="form">
-				<p>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/HelpText')}</p>
-				<p>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/VariableHelpText')}</p>
-				<p:growl id="growl" showDetail="true"/>
+				<p:growl id="growl" showDetail="true" life="3000" />
+				<p:dataTable id="filesTable" var="document"
+					value="#{data.documents}" showGridlines="true"
+					resizableColumns="true" resizeMode="fit" paginator="true" rows="10"
+					paginatorPosition="bottom" rowsPerPageTemplate="10,25,50"
+					rowKey="#{document.id}"
+					emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}">
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/IdHeaderText')}"
+						width="30" filterBy="#{document.id}" filterMatchMode="contains">
+						<h:outputText value="#{document.id}" />
+					</p:column>
 
-				<h:panelGroup id="filter-selection-group" styleClass="formgrid grid ui-fluid">
-					<h3 class="field col-12">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Filter')}</h3>
-					<div class="field col-12 md:col-5">
-						<p:outputLabel value="#{ivy.cms.co('/Labels/Instance')}" for="@next" />
-						<p:selectOneMenu id="instance" filter="true" filterMatchMode="contains"
-							placeholder="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PleaseSelect')}"
-							value="#{data.selectedInstance}"
-							converter="pojoConverter">
-							<f:selectItem noSelectionOption="true" />
-							<f:selectItems value="#{data.availableInstances}"
-								var="instance" itemLabel="#{instance.displayName}" itemValue="#{instance}" />
-							<p:ajax process="@this" update="@this form"
-								listener="#{logic.onChangeInstance()}" />
-						</p:selectOneMenu>
-					</div>
-					<div class="field col-12 md:col-7" />
-					<div class="field col-12 md:col-5">
-						<p:outputLabel for="@next"
-							value="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Organization')}" />
-						<p:selectCheckboxMenu id="organization" value="#{data.selectedOrganizations}"
-							filterMatchMode="contains" multiple="true" filter="true"
-							emptyLabel="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PleaseSelectInstance')}"
-							updateLabel="true" converter="pojoConverter" scrollHeight="250">
-							<f:selectItems value="#{data.availableOrganizations}" var="org"
-								itemLabel="#{org.name}" itemValue="#{org}" />
-							<p:ajax listener="#{logic.queryFileCabinetByOrgs()}" process="@this" update="form" />
-							<p:ajax event="toggleSelect"
-								listener="#{logic.queryFileCabinetByOrgs()}" process="@this" update="form" />
-							<p:ajax event="itemUnselect"
-								listener="#{logic.queryFileCabinetByOrgs()}" process="@this" update="form" />
-						</p:selectCheckboxMenu>
-					</div>
-					<div class="field col-12 md:col-5">
-						<p:outputLabel for="@next"
-							value="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/FileCabinet')}" />
-						<p:selectCheckboxMenu id="fileCabinet"
-							value="#{data.selectedFileCabinets}"
-							filterMatchMode="contains" multiple="true" filter="true"
-							emptyLabel="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PleaseSelectOrg')}"
-							updateLabel="true" scrollHeight="250" converter="pojoConverter">
-							<f:selectItems value="#{data.availableFileCabinets}"
-								var="cabinet" itemLabel="#{cabinet.name}" itemValue="#{cabinet}" />
-							<p:ajax listener="#{logic.queryDocs()}" process="@this" update="@this form:result-group" />
-							<p:ajax event="toggleSelect" listener="#{logic.queryDocs()}" process="@this" update="@this form:result-group" />
-							<p:ajax event="itemUnselect" listener="#{logic.queryDocs()}" process="@this" update="@this form:result-group" />
-						</p:selectCheckboxMenu>
-					</div>
-				</h:panelGroup>
-				<h:panelGroup id="result-group">
-					<p:dataTable id="filesTable" var="document"
-						value="#{data.docuWareDocuments}" showGridlines="true"
-						resizableColumns="true" resizeMode="fit"
-						rowKey="#{document.id}" rows="10"
-						paginator="true" paginatorPosition="bottom"
-						rowsPerPageTemplate="10,25,50" paginatorAlwaysVisible="false"
-						allowUnsorting="true" sortMode="single"
-						emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}">
-						<f:facet name="header">
-							<div class="formgrid grid">
-								<h:outputText styleClass="field col-12 md:col-6"
-									value="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/ContentTitle')}" />
-								<div class="field col-12 md:col-6 grid align-items-end flex-row-reverse pr-0">
-									<p:commandButton value="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Refresh')}"
-										process="form:result-group" update="form:result-group"
-										partialSubmit="true" actionListener="#{logic.queryDocs()}" />
-								</div>
-							</div>
-						</f:facet>
-						<p:column sortBy="#{document.id}"
-							headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/IdHeaderText')}"
-							width="30" filterBy="#{document.id}" filterMatchMode="contains">
-							<h:outputText value="#{document.id}" />
-						</p:column>
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ContentTypeHeaderText')}"
+						filterBy="#{document.contentType}" filterMatchMode="contains">
+						<h:outputText value="#{document.contentType}" />
+					</p:column>
 
-						<p:column sortBy="#{document.document.title}"
-							headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/TitleHeaderText')}"
-							filterBy="#{document.document.title}" filterMatchMode="contains">
-							<h:outputText value="#{document.document.title}" />
-						</p:column>
-
-						<p:column sortBy="#{document.document.contentType}"
-							headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ContentTypeHeaderText')}"
-							filterBy="#{document.document.contentType}" filterMatchMode="contains">
-							<h:outputText value="#{document.document.contentType}" styleClass="white-space-normal" />
-						</p:column>
-
-						<p:column styleClass="text-center"
-							headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/HeaderText')}"
-							width="100">
-							<div class="action-column">
-								<p:commandButton icon="pi pi-eye"
-									title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
-									actionListener="#{docuWareDemoBean.buildDocumentUrl(document)}"
-									oncomplete="PF('viewDocumentDialog').show()"
-									update=":form:viewDocumentDialog" />
-								<p:commandButton icon="pi pi-pencil"
-									title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/EditPropertiesBtnTitle')}"
-									actionListener="#{logic.onClickEditDocument(document)}"
-									oncomplete="PF('editIndexFieldsDialog').show()"
-									update=":form:editIndexFieldsDialog" />
-								<p:commandButton icon="pi pi-trash"
-									title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/DeleteDocumentBtnTitle')}"
-									update=":form:filesTable"
-									actionListener="#{logic.deleteDocument(document)}">
-									<p:confirm header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteHeader')}"
-										message="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteMessage')}"
-										icon="fa fa-exclamation-triangle" />
-								</p:commandButton>
-							</div>
-						</p:column>
-					</p:dataTable>
-				</h:panelGroup>
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/TitleHeaderText')}"
+						filterBy="#{document.title}" filterMatchMode="contains">
+						<h:outputText value="#{document.title}" />
+					</p:column>
+					<p:column
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/HeaderText')}"
+						width="150">
+						<div class="action-column">
+							<p:commandButton icon="pi pi-eye"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
+								actionListener="#{docuWareDemoBean.buildDocumentUrl(document.id, data.fileCabinet.id)}"
+								oncomplete="PF('viewDocumentDialog').show()"
+								update=":form:viewDocumentDialog" />
+							<p:commandButton icon="pi pi-eye"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
+								actionListener="#{docuWareDemoBean.buildDocumentUrl2(document.id, data.fileCabinet.id)}"
+								oncomplete="PF('viewDocumentDialog').show()"
+								update=":form:viewDocumentDialog" />
+							<p:commandButton icon="pi pi-pencil"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/EditPropertiesBtnTitle')}"
+								actionListener="#{logic.onClickEditDocument(document.id)}"
+								oncomplete="PF('editIndexFieldsDialog').show()"
+								update=":form:editIndexFieldsDialog" />
+							<p:commandButton icon="pi pi-trash"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/DeleteDocumentBtnTitle')}"
+								update=":form:filesTable"
+								actionListener="#{logic.deleteDocument(document.id)}">
+								<p:confirm header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteHeader')}"
+									message="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteMessage')}"
+									icon="fa fa-exclamation-triangle" />
+							</p:commandButton>
+						</div>
+					</p:column>
+				</p:dataTable>
 				<br />
 				<div class="command-btns">
 					<p:commandButton id="cancel"
@@ -134,10 +76,10 @@
 				</div>
 				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
 					responsive="true" width="350">
-					<p:commandButton value="#{ivy.cms.co('/Labels/NO/name')}"
-						type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
-					<p:commandButton value="#{ivy.cms.co('/Labels/YES/name')}"
-						type="button" styleClass="ui-confirmdialog-yes" />
+					<p:commandButton value="#{ivy.cms.co('/Labels/NO/name')}" type="button"
+						styleClass="ui-confirmdialog-no ui-button-flat" />
+					<p:commandButton value="#{ivy.cms.co('/Labels/YES/name')}" type="button"
+						styleClass="ui-confirmdialog-yes" />
 				</p:confirmDialog>
 				<p:dialog id="viewDocumentDialog" widgetVar="viewDocumentDialog"
 					modal="true" resizable="false"
@@ -152,7 +94,7 @@
 					width="90vw" height="80vh">
 					<ic:com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields
 						documentId="#{data.documentId}"
-						fileCabinetId="#{data.fileCabinetId}"
+						fileCabinetId="#{data.fileCabinet.id}"
 						documentProperties="#{data.properties}" />
 				</p:dialog>
 			</h:form>

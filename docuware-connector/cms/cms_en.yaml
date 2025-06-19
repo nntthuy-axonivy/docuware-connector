@@ -30,4 +30,5 @@ Labels:
   Username: Username
 Processes:
   LoginToken:
-    name: Start to request a LoginToken for DW-Token
+    description: Get a login token for a username and a password.
+    name: Request a LoginToken for DW-Token
