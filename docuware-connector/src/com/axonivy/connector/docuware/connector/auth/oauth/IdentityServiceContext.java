@@ -12,11 +12,12 @@ import com.axonivy.connector.docuware.connector.auth.OAuth2Feature.Property;
 import com.axonivy.connector.docuware.connector.exception.DocuWareException;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.rest.client.FeatureConfig;
 
 public class IdentityServiceContext {
 
-	private static final String HTTPS_PROTOCOL = "https://";
+	private static final String SCHEME_VAR = "docuwareConnector.scheme";
 	private static final String DEFAULT_PLATFORM = "docuware/platform";
 	private static final String IDENTITY_SERVICE_INFO_URL = "Home/IdentityServiceInfo";
 	private static final String OPEN_ID_CONFIGURATION_URL = ".well-known/openid-configuration";
@@ -59,7 +60,8 @@ public class IdentityServiceContext {
 
 	public static URI buildIdentityServiceInfoURI(String host) {
 		Objects.requireNonNull(host, "Host must not be empty");
-		return UriBuilder.fromPath(HTTPS_PROTOCOL).path(host).path(DEFAULT_PLATFORM).path(IDENTITY_SERVICE_INFO_URL)
+		String scheme = Ivy.var().get(SCHEME_VAR);
+		return UriBuilder.fromPath("%s://".formatted(scheme)).path(host).path(DEFAULT_PLATFORM).path(IDENTITY_SERVICE_INFO_URL)
 				.build();
 	}
 
