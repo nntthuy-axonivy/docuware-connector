@@ -27,27 +27,6 @@ public class TestDeleteService extends TestDocuWareConnector {
       .elementName("deleteDocument(String, DocuWareEndpointConfiguration)");
 
   @Test
-  public void deleteDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
-      throws IOException {
-    prepareRestClient(app, fixture);
-    ExecutionResult result = bpmClient.start().subProcess(testeeDelete)
-        .withParam("documentId", String.valueOf(DOCUMENT_ID)).execute();
-    DeleteServiceData data = result.data().last();
-    assertThat(data.getError()).isNull();
-  }
-
-  @Test
-  public void deleteDocumentError(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app)
-      throws IOException {
-    prepareRestClient(app, fixture);
-    ExecutionResult result = bpmClient.start().subProcess(testeeDelete)
-        .withParam("documentId", Constants.DOCUMENT_ID_ERRROR_CASE).execute();
-    DeleteServiceData data = result.data().last();
-    assertThat(data.getError()).isNotNull();
-    assertThat(data.getError().getErrorMessage()).isNotEmpty();
-  }
-
-  @Test
   public void deleteDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture,
       IApplication app) throws IOException {
     prepareRestClient(app, fixture);

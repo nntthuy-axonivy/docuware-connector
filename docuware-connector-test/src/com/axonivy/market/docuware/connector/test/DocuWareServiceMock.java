@@ -86,9 +86,9 @@ public class DocuWareServiceMock {
 
   @GET
   @Produces(MediaType.APPLICATION_XML)
-  @Path("FileCabinets/{fileCabinetId}/Documents/{documentId}/FileDownload")
+  @Path("FileCabinets/{FileCabinetId}/Documents/{documentId}/FileDownload")
   public Response downloadFile(@Context HttpServletRequest req,
-      @PathParam(value = "fileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId)
+      @PathParam(value = "FileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId)
       throws IOException {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
@@ -96,16 +96,16 @@ public class DocuWareServiceMock {
     } else {
       File pdf = DocuWareDemoService.exportFromCMS("/Files/uploadSample", "pdf");
       Response response = Response.ok(pdf).build();
-      response.getHeaders().add("Content-Disposition", "ABC filename=DownloadedFile.pdf");
+      response.getHeaders().add("Content-Disposition", "attachment; filename=\"EURO rates.pdf\"; filename*=utf-8''%e2%82%ac%20rates.pdf");
       return response;
     }
   }
 
   @PUT
   @Produces(MediaType.APPLICATION_XML)
-  @Path("FileCabinets/{fileCabinetId}/Documents/{documentId}/Fields")
+  @Path("FileCabinets/{FileCabinetId}/Documents/{documentId}/Fields")
   public Response updateDocument(@Context HttpServletRequest req,
-      @PathParam(value = "fileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId) {
+      @PathParam(value = "FileCabinetId") String fileCabinetId, @PathParam(value = "documentId") String documentId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
@@ -133,9 +133,9 @@ public class DocuWareServiceMock {
 
   @POST
   @Produces(MediaType.APPLICATION_XML)
-  @Path("FileCabinets/{fileCabinetId}/Documents")
-  public Response upload(@Context HttpServletRequest req, @PathParam(value = "fileCabinetId") String fileCabinetId,
-      @QueryParam(value = "storeDialogId") String storeDialogId) {
+  @Path("FileCabinets/{FileCabinetId}/Documents")
+  public Response upload(@Context HttpServletRequest req, @PathParam(value = "FileCabinetId") String fileCabinetId,
+      @QueryParam(value = "StoreDialogId") String storeDialogId) {
     if (!isAuthenticated(req)) {
       // note: the real service would send details
       return Response.status(401).build();
