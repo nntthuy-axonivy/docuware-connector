@@ -10,3 +10,5 @@ on:
 jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v6
+    secrets:
+      mvnArgs: -Ddocuware.host="${{secrets.HOST}}" -Ddocuware.defaultInstance="${{secrets.DEFAULT_INSTANCE}}" -Ddocuware.instanceHost="${{secrets.INSTANCE_HOST}}" -Ddocuware.instanceGrantType="${{secrets.INSTANCE_GRANT_TYPE}}" -Ddocuware.instanceUsername="${{secrets.INSTANCE_USERNAME}}" -Ddocuware.instancePassword="${{secrets.INSTANCE_PASSWORD}}" -Ddocuware.instanceTrustedUserName="${{secrets.INSTANCE_TRUSTED_USER_NAME}}" -Ddocuware.instanceTrustedUserPassword="${{secrets.INSTANCE_TRUSTED_USER_PASSWORD}}" -Ddocuware.filecabinetid="${{secrets.FILECABINETID}}"
