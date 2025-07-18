@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.axonivy.ivy.api</groupId>
@@ -79,6 +81,30 @@
         <version>3.0.0-M1</version>
         <configuration>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <configuration>
+          <systemPropertyVariables>
+            <host>${docuware.host}</host>
+            <defaultInstance>${docuware.defaultInstance}</defaultInstance>
+            <instanceHost>${docuware.instanceHost}</instanceHost>
+            <instanceGrantType>${docuware.instanceGrantType}</instanceGrantType>
+            <instanceUsername>${docuware.instanceUsername}</instanceUsername>
+            <instancePassword>${docuware.instancePassword}</instancePassword>
+            <instanceTrustedUserName>${docuware.instanceTrustedUserName}</instanceTrustedUserName>
+            <instanceTrustedUserPassword>${docuware.instanceTrustedUserPassword}</instanceTrustedUserPassword>
+            <filecabinetid>${docuware.filecabinetid}</filecabinetid>
+          </systemPropertyVariables>
+          <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+            <disable>false</disable>
+            <usePhrasedFileName>false</usePhrasedFileName>
+            <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+            <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+            <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+          </statelessTestsetReporter>
         </configuration>
       </plugin>
     </plugins>
