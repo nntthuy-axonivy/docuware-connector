@@ -4,7 +4,8 @@ public class DocuwareTestConstants {
   public static final String MOCK_SERVER_CONTEXT_DISPLAY_NAME = "Mock Server Test";
   public static final String REAL_CALL_CONTEXT_DISPLAY_NAME = "Real Server Test";
   public static final String REST_CLIENT_RESPONSE_STATUS_CODE = "RestClientResponseStatusCode";
-
+  public static final String END_TO_END_TESTING_ENVIRONMENT_KEY = "testEnvironment";
+  public static final String END_TO_END_TESTING_ENVIRONMENT_VALUE = "E2E";
   public static final String HOST = "host";
   public static final String DEFAULT_INSTANCE = "defaultInstance";
   public static final String INSTANCE_HOST = "instanceHost";

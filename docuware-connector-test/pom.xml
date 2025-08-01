@@ -96,6 +96,7 @@
             <instanceTrustedUserName>${docuware.instanceTrustedUserName}</instanceTrustedUserName>
             <instanceTrustedUserPassword>${docuware.instanceTrustedUserPassword}</instanceTrustedUserPassword>
             <filecabinetid>${docuware.filecabinetid}</filecabinetid>
+            <testEnvironment>${testEnvironment}</testEnvironment>
           </systemPropertyVariables>
           <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
             <disable>false</disable>
