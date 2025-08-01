@@ -7,30 +7,39 @@
 # '<project>/Config/_<environment>/variables.yaml
 #
 Variables:
-  host: ""
-  grantType: password
-  username: ""
-  #[password]
-  password: ${decrypt:}
-  trustedUserName: ""
-  #[password]
-  trustedUserPassword: ${decrypt:}
-  fileCabinetId: ""
-  defaultInstance: primary
-  instances:
-    primary:
-      host: localhost
-      grantType: password
-      username: ""
-      password: ""
-      organization: ""
-      fileCabinetId: ""
-      connectTimeout: "0"
-    testCloud:
-      host: ""
-      grantType: password
-      username: ""
-      #[password]
-      password: ${decrypt:}
-      organization: ""
-      fileCabinetId: ""
+  docuwareConnector:
+    # The default active host. Managed by the system, should not manually modify.
+    host: ""
+    # The default active connection timeout. Managed by the system, should not manually modify.
+    connectTimeout: "0"
+    # The default active instance, it should be match with one of the instances in the configured  instance
+    # [enum: primary]
+    defaultInstance: ""
+    instances:
+      primary:
+        # Your docuware instance: e.g. 'acme.docuware.cloud'
+        host: ""
+        # The type of authorization grant to provide.
+        # [enum: password, trusted, dwtoken]
+        grantType: password
+        # The username used for authenticating to DocuWare.
+        username: ""
+        # The password used for authenticating to DocuWare.
+        #[password]
+        password: ${decrypt:}
+        # The Trusted username used for authenticating to DocuWare when GrantType is trusted.
+        trustedUserName: ""
+        # The password used for authenticating to DocuWare  when GrantType is trusted.
+        #[password]
+        trustedUserPassword: ${decrypt:}
+        # Use for getting a new DocuWare token by GrantType is dwtoken
+        # Please start process startRequestALoginToken.ivp to generate a new LoginToken
+        #[password]
+        loginToken: ${decrypt:}
+        # Your organization name
+        organization: ""
+        # The file cabinet Id, it must belong to provided organization
+        filecabinetid: ""
+        # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+        # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+        connectTimeout: "0"
