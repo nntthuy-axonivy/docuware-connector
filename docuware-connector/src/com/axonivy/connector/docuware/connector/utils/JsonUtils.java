@@ -1,7 +1,5 @@
 package com.axonivy.connector.docuware.connector.utils;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.DocuWareProperties;
@@ -13,9 +11,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.util.StringUtil;
 
 /**
  * Provides utilities related to json serialization like building an
@@ -56,13 +54,7 @@ public class JsonUtils {
    * @return
    */
   private static Module timeModule() {
-    try {
-      return (Module) StringUtil.class.getClassLoader()
-          .loadClass("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule").getDeclaredConstructor().newInstance();
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-        | NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-      throw new RuntimeException("JSR time module not available", e);
-    }
+    return new JavaTimeModule();
   }
 
   public static String writeObjectAsJson(Object entity) {
