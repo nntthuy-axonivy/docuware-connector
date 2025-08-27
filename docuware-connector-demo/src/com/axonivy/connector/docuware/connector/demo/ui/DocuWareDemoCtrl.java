@@ -9,8 +9,11 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.core.Response;
 
@@ -53,9 +56,12 @@ public class DocuWareDemoCtrl {
 	private InputStream checkedOutStream;
 	private String checkedOutFilename;
 	private List<Field> fields;
+	private List<String> configs;
+	private String config;
 	private static final Random RND = new Random();
 
 	public DocuWareDemoCtrl() {
+		configs = DocuWareService.get().getConfigs().stream().sorted().toList();
 		organizationId = Ivy.var().get("docuwareConnector.organization");
 		fileCabinetId = Ivy.var().get("docuwareConnector.filecabinetid");
 		fields = new ArrayList<>();
@@ -71,32 +77,34 @@ public class DocuWareDemoCtrl {
 	}
 
 	public String getConfigurationDescription() {
-		try (var sw = new StringWriter();
-				var pw = new PrintWriter(sw)) {
-			pw.format(
-					"""
-					Global variables:
-					Host: '%s'
-					Platform: '%s'
-					GrantType: '%s'
-					Username: '%s'
-					Password: '%s'
-					TrustedUserName: '%s'
-					TrustedUserPassword: '%s'
-					""",
-					DocuWareVariable.HOST.getValue(),
-					DocuWareVariable.PLATFORM.getValue(),
-					DocuWareVariable.GRANT_TYPE.getValue(),
-					DocuWareVariable.USERNAME.getValue(),
-					safeShow(DocuWareVariable.PASSWORD.getValue()),
-					DocuWareVariable.TRUSTED_USERNAME.getValue(),
-					safeShow(DocuWareVariable.TRUSTED_USER_PASSWORD.getValue())
-					);
-			return sw.toString();
-		} catch (IOException e) {
-			log("Error reading configuration.", e);
-		}
-		return "Could not read configuration.";
+		var svc = DocuWareService.get();
+		return 	"""
+				Current configuration: %s
+
+				Known DocuWare global variables:
+				================================
+				%s
+				""".formatted(
+						getConfig(),
+						Stream.of(DocuWareVariable.values())
+						.filter(v -> !v.isObsolete())
+						.map(v -> "%s: %s".formatted(
+								v.varName(),
+								v.isSecret() ? safeShow(svc.getConfigVar(config, v, null)) : svc.getConfigVar(config, v, null)))
+						.collect(Collectors.joining("\n"))
+						);
+	}
+
+	public String getConfig() {
+		return config != null ? config : DocuWareService.get().getDefaultConfig();
+	}
+
+	public void setConfig(String config) {
+		this.config = config;
+	}
+
+	public Collection<String> getConfigs() {
+		return configs;
 	}
 
 	public Organizations getOrganizations() {
@@ -195,7 +203,7 @@ public class DocuWareDemoCtrl {
 	public String getViewerUrl() {
 		return viewerUrl;
 	}
-	
+
 	public String getResultListUrl() {
 		return resultListUrl;
 	}
@@ -249,7 +257,7 @@ public class DocuWareDemoCtrl {
 	}
 
 	public boolean isIntegrationPasswordSet() {
-		return StringUtils.isNotBlank(DocuWareVariable.INTEGRATION_PASSPHRASE.getValue());
+		return StringUtils.isNotBlank(DocuWareService.get().getConfigVar(config, DocuWareVariable.INTEGRATION_PASSPHRASE, null));
 	}
 
 	public void prepareDownloadedFile(Response response, InputStream result) throws IOException {
@@ -323,7 +331,7 @@ public class DocuWareDemoCtrl {
 		resultListUrl = dwService.getCabinetResultListAndViewerUrl(null, loginToken, fileCabinetId);
 		return resultListUrl;
 	}
-	
+
 	public void log(String format, Object...params) {
 		if(params.length > 0) {
 			Ivy.log().info(format, params);
@@ -400,7 +408,7 @@ public class DocuWareDemoCtrl {
 			}
 		}
 	}
-	
+
 	private String toString(DocumentIndexField field) {
 		String result = field.toString();
 		if(field.getDate() != null) {
@@ -448,7 +456,7 @@ public class DocuWareDemoCtrl {
 			field.setValue(value);
 			return field;
 		}
-		
+
 		public String getName() {
 			return name;
 		}

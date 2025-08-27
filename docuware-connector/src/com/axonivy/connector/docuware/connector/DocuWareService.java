@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +79,14 @@ public class DocuWareService {
 	 * This is the format: /Date(1652285631000)/
 	 */
 	protected static UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
+	/**
+	 * Base of all DocueWare connector variables.
+	 */
+	protected static final String DOCUWARE_CONNECTOR_VAR = "docuwareConnector";
+	/**
+	 * Name of the default configuration.
+	 */
+	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
 	protected static final String PROPERTIES_FILE_EXTENSION = ".json";
@@ -93,12 +103,113 @@ public class DocuWareService {
 		return INSTANCE;
 	}
 
+	/**
+	 * Get the name of the default configuration.
+	 * 
+	 * @return
+	 */
+	public String getDefaultConfig() {
+		return DOCUWARE_DEFAULT_CONFIG;
+	}
+
+	/**
+	 * Get the id of a configuration.
+	 * 
+	 * <p>
+	 * The id of a configuration is only used to determine, whether a configuration has changed
+	 * (and therefore cached values must be re-read). You can put there any value. A timestamp
+	 * and a user name might be informative.
+	 * </p>
+	 * @param config
+	 * @return
+	 */
+	public String getConfigId(String config) {
+		return getConfigVar(config, DocuWareVariable.CONFIG_ID, null);
+	}
+
+
+	/**
+	 * Get a variable in the Docuware Namespace and handle inheritance.
+	 * 
+	 * <p>
+	 * Convenience function to use predefined variable names.
+	 * </p>
+	 * 
+	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
+	 * @param variable variable inside config
+	 * @param def default value
+	 * @return
+	 */
+	public String getConfigVar(String config, DocuWareVariable variable, String def) {
+		return getConfigVar(config, variable.varName(), def);
+	}
+
+	/**
+	 * Get a variable in the Docuware Namespace and handle inheritance.
+	 * 
+	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
+	 * @param name name inside config
+	 * @param def default value
+	 * @return
+	 */
+	public String getConfigVar(String config, String name, String def) {
+		String result = null;
+		var cfg = config != null ? config : DOCUWARE_DEFAULT_CONFIG;
+		var seen = new HashSet<String>();
+		while(result == null) {
+			result = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, name), def);
+			if(result == null) {
+				var inherit = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, DocuWareVariable.INHERIT), def);
+				if(inherit != null && seen.add(inherit)) {
+					cfg = inherit;
+				}
+				else {
+					result = def;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Get all available Docuware configurations.
+	 * 
+	 * @return
+	 */
+	public Collection<String> getConfigs() {
+		// Search for all variables in our namespace containing at least one child variable.
+		var configPattern = Pattern.compile("%s[.]([^.]+)[.].+".formatted(DOCUWARE_CONNECTOR_VAR));
+
+		return Ivy.var().names().stream()
+				.map(n -> configPattern.matcher(n))
+				.filter(m -> m.matches())
+				.map(m -> m.group(1))
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Get a variable with absolute path.
+	 * 
+	 * @param name absolute path
+	 * @param def default value
+	 * @return
+	 */
+	public String getVar(String name, String def) {
+		return Optional.ofNullable(Ivy.var().get(name)).orElse(def);
+	}
+
+	/**
+	 * @deprecated use String version with inheritance instead
+	 * @param variable
+	 * @return
+	 */
+	@Deprecated
 	public String getIvyVar(DocuWareVariable variable) {
-		return Ivy.var().get(variable.getVariableName());
+		return Ivy.var().get(variable.varName());
 	}
 
 	public String setIvyVar(DocuWareVariable variable, String value) {
-		return Ivy.var().set(variable.getVariableName(), value);
+		return Ivy.var().set(variable.varName(), value);
 	}
 
 	public GrantType getIvyVarGrantType() {
@@ -151,7 +262,7 @@ public class DocuWareService {
 		return Ivy.rest().client(CLIENT_ID).resolveTemplate("host", host);
 
 	}
-	
+
 	protected URIBuilder addPathSegments(URIBuilder builder, String...pathSegments) {
 		List<String> segs = new ArrayList<>(builder.getPathSegments());
 
@@ -296,7 +407,8 @@ public class DocuWareService {
 	 */
 	public Cipher getCipher(int mode) {
 		Cipher cipher = null;
-		var passphrase = DocuWareVariable.INTEGRATION_PASSPHRASE.getValue();
+		// TODO onyl quick fix
+		var passphrase = getConfigVar(null, DocuWareVariable.INTEGRATION_PASSPHRASE.varName(), null);
 		if(StringUtils.isBlank(passphrase)) {
 			BpmError
 			.create(DOCUWARE_ERROR + "missingintegrationpassphrase")

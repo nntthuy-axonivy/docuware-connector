@@ -11,7 +11,22 @@
 				<div class="card messages">
 					<div class="grid">
 						<div class="col-12 md:col-12 lg:col-12">
-							<p:inputTextarea id="config" value="#{data.ctrl.configurationDescription}" autoResize="true" readonly="true" class="output" />
+							<p:inputTextarea id="configDescription" value="#{data.ctrl.configurationDescription}" autoResize="true" readonly="true" class="output" />
+						</div>
+					</div>
+					<div class="grid">
+						<div class="col-12 md:col-6 lg:col-2">
+							<p:outputLabel for="@next" value="Configuration" />
+						</div>
+						<div class="col-12 md:col-6 lg:col-2">
+							<p:selectOneMenu id="config" value="#{data.ctrl.config}">
+ 								<f:selectItem itemLabel="Select Configuration" itemValue="" />
+                    			<f:selectItems value="#{data.ctrl.configs}" />
+                    			<p:ajax update="@form"/>
+							</p:selectOneMenu>
+						</div>
+						<div class="col-12 md:col-6 lg:col-1">
+							<p:commandButton update="commands" icon="fa-solid fa-refresh" />
 						</div>
 					</div>
 					<div class="grid">
@@ -21,22 +36,17 @@
 						<div class="col-12 md:col-6 lg:col-2">
 							<p:inputText id="organizationId" value="#{data.ctrl.organizationId}" />
 						</div>
-					</div>
-					<div class="grid">
 						<div class="col-12 md:col-6 lg:col-2">
 							<p:outputLabel for="@next" value="Cabinet Id" />
 						</div>
-						<div class="col-12 md:col-6 lg:col-4">
+						<div class="col-12 md:col-6 lg:col-2">
 							<p:inputText id="fileCabinetId" value="#{data.ctrl.fileCabinetId}" />
 						</div>
 						<div class="col-12 md:col-6 lg:col-2">
 							<p:outputLabel for="@next" value="Doc Id" />
 						</div>
-						<div class="col-12 md:col-6 lg:col-3">
+						<div class="col-12 md:col-6 lg:col-2">
 							<p:inputText id="documentId" value="#{data.ctrl.documentId}" />
-						</div>
-						<div class="col-12 md:col-6 lg:col-1">
-							<p:commandButton update="commands" icon="fa-solid fa-refresh" />
 						</div>
 					</div>
 				</div>

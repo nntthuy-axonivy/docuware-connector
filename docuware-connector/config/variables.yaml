@@ -8,35 +8,25 @@
 #
 Variables:
   docuwareConnector:
-    # your docuware instance: e.g. 'acme.docuware.cloud'
-    scheme: "https"
-    # your docuware instance: e.g. 'acme.docuware.cloud'
-    host: ""
-    # The type of authorization grant to provide.
-    # [enum: password, trusted, dwtoken]
-    grantType: ""
-    # The username used for authenticating to DocuWare with the GrantType password. Additionally this username is used with the GrantType trusted, if the session is running
-    # unauthenticated or as system user.
-    username: ""
-    # The password used for authenticating to DocuWare with the GrantType password.
-    #[password]
-    password: ${decrypt:}
-    # The Trusted username used for authenticating to DocuWare when GrantType is trusted.
-    trustedUserName: ""
-    # The password used for authenticating to DocuWare  when GrantType is trusted.
-    trustedUserPassword: ""
-    # Use for getting a new DocuWare token by GrantType is dwtoken
-    # Please start process startRequestALoginToken.ivp to generate a new LoginToken
-    loginToken: ""
-    # A default organization to use
-    organization: ""
-    # A default file cabinet id to use
-    filecabinetid: ""
-    # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
-    # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
-    connectTimeout: "0"
-    # This property defines the maximum number of characters of an entity that will be logged.
-    loggingEntityMaxSize: "8192"
-    # The password used for encrypting parameters of embedded urls (set in Configurations/Organization Settings/Security)
-    #[password]
-    integrationPassphrase: ""
+    # The DocuWare default configuration.
+    defaultConfig:
+      # The Id of this configuration. It is only used to invalidate any cached connection based on this (and inherited) configuration.
+      configId: ""
+      # The URL of the server, including the platform part (compare to Postman collection), eg. https://acme.docuware.cloud/DocuWare/Platform
+      url: ""
+      # The type of authorization grant to provide.
+      # [enum: password, trusted, dwtoken]
+      grantType: ""
+      # The username used for authenticating to DocuWare.
+      username: ""
+      # The password used for authenticating to DocuWare.
+      #[password]
+      password: ${decrypt:}
+      # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+      # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+      connectTimeout: "0"
+      # This property defines the maximum number of characters of an entity that will be logged.
+      loggingEntityMaxSize: "8192"
+      # The password used for encrypting parameters of embedded urls (set in Configurations/Organization Settings/Security)
+      #[password]
+      integrationPassphrase: ""
