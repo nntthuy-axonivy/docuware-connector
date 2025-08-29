@@ -96,7 +96,7 @@ public class DocuWareDemoCtrl {
 	}
 
 	public String getConfig() {
-		return config != null ? config : DocuWareService.get().getDefaultConfig();
+		return DocuWareService.get().safeConfig(config);
 	}
 
 	public void setConfig(String config) {
@@ -161,7 +161,13 @@ public class DocuWareDemoCtrl {
 	}
 
 	public boolean hasAccessToken() {
-		return DocuWareService.get().getCachedToken() != null;
+		var result = false;
+		try {
+			result = DocuWareService.get().getCachedToken(config) != null;
+		} catch (Exception e) {
+			log("Error while checking access token, assuming no token is available.", e);
+		}
+		return result;
 	}
 
 	public String getLoginToken() {

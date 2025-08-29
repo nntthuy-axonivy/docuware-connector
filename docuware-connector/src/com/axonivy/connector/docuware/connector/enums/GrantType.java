@@ -10,13 +10,13 @@ public enum GrantType {
 	PASSWORD("password"), DW_TOKEN("dwtoken"), TRUSTED("trusted");
 
 	private String code;
-	private static final Map<String, GrantType> CODE_MAP = Stream.of(values()).collect(Collectors.toMap(GrantType::getCode, Functions.identity())); 
+	private static final Map<String, GrantType> CODE_MAP = Stream.of(values()).collect(Collectors.toMap(GrantType::code, Functions.identity())); 
 
 	private GrantType(String code) {
 		this.code = code;
 	}
 
-	public String getCode() {
+	public String code() {
 		return code;
 	}
 

@@ -16,7 +16,6 @@ import com.axonivy.connector.docuware.connector.auth.oauth.IdentityServiceContex
 import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2BearerFilter;
 import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2TokenRequester.AuthContext;
 import com.axonivy.connector.docuware.connector.auth.oauth.OAuth2UriProperty;
-import com.axonivy.connector.docuware.connector.constant.Constants;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.enums.GrantType;
 
@@ -84,32 +83,32 @@ public class OAuth2Feature implements Feature {
 
 	public static MultivaluedMap<String, String> passwordParamsMap(String username, String password) {
 		MultivaluedMap<String, String> values = new MultivaluedHashMap<>();
-		values.put(Constants.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.PASSWORD.getCode()));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
-		values.put(Constants.USERNAME, List.of(username));
-		values.put(Constants.PASSWORD, List.of(password));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.PASSWORD.code()));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(username));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(password));
 		return values;
 	}
 
 	public MultivaluedMap<String, String> trustedParamsMap(String trustedUsername, String trustedPassword, String username) {
 		MultivaluedMap<String, String> values = new MultivaluedHashMap<>();
-		values.put(Constants.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.TRUSTED.getCode()));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getDocuwareUserBasedOnCurrentUser()));
-		values.put(Constants.USERNAME, List.of(trustedUsername));
-		values.put(Constants.PASSWORD, List.of(trustedPassword));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.TRUSTED.code()));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getDocuwareUserBasedOnCurrentUser()));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(trustedUsername));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(trustedPassword));
 		return values;
 	}
 
 	public static MultivaluedMap<String, String> dwTokenParamsMap(String loginToken) {
 		MultivaluedMap<String, String> values = new MultivaluedHashMap<>();
-		values.put(Constants.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.DW_TOKEN.getCode()));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getIvyVar(DocuWareVariable.USERNAME)));
-		values.put(Constants.ACCESS_TOKEN_REQUEST_TOKEN, List.of(loginToken));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(GrantType.DW_TOKEN.code()));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_SCOPE, List.of(Property.SCOPE));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_CLIENT_ID, List.of(Property.CLIENT_ID));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getIvyVar(DocuWareVariable.USERNAME)));
+		values.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(loginToken));
 		return values;
 	}
 }

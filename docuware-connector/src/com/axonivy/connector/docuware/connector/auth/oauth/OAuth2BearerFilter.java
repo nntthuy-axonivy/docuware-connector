@@ -42,25 +42,31 @@ public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilte
 		context.getHeaders().add(AUTHORIZATION, BEARER + accessToken);
 	}
 
-
 	private String getAccessToken(ClientRequestContext context) {
+		var config = getConfig(context);
+
 		return Sudo.get(() -> {
-			var accessToken = DocuWareService.get().getCachedToken();
+			var accessToken = DocuWareService.get().getCachedToken(config);
 
 			if (accessToken == null || accessToken.isExpired()) {
-				var config = new FeatureConfig(context.getConfiguration(), getSource());
-				accessToken = getNewAccessToken(context.getClient(), config);
-				DocuWareService.get().setCachedToken(accessToken);
+				var cfg = new FeatureConfig(context.getConfiguration(), getSource());
+				accessToken = getNewAccessToken(context.getClient(), cfg);
+				DocuWareService.get().setCachedToken(config, accessToken);
 			}
 
 			if (!accessToken.hasAccessToken()) {
-				DocuWareService.get().setCachedToken(null);
+				DocuWareService.get().setCachedToken(config, null);
 				authError().withMessage("Failed to read 'access_token' from %s".formatted(accessToken)).throwError();
 			}
 
 			return accessToken.accessToken();
 		});
 	}
+
+	private String getConfig(ClientRequestContext context) {
+		return (String)context.getConfiguration().getProperty("config");
+	}
+
 
 	private Class<?> getSource() {
 		Class<?> type = getToken.getClass();

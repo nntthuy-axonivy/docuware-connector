@@ -8,29 +8,25 @@
 #
 Variables:
   docuwareConnector:
-    demoPasswort:
+    defaultConfig:
       configId: "1"
-      inherit: defaultConfig
-      url: 
-      grantType: 
-      username: 
+      url: https://presentationvm/docuware/platform
+      grantType: password
+      username: admin
       #[password]
-      password: 
+      password: ${decrypt:k1GmwSEiJtUbRb2q6CZ9QQ==}
     demoTrustedUser:
       configId: "1"
       inherit: defaultConfig
-      url: 
-      grantType: 
-      username: 
-      password: 
+      grantType: trusted
     presales:
       configId: "1"
       inherit: defaultConfig
-      url: 
-      grantType: 
-      username: 
+      url: https://presales-axonivy.docuware.cloud/docuware/platform
+      grantType: password
+      username: presales.axonivy
       #[password]
-      password: 
+      password: ${decrypt:lPij4j2mkTBwgl1pfnwjsA==}
     host: ""
     username: ""
     password: ""

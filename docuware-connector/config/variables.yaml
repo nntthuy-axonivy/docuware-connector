@@ -11,17 +11,31 @@ Variables:
     # The DocuWare default configuration.
     defaultConfig:
       # The Id of this configuration. It is only used to invalidate any cached connection based on this (and inherited) configuration.
-      configId: ""
+      configId: "1"
       # The URL of the server, including the platform part (compare to Postman collection), eg. https://acme.docuware.cloud/DocuWare/Platform
       url: ""
       # The type of authorization grant to provide.
       # [enum: password, trusted, dwtoken]
-      grantType: ""
+      grantType: "password"
       # The username used for authenticating to DocuWare.
       username: ""
       # The password used for authenticating to DocuWare.
       #[password]
       password: ${decrypt:}
+      # Impersonate a specific DocuWare user (only used for granttype trusted).
+      #
+      # DW name is constant
+      # <dwuser>
+      #
+      # DW names are fixed for system (developer), anonymous and user
+      # ^fixed:system=<dwuser>,anonymous=<dwuser>,user=<dwuser>
+      #
+      # DW names are fixed for system (developer) and anonymous but current ivy user name for other users
+      # ^ivy:system=<dwuser>,anonymous=<dwuser>
+      # 
+      # DW name is taken from an attribute of the current session (needs to be set by a service function)
+      # ^session
+      impersonateUser: ""
       # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
       # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
       connectTimeout: "0"

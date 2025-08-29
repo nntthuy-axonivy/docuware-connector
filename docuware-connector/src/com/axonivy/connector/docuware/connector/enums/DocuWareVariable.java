@@ -13,6 +13,7 @@ public enum DocuWareVariable {
 	GRANT_TYPE("grantType"),
 	USERNAME("username"),
 	PASSWORD("password", true),
+	IMPERSONATE_USER("impersonateUser"),
 	CONNECT_TIMEOUT("connectTimeout"),
 	LOGGING_ENTITY_MAX_SIZE("loggingEntityMaxSize"),
 	INTEGRATION_PASSPHRASE("integrationPassphrase", true),
@@ -40,7 +41,8 @@ public enum DocuWareVariable {
 	/**
 	 * @deprecated 
 	 */
-	LOGIN_TOKEN("docuwareConnector.loginToken", true, true);
+	LOGIN_TOKEN("docuwareConnector.loginToken", true, true)
+	;
 
 	private String varName;
 	private boolean secret = false;

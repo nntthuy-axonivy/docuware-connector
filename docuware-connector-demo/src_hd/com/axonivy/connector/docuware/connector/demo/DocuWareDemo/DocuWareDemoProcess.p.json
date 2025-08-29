@@ -130,6 +130,9 @@
           "path" : "/Organizations",
           "headers" : {
             "Accept" : "application/xml"
+          },
+          "properties" : {
+            "config" : "in.ctrl.config"
           }
         },
         "response" : {

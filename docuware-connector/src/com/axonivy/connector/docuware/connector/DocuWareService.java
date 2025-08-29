@@ -52,6 +52,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
+import com.axonivy.connector.docuware.connector.auth.oauth.ImpersonateStrategy;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.enums.GrantType;
@@ -87,6 +89,8 @@ public class DocuWareService {
 	 * Name of the default configuration.
 	 */
 	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
+	protected static final String DOCUWARE_USERNAME = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwusername");
+
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
 	protected static final String PROPERTIES_FILE_EXTENSION = ".json";
@@ -102,6 +106,16 @@ public class DocuWareService {
 	public static DocuWareService get() {
 		return INSTANCE;
 	}
+
+
+	public static final String ACCESS_TOKEN_REQUEST_GRANT_TYPE = "grant_type";
+	public static final String ACCESS_TOKEN_REQUEST_CLIENT_ID = "client_id";
+	public static final String ACCESS_TOKEN_REQUEST_SCOPE = "scope";
+	public static final String ACCESS_TOKEN_REQUEST_TOKEN = "token";
+	public static final String ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME = "impersonateName";
+	public static final String AUTHORIZATION_CODE = "authorization_code";
+	public static final String ACCESS_TOKEN_REQUEST_USERNAME = "username";
+	public static final String ACCESS_TOKEN_REQUEST_PASSWORD = "password";
 
 	/**
 	 * Get the name of the default configuration.
@@ -154,21 +168,117 @@ public class DocuWareService {
 	 */
 	public String getConfigVar(String config, String name, String def) {
 		String result = null;
-		var cfg = config != null ? config : DOCUWARE_DEFAULT_CONFIG;
+		var cfg = safeConfig(config);
 		var seen = new HashSet<String>();
-		while(result == null) {
+		while(StringUtils.isBlank(result)) {
 			result = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, name), def);
-			if(result == null) {
+			if(StringUtils.isBlank(result)) {
 				var inherit = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, DocuWareVariable.INHERIT), def);
-				if(inherit != null && seen.add(inherit)) {
-					cfg = inherit;
+				if(!StringUtils.isBlank(inherit)) {
+					if(seen.add(inherit)) { 
+						cfg = inherit;
+					}
+					else {
+						BpmError
+						.create(DOCUWARE_ERROR + "invalidconfiguration")
+						.withMessage("Found inheritance loop for config '%s'".formatted(config))
+						.throwError();
+					}
 				}
 				else {
 					result = def;
+					break;
 				}
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Get the {@link GrantType} of a configuration.
+	 * 
+	 * @param config
+	 * @param def 
+	 * @return
+	 */
+	public GrantType getConfigGrantType(String config, GrantType def) {
+		var grantType = getConfigVar(config, DocuWareVariable.GRANT_TYPE, null);
+		return StringUtils.isNotBlank(grantType) ? GrantType.of(grantType) : def;
+	}
+
+	/**
+	 * Get the config id of a configuration.
+	 * 
+	 * @param config
+	 * @param def
+	 * @return
+	 */
+	public String getConfigId(String config, String def) {
+		return getConfigVar(config, DocuWareVariable.CONFIG_ID, def);
+	}
+
+	/**
+	 * Check if the configId is up to date.
+	 * 
+	 * @param config
+	 * @param configId
+	 * @return
+	 */
+	public boolean isValidConfigId(String config, String configId) {
+		return StringUtils.equals(getConfigId(config), configId);
+	}
+
+	/**
+	 * Get the cached configuration from the application store.
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public Configuration getCachedConfiguration(String config) {
+		var key = createConfigurationCacheKey(config);
+		return (Configuration)IApplication.current().getAttribute(key);
+	}
+
+	public void setCachedConfiguration(String config, Configuration configuration) {
+		var key = createConfigurationCacheKey(config);
+		IApplication.current().setAttribute(key, configuration);
+	}
+
+	/**
+	 * Get the cached token from the grant-type specific store.
+	 * 
+	 * @return
+	 */
+	public Token getCachedToken(String config) {
+
+		// FIXME if grant type is trusted user then the key must also contain the impersonated user! The impersonated name needs to be an additional parameter.
+
+		var key = createTokenCacheKey(safeConfig(config));
+		Token token = null;
+		IAttributeStore<Object> store = null;
+		try {
+			store  = getGrantTypeStore(safeConfig(config));
+			token = (Token)store.getAttribute(key);
+		} catch (Exception e) {
+			BpmError
+			.create(DOCUWARE_ERROR + "cachedtoken")
+			.withCause(e)
+			.withMessage("Could not load token from store '%s' with key '%s'. Note: in the Designer ClassCastExecptions can occur on source changes.".formatted(store, key))
+			.throwError();
+		}
+		return token;
+	}
+
+	/**
+	 * Set the cached token to the grant-type specific store.
+	 * 
+	 * @param config
+	 * @param token
+	 */
+	public void setCachedToken(String config, Token token) {
+		var key = createTokenCacheKey(safeConfig(config));
+		var store = getGrantTypeStore(safeConfig(config));
+		store.setAttribute(key, token);
 	}
 
 	/**
@@ -188,6 +298,15 @@ public class DocuWareService {
 	}
 
 	/**
+	 * If config is <code>null</code> return the name of the default config.
+	 * @param config
+	 * @return
+	 */
+	public String safeConfig(String config) {
+		return config != null ? config : DOCUWARE_DEFAULT_CONFIG;
+	}
+
+	/**
 	 * Get a variable with absolute path.
 	 * 
 	 * @param name absolute path
@@ -196,6 +315,48 @@ public class DocuWareService {
 	 */
 	public String getVar(String name, String def) {
 		return Optional.ofNullable(Ivy.var().get(name)).orElse(def);
+	}
+
+	/**
+	 * Parse the impersonateUser and prepare a strategy.
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public ImpersonateStrategy getImpersonateStrategy(String config) {
+		return ImpersonateStrategy.create(getConfigVar(config, DocuWareVariable.IMPERSONATE_USER, null));
+	}
+
+	public String docuWareUserKey(String config) {
+		return "%s:%s".formatted(DOCUWARE_USERNAME, config);
+	}
+
+	/**
+	 * Get a username stored in session.
+	 * 
+	 * <p>
+	 * Use for impersonate user of type session.
+	 * </p>
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public String getSessionDocuwareUser(String config) {
+		return (String) Ivy.session().getAttribute(docuWareUserKey(config));
+	}
+
+	/**
+	 * Set a username stored in session.
+	 * 
+	 * <p>
+	 * Use for impersonate user of type session.
+	 * </p>
+	 * 
+	 * @param config
+	 * @param username
+	 */
+	public void setSessionDocuwareUser(String config, String username) {
+		Ivy.session().setAttribute(docuWareUserKey(config), username);
 	}
 
 	/**
@@ -216,6 +377,8 @@ public class DocuWareService {
 		var type = getIvyVar(DocuWareVariable.GRANT_TYPE);
 		return Optional.ofNullable(GrantType.of(type)).orElse(GrantType.PASSWORD);
 	}
+
+
 
 	/**
 	 * Get the DocuWare Base URL.
@@ -521,43 +684,22 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Get the cached token from the grant-type specific store.
-	 * 
-	 * @return
-	 */
-	public Token getCachedToken() {
-		var key = createKey();
-		var store = getGrantTypeStore();
-		Token token = null;
-		try {
-			token = (Token)store.getAttribute(key);
-		} catch (Exception e) {
-			Ivy.log().error("Could not load token from store {0} with key {1}. Note: in the Designer ClassCaseExecptions can occur on source changes.", e, store, key);
-		}
-		return token;
-	}
-
-	/**
-	 * Set the cached token to the grant-type specific store.
-	 * 
-	 * @param token
-	 */
-	public void setCachedToken(Token token) {
-		var key = createKey();
-		var store = getGrantTypeStore();
-		store.setAttribute(key, token);
-	}
-
-	/**
 	 * Get the grant-type specific store.
 	 * 
 	 * For grant type trusted, the token is stored in the session,
 	 * for all others globally in the application.
 	 * 
+	 * @param config
 	 * @return
 	 */
-	private IAttributeStore<Object> getGrantTypeStore() {
-		var grantType = DocuWareService.get().getIvyVarGrantType();
+	private IAttributeStore<Object> getGrantTypeStore(String config) {
+		var grantType = getConfigGrantType(config, null);
+
+		if(grantType == null) {
+			BpmError.create(DOCUWARE_ERROR + "missingGrantType")
+			.withMessage("GrantType of config '%s' is unset.".formatted(safeConfig(config)))
+			.throwError();
+		}
 
 		return switch (grantType) {
 		case TRUSTED -> Ivy.session();
@@ -565,8 +707,12 @@ public class DocuWareService {
 		};
 	}
 
-	private String createKey() {
-		return Token.class.getCanonicalName();
+	private String createTokenCacheKey(String config) {
+		return "%s:%s".formatted(Token.class.getCanonicalName(), safeConfig(config));
+	}
+
+	private String createConfigurationCacheKey(String config) {
+		return "%s:%s".formatted(Configuration.class.getCanonicalName(), safeConfig(config));
 	}
 
 	/**
