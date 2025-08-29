@@ -235,8 +235,14 @@ public class DocuWareService {
 	 * @return
 	 */
 	public Configuration getCachedConfiguration(String config) {
+		Configuration configuration = null;
 		var key = createConfigurationCacheKey(config);
-		return (Configuration)IApplication.current().getAttribute(key);
+		try {
+			configuration = (Configuration)IApplication.current().getAttribute(key);
+		} catch (ClassCastException e) {
+			Ivy.log().error("Cache contained an old version of the configuration class, ignoring it.");
+		}
+		return configuration;
 	}
 
 	public void setCachedConfiguration(String config, Configuration configuration) {
@@ -258,7 +264,11 @@ public class DocuWareService {
 		IAttributeStore<Object> store = null;
 		try {
 			store  = getGrantTypeStore(safeConfig(config));
-			token = (Token)store.getAttribute(key);
+			try {
+				token = (Token)store.getAttribute(key);
+			} catch (ClassCastException e) {
+				Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
+			}
 		} catch (Exception e) {
 			BpmError
 			.create(DOCUWARE_ERROR + "cachedtoken")

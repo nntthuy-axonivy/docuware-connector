@@ -21,7 +21,7 @@ public class Token {
 	public static final String EXPIRES_IN = "expires_in";
 	public static final String ACCESS_TOKEN = "access_token";
 
-	public Token() { }
+	protected Token() { }
 
 	public Token(Map<String, Object> values) {
 		this.values = values;

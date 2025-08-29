@@ -164,14 +164,13 @@ public class DocuWareAuthFeature implements Feature {
 
 		var map = response.readEntity(new GenericType<Map<String, Object>>(Map.class));
 
-		var token = new Token();
+		var token = new Token(map);
 		token.setConfig(config);
 		token.setConfigId(configuration.getConfigId());
-		token.setValues(map);
 
 		// TODO test token 
 		// return new Token(map);
-		return null;
+		return token;
 	}
 
 	private Configuration getNewConfiguration(ClientRequestContext context) {
