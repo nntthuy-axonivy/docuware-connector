@@ -14,6 +14,7 @@ public enum DocuWareVariable {
 	USERNAME("username"),
 	PASSWORD("password", true),
 	IMPERSONATE_USER("impersonateUser"),
+	DW_TOKEN("dwToken"),
 	CONNECT_TIMEOUT("connectTimeout"),
 	LOGGING_ENTITY_MAX_SIZE("loggingEntityMaxSize"),
 	INTEGRATION_PASSPHRASE("integrationPassphrase", true),

@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.connector.docuware.connector.DocuWareService;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
-import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.security.ISecurityConstants;
 
 /**
  * Represent an Impersonation Strategy.
@@ -24,8 +22,6 @@ import ch.ivyteam.ivy.security.ISecurityConstants;
  * <dd>^ivy:system=&lt;dwuser&gt;,anonymous=&gt;dwuser&gt;</dd>
  * <dt>DW name is taken from an attribute of the current session (needs to be set by a service function)</dt>
  * <dd><code>^session</code></dd>
- * <dt>DW name is taken from an attribute of the current thread (needs to be set by a service function)</dt>
- * <dd><code>^thread</code></dd>
  * </dl>
  * </p>
  */
@@ -52,16 +48,25 @@ public class ImpersonateStrategy {
 	private String systemUser;
 	private String anonymousUser;
 	private String ivyUser;
+	private String config;
 
 	private ImpersonateStrategy() {};
 
-	public static ImpersonateStrategy create(String impersonateUser) {
+	/**
+	 * Create a new {@link ImpersonateStrategy}.
+	 * 
+	 * @param config
+	 * @param impersonateUser
+	 * @return new strategy or <code>null</code> if impersonateUser is blank
+	 */
+	public static ImpersonateStrategy create(String config, String impersonateUser) {
 		var valid = false;
-		Exception ex = null;
 		ImpersonateStrategy is = null;
 		if(StringUtils.isNotBlank(impersonateUser)) {
+			Exception ex = null;
 			try {
 				is = new ImpersonateStrategy();
+				is.config = config;
 
 				var m = IMP_USER_PATTERN.matcher(impersonateUser);
 
@@ -91,16 +96,18 @@ public class ImpersonateStrategy {
 					}
 				}
 				else {
-					is.strategy = Strategy.DIRECT;
+					is.strategy = Strategy.CONSTANT;
 					var user = impersonateUser.strip();
 					is.systemUser = user;
 					is.anonymousUser = user;
 					is.ivyUser = user;
 				}
 
+
+				// Check plausibility of finally determined names for system, anonymous and ivy user.
 				if(is.strategy != null) {
 					valid = switch(is.strategy) {
-					case DIRECT -> !StringUtils.isAnyBlank(is.systemUser, is.anonymousUser, is.ivyUser);
+					case CONSTANT -> !StringUtils.isAnyBlank(is.systemUser, is.anonymousUser, is.ivyUser);
 					case FIXED -> !StringUtils.isAnyBlank(is.systemUser, is.anonymousUser, is.ivyUser); 
 					case IVY -> !StringUtils.isAnyBlank(is.systemUser, is.anonymousUser) && StringUtils.isBlank(is.ivyUser);
 					default -> StringUtils.isAllBlank(is.systemUser, is.anonymousUser, is.ivyUser);
@@ -109,59 +116,22 @@ public class ImpersonateStrategy {
 			} catch (Exception e) {
 				ex = e;
 			}
-		}
-
-		if(!valid) {
-			var error = BpmError.create(DocuWareService.DOCUWARE_ERROR + "invalidimpersonateUser")
-					.withMessage("Invalid impersonate pattern: '%s'".formatted(impersonateUser));
-			if(ex != null) {
-				error.withCause(ex);
+			if(!valid) {
+				var error = BpmError.create(DocuWareService.DOCUWARE_ERROR + "invalidimpersonateUser")
+						.withMessage("Invalid impersonate pattern: '%s'".formatted(impersonateUser));
+				if(ex != null) {
+					error.withCause(ex);
+				}
+				error.throwError();
 			}
-			error.throwError();
 		}
 
 		return is;
 	}
 
-	public String getImpersonateUserName() {
-		String result = null;
-		var session = Ivy.session();
-
-		switch(strategy) {
-		case DIRECT:
-			result = systemUser;
-			break;
-		case FIXED:
-			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
-				result = systemUser;
-			}
-			else if(session.isSessionUserUnknown()) {
-				result = anonymousUser;
-			}
-			else {
-				result = ivyUser;
-			}
-			break;
-		case IVY:
-			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
-				result = systemUser;
-			}
-			else if(session.isSessionUserUnknown()) {
-				result = anonymousUser;
-			}
-			else {
-				result = session.getSessionUserName();
-			}
-			break;
-		case SESSION:
-			break;
-		default:
-			break;
-		}
-		return result;
+	public String getConfig() {
+		return config;
 	}
-
-
 
 	public Strategy getStrategy() {
 		return strategy;
@@ -179,13 +149,25 @@ public class ImpersonateStrategy {
 		return ivyUser;
 	}
 
-
-
-
+	/**
+	 * Impersonation Strategies.
+	 */
 	public enum Strategy {
-		DIRECT,
+		/**
+		 * A constant DW name for all situations.
+		 */
+		CONSTANT,
+		/**
+		 * Fixed DW names defined for users, for system and for anonymous. 
+		 */
 		FIXED,
+		/**
+		 * The DW user name is the Iyv user and special users defined for system and anonymous. 
+		 */
 		IVY,
+		/**
+		 * The DW user name is taken from the session.
+		 */
 		SESSION;
 	}
 }

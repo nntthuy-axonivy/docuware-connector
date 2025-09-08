@@ -133,12 +133,10 @@ public class DocuWareAuthFeature implements Feature {
 		case TRUSTED:
 			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.USERNAME, null)));
 			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.PASSWORD, null)));
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(configuration.getImpersonateUserName()));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy())));
 			break;
 		case DW_TOKEN:
-			// TODO what use case is this and should it be handled by the feature?
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of());
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(configuration.getImpersonateUserName()));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(DocuWareService.get().getDwToken(configuration.getDwTokenStrategy())));
 			break;
 		default:
 			break;
@@ -245,9 +243,7 @@ public class DocuWareAuthFeature implements Feature {
 			.withMessage("Did not receive a token endpoint URL for config '%s'".formatted(config))
 			.throwError();
 		}
-		var configuration = new Configuration();
-		configuration.setConfig(config);
-		configuration.setConfigId(DocuWareService.get().getConfigId(config));
+		var configuration = DocuWareService.get().createConfiguration(config);
 		configuration.setTokenEndpoint(responseTokenEndpointUrl);
 		return configuration;
 	}

@@ -53,6 +53,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
+import com.axonivy.connector.docuware.connector.auth.oauth.DwTokenStrategy;
 import com.axonivy.connector.docuware.connector.auth.oauth.ImpersonateStrategy;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
@@ -90,6 +91,7 @@ public class DocuWareService {
 	 */
 	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
 	protected static final String DOCUWARE_USERNAME = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwusername");
+	protected static final String DOCUWARE_TOKEN = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwtoken");
 
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
@@ -229,6 +231,24 @@ public class DocuWareService {
 	}
 
 	/**
+	 * Create a configuration by reading basic attributes.
+	 * 
+	 * <p>
+	 * This configuration is used for caching important attributes. Not all attributes of the configuration might be available.
+	 * </p>
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public Configuration createConfiguration(String config) {
+		var configuration = new Configuration();
+		configuration.setConfig(config);
+		configuration.setConfigId(DocuWareService.get().getConfigId(config));
+		configuration.setImpersonateStrategy(DocuWareService.get().getImpersonateStrategy(config));
+		return configuration;
+	}
+
+	/**
 	 * Get the cached configuration from the application store.
 	 * 
 	 * @param config
@@ -334,18 +354,89 @@ public class DocuWareService {
 	 * @return
 	 */
 	public ImpersonateStrategy getImpersonateStrategy(String config) {
-		return ImpersonateStrategy.create(getConfigVar(config, DocuWareVariable.IMPERSONATE_USER, null));
+		return ImpersonateStrategy.create(safeConfig(config), getConfigVar(config, DocuWareVariable.IMPERSONATE_USER, null));
 	}
 
-	public String docuWareUserKey(String config) {
-		return "%s:%s".formatted(DOCUWARE_USERNAME, config);
+	/**
+	 * Parse the impersonateUser and prepare a strategy.
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public DwTokenStrategy getDwTokenStrategy(String config) {
+		return DwTokenStrategy.create(safeConfig(config), getConfigVar(config, DocuWareVariable.DW_TOKEN, null));
 	}
+
+	/**
+	 * Get the DW user name based on the strategy. 
+	 * 
+	 * @param impersonateStrategy
+	 * @return
+	 */
+	public String getImpersonateUserName(ImpersonateStrategy impersonateStrategy) {
+		String result = null;
+		var session = Ivy.session();
+
+		switch(impersonateStrategy.getStrategy()) {
+		case CONSTANT:
+			result = impersonateStrategy.getSystemUser();
+			break;
+		case FIXED:
+			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
+				result = impersonateStrategy.getSystemUser();
+			}
+			else if(session.isSessionUserUnknown()) {
+				result = impersonateStrategy.getAnonymousUser();
+			}
+			else {
+				result = impersonateStrategy.getIvyUser();
+			}
+			break;
+		case IVY:
+			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
+				result = impersonateStrategy.getSystemUser();
+			}
+			else if(session.isSessionUserUnknown()) {
+				result = impersonateStrategy.getAnonymousUser();
+			}
+			else {
+				result = session.getSessionUserName();
+			}
+			break;
+		case SESSION:
+			result = getSessionDocuwareUser(impersonateStrategy.getConfig());
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+
+	/**
+	 * Get the DW token based on the strategy. 
+	 * 
+	 * @param dwTokenStrategy
+	 * @return
+	 */
+	public String getDwToken(DwTokenStrategy dwTokenStrategy) {
+		String result = null;
+
+		switch(dwTokenStrategy.getStrategy()) {
+		case SESSION:
+			result = getSessionDocuwareToken(dwTokenStrategy.getConfig());
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+
 
 	/**
 	 * Get a username stored in session.
 	 * 
 	 * <p>
-	 * Use for impersonate user of type session.
+	 * Use to impersonate user of type session.
 	 * </p>
 	 * 
 	 * @param config
@@ -359,7 +450,7 @@ public class DocuWareService {
 	 * Set a username stored in session.
 	 * 
 	 * <p>
-	 * Use for impersonate user of type session.
+	 * Use to impersonate user of type session.
 	 * </p>
 	 * 
 	 * @param config
@@ -368,6 +459,48 @@ public class DocuWareService {
 	public void setSessionDocuwareUser(String config, String username) {
 		Ivy.session().setAttribute(docuWareUserKey(config), username);
 	}
+
+	/**
+	 * Get a dw token stored in session.
+	 * 
+	 * <p>
+	 * Use for dw token of type session.
+	 * </p>
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public String getSessionDocuwareToken(String config) {
+		return (String) Ivy.session().getAttribute(docuWareTokenKey(config));
+	}
+
+	/**
+	 * Set a dw token stored in session.
+	 * 
+	 * <p>
+	 * Use for dw token of type session.
+	 * </p>
+	 * 
+	 * @param config
+	 * @param token
+	 */
+	public void setSessionDocuwareToken(String config, String token) {
+		Ivy.session().setAttribute(docuWareTokenKey(config), token);
+	}
+
+	public String docuWareUserKey(String config) {
+		return "%s:%s".formatted(DOCUWARE_USERNAME, config);
+	}
+
+	public String docuWareTokenKey(String config) {
+		return "%s:%s".formatted(DOCUWARE_TOKEN, config);
+	}
+
+	/**
+	 * Stuff below this line needs review.
+	 */
+	private void xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx() {}
+
 
 	/**
 	 * @deprecated use String version with inheritance instead

@@ -1,7 +1,5 @@
 package com.axonivy.connector.docuware.connector.auth.oauth;
 
-import com.axonivy.connector.docuware.connector.DocuWareService;
-
 /**
  * Configuration properties to cache.
  */
@@ -10,6 +8,7 @@ public class Configuration {
 	private String configId;
 	private String tokenEndpoint;
 	private ImpersonateStrategy impersonateStrategy;
+	private DwTokenStrategy dwTokenStrategy;
 
 	public String getConfig() {
 		return config;
@@ -35,12 +34,22 @@ public class Configuration {
 		this.tokenEndpoint = tokenEndpoint;
 	}
 
-	public String getImpersonateUserName() {
-		if(impersonateStrategy == null) {
-			impersonateStrategy = DocuWareService.get().getImpersonateStrategy(config);
-		}
-		return impersonateStrategy.getImpersonateUserName();
+	public ImpersonateStrategy getImpersonateStrategy() {
+		return impersonateStrategy;
 	}
+
+	public void setImpersonateStrategy(ImpersonateStrategy impersonateStrategy) {
+		this.impersonateStrategy = impersonateStrategy;
+	}
+
+	public DwTokenStrategy getDwTokenStrategy() {
+		return dwTokenStrategy;
+	}
+
+	public void setDwTokenStrategy(DwTokenStrategy dwTokenStrategy) {
+		this.dwTokenStrategy = dwTokenStrategy;
+	}
+
 
 	@Override
 	public String toString() {
