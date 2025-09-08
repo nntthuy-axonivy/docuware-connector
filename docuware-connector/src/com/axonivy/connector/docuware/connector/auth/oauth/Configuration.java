@@ -1,5 +1,7 @@
 package com.axonivy.connector.docuware.connector.auth.oauth;
 
+import com.axonivy.connector.docuware.connector.enums.GrantType;
+
 /**
  * Configuration properties to cache.
  */
@@ -9,6 +11,7 @@ public class Configuration {
 	private String tokenEndpoint;
 	private ImpersonateStrategy impersonateStrategy;
 	private DwTokenStrategy dwTokenStrategy;
+	private GrantType grantType;
 
 	public String getConfig() {
 		return config;
@@ -50,10 +53,11 @@ public class Configuration {
 		this.dwTokenStrategy = dwTokenStrategy;
 	}
 
-
-	@Override
-	public String toString() {
-		return "Configuration [config=%s, configId=%s, tokenEndpoint=%s]".formatted(config, configId, tokenEndpoint);
+	public void setGrantType(GrantType grantType) {
+		this.grantType = grantType;
 	}
 
+	public GrantType getGrantType() {
+		return grantType;
+	}
 }

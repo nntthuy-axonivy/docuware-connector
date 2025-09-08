@@ -74,7 +74,6 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.security.ISecurityConstants;
-import ch.ivyteam.util.IAttributeStore;
 import ch.ivyteam.util.StringUtil;
 
 public class DocuWareService {
@@ -163,6 +162,27 @@ public class DocuWareService {
 	/**
 	 * Get a variable in the Docuware Namespace and handle inheritance.
 	 * 
+	 * <p>
+	 * Convenience function to use predefined variable names.
+	 * </p>
+	 * 
+	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
+	 * @param variable variable inside config
+	 * @param def default value
+	 * @return
+	 */
+	public Long getConfigVarAsLong(String config, DocuWareVariable variable, Long def) {
+		Long result = def;
+		var val = getConfigVar(config, variable.varName(), null);
+		if(val != null) {
+			result = Long.valueOf(val);
+		}
+		return result;
+	}
+
+	/**
+	 * Get a variable in the Docuware Namespace and handle inheritance.
+	 * 
 	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
 	 * @param name name inside config
 	 * @param def default value
@@ -194,18 +214,6 @@ public class DocuWareService {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Get the {@link GrantType} of a configuration.
-	 * 
-	 * @param config
-	 * @param def 
-	 * @return
-	 */
-	public GrantType getConfigGrantType(String config, GrantType def) {
-		var grantType = getConfigVar(config, DocuWareVariable.GRANT_TYPE, null);
-		return StringUtils.isNotBlank(grantType) ? GrantType.of(grantType) : def;
 	}
 
 	/**
@@ -245,6 +253,18 @@ public class DocuWareService {
 		configuration.setConfig(config);
 		configuration.setConfigId(DocuWareService.get().getConfigId(config));
 		configuration.setImpersonateStrategy(DocuWareService.get().getImpersonateStrategy(config));
+		configuration.setDwTokenStrategy(DocuWareService.get().getDwTokenStrategy(config));
+		var grantTypeVar = getConfigVar(config, DocuWareVariable.GRANT_TYPE, null);
+
+		if(StringUtils.isNotBlank(grantTypeVar)) {
+			configuration.setGrantType(GrantType.of(grantTypeVar));
+		}
+		else {
+			BpmError.create(DOCUWARE_ERROR + "missingGrantType")
+			.withMessage("GrantType is missing for config '%s'".formatted(config))
+			.throwError();
+		}
+
 		return configuration;
 	}
 
@@ -272,20 +292,19 @@ public class DocuWareService {
 
 	/**
 	 * Get the cached token from the grant-type specific store.
+	 * @param extra 
 	 * 
 	 * @return
 	 */
-	public Token getCachedToken(String config) {
+	public Token getCachedToken(String config, String extra) {
 
 		// FIXME if grant type is trusted user then the key must also contain the impersonated user! The impersonated name needs to be an additional parameter.
 
-		var key = createTokenCacheKey(safeConfig(config));
+		var key = createTokenCacheKey(safeConfig(config), extra);
 		Token token = null;
-		IAttributeStore<Object> store = null;
 		try {
-			store  = getGrantTypeStore(safeConfig(config));
 			try {
-				token = (Token)store.getAttribute(key);
+				token = (Token)IApplication.current().getAttribute(key);
 			} catch (ClassCastException e) {
 				Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
 			}
@@ -293,7 +312,7 @@ public class DocuWareService {
 			BpmError
 			.create(DOCUWARE_ERROR + "cachedtoken")
 			.withCause(e)
-			.withMessage("Could not load token from store '%s' with key '%s'. Note: in the Designer ClassCastExecptions can occur on source changes.".formatted(store, key))
+			.withMessage("Could not load token with key '%s'. Note: in the Designer ClassCastExecptions can occur on source changes.".formatted(key))
 			.throwError();
 		}
 		return token;
@@ -303,12 +322,12 @@ public class DocuWareService {
 	 * Set the cached token to the grant-type specific store.
 	 * 
 	 * @param config
+	 * @param extra 
 	 * @param token
 	 */
-	public void setCachedToken(String config, Token token) {
-		var key = createTokenCacheKey(safeConfig(config));
-		var store = getGrantTypeStore(safeConfig(config));
-		store.setAttribute(key, token);
+	public void setCachedToken(String config, String extra, Token token) {
+		var key = createTokenCacheKey(safeConfig(config), extra);
+		IApplication.current().setAttribute(key, token);
 	}
 
 	/**
@@ -826,32 +845,13 @@ public class DocuWareService {
 		return username;
 	}
 
-	/**
-	 * Get the grant-type specific store.
-	 * 
-	 * For grant type trusted, the token is stored in the session,
-	 * for all others globally in the application.
-	 * 
-	 * @param config
-	 * @return
-	 */
-	private IAttributeStore<Object> getGrantTypeStore(String config) {
-		var grantType = getConfigGrantType(config, null);
 
-		if(grantType == null) {
-			BpmError.create(DOCUWARE_ERROR + "missingGrantType")
-			.withMessage("GrantType of config '%s' is unset.".formatted(safeConfig(config)))
-			.throwError();
+	private String createTokenCacheKey(String config, String extra) {
+		var key = "%s:%s".formatted(Token.class.getCanonicalName(), safeConfig(config));
+		if(extra != null) {
+			key = "%s:%s".formatted(key, extra);
 		}
-
-		return switch (grantType) {
-		case TRUSTED -> Ivy.session();
-		default -> IApplication.current();
-		};
-	}
-
-	private String createTokenCacheKey(String config) {
-		return "%s:%s".formatted(Token.class.getCanonicalName(), safeConfig(config));
+		return key;
 	}
 
 	private String createConfigurationCacheKey(String config) {

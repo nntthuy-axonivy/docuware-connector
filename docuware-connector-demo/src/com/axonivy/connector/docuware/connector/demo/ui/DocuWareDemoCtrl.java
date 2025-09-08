@@ -101,6 +101,8 @@ public class DocuWareDemoCtrl {
 
 	public void setConfig(String config) {
 		this.config = config;
+		organizationId = null;
+		fileCabinetId = null;
 	}
 
 	public Collection<String> getConfigs() {
@@ -163,7 +165,18 @@ public class DocuWareDemoCtrl {
 	public boolean hasAccessToken() {
 		var result = false;
 		try {
-			result = DocuWareService.get().getCachedToken(config) != null;
+			var configuration = DocuWareService.get().getCachedConfiguration(config);
+			if(configuration != null) {
+				String extra = null;
+				switch(configuration.getGrantType()) {
+				case TRUSTED:
+					extra = DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy());
+				default:
+					break;
+				}
+				result = DocuWareService.get().getCachedToken(config, extra) != null;
+
+			}
 		} catch (Exception e) {
 			log("Error while checking access token, assuming no token is available.", e);
 		}

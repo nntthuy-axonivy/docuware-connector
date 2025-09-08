@@ -16,7 +16,6 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
 import ch.ivyteam.ivy.rest.client.FeatureConfig;
 import ch.ivyteam.ivy.rest.client.internal.oauth2.RedirectToIdentityProvider;
-import ch.ivyteam.ivy.security.exec.Sudo;
 
 @SuppressWarnings("restriction")
 public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilter {
@@ -43,24 +42,26 @@ public class OAuth2BearerFilter implements javax.ws.rs.client.ClientRequestFilte
 	}
 
 	private String getAccessToken(ClientRequestContext context) {
-		var config = getConfig(context);
-
-		return Sudo.get(() -> {
-			var accessToken = DocuWareService.get().getCachedToken(config);
-
-			if (accessToken == null || accessToken.isExpired()) {
-				var cfg = new FeatureConfig(context.getConfiguration(), getSource());
-				accessToken = getNewAccessToken(context.getClient(), cfg);
-				DocuWareService.get().setCachedToken(config, accessToken);
-			}
-
-			if (!accessToken.hasAccessToken()) {
-				DocuWareService.get().setCachedToken(config, null);
-				authError().withMessage("Failed to read 'access_token' from %s".formatted(accessToken)).throwError();
-			}
-
-			return accessToken.accessToken();
-		});
+		//		var config = getConfig(context);
+		//
+		//		
+		//		return Sudo.get(() -> {
+		//			var accessToken = DocuWareService.get().getCachedToken(config);
+		//
+		//			if (accessToken == null || accessToken.isExpired()) {
+		//				var cfg = new FeatureConfig(context.getConfiguration(), getSource());
+		//				accessToken = getNewAccessToken(context.getClient(), cfg);
+		//				DocuWareService.get().setCachedToken(config, accessToken);
+		//			}
+		//
+		//			if (!accessToken.hasAccessToken()) {
+		//				DocuWareService.get().setCachedToken(config, null);
+		//				authError().withMessage("Failed to read 'access_token' from %s".formatted(accessToken)).throwError();
+		//			}
+		//
+		//			return accessToken.accessToken();
+		//		});
+		return null;
 	}
 
 	private String getConfig(ClientRequestContext context) {

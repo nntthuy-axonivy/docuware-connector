@@ -1,6 +1,7 @@
 package com.axonivy.connector.docuware.connector.auth;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ public class DocuWareAuthFeature implements Feature {
 	public static final String AUTHORIZATION = "Authorization";
 	public static final String BEARER = "Bearer ";
 	public static final String SKIP_FILTER = "Skip-%s".formatted(DocuWareBearerFilter.class.getCanonicalName());
+	public static final String URI_PLACEHOLDER = "URI.PLACEHOLDER";
 
 	@Override
 	public boolean configure(FeatureContext context) {
@@ -53,6 +55,12 @@ public class DocuWareAuthFeature implements Feature {
 		 */
 		@Override
 		public void filter(ClientRequestContext context) throws IOException {
+			var config = getConfig(context);
+
+			context.setProperty("jersey.config.client.connectTimeout", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.CONNECT_TIMEOUT, null));
+			context.setProperty("jersey.config.client.readTimeout", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.READ_TIMEOUT, null));
+			context.setProperty("jersey.config.client.logging.entity.maxSize", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.LOGGING_ENTITY_MAX_SIZE, null));
+
 			var skip = context.getProperty(SKIP_FILTER);
 			if(skip == Boolean.TRUE) {
 				Ivy.log().debug("Request filter is skipped for ''{0}''.", context.getUri());
@@ -60,6 +68,9 @@ public class DocuWareAuthFeature implements Feature {
 			else {
 				String accessToken = getAccessToken(context);
 				context.getHeaders().add(AUTHORIZATION, BEARER + accessToken);
+				var uri = context.getUri().toString();
+				context.setUri(URI.create(uri.replace(URI_PLACEHOLDER, DocuWareService.get().getConfigVar(config, DocuWareVariable.URL, ""))));
+				Ivy.log().debug("Changed Uri ''{0}'' to ''{1}''", uri, context.getUri());
 			}
 		}
 	}
@@ -73,16 +84,28 @@ public class DocuWareAuthFeature implements Feature {
 	private String getAccessToken(ClientRequestContext context) {
 		var config = getConfig(context);
 
-		var token = DocuWareService.get().getCachedToken(config);
+		var configuration = getConfiguration(context, config);
+
+		String extra = null;
+
+		switch(configuration.getGrantType()) {
+		case TRUSTED:
+			extra = DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy());
+			break;
+		default:
+			break;
+		}
+
+		var token = DocuWareService.get().getCachedToken(config, extra);
 
 		if (token == null || token.isExpired() || !DocuWareService.get().isValidConfigId(config, token.getConfigId())) {
 			token = getNewAccessToken(context);
-			DocuWareService.get().setCachedToken(config, token);
+			DocuWareService.get().setCachedToken(config, extra, token);
 			Ivy.log().debug("Cached a new token: {0}", token);
 		}
 
 		if (!token.hasAccessToken()) {
-			DocuWareService.get().setCachedToken(config, null);
+			DocuWareService.get().setCachedToken(config, extra, null);
 			authError("accesstoken")
 			.withMessage("Failed to get access token for config '%s' and token %s".formatted(config, token))
 			.throwError();
@@ -101,24 +124,11 @@ public class DocuWareAuthFeature implements Feature {
 	private Token getNewAccessToken(ClientRequestContext context) {
 		var config = getConfig(context);
 
-		var configuration = DocuWareService.get().getCachedConfiguration(config);
-
-		if(configuration == null || !DocuWareService.get().isValidConfigId(config, configuration.getConfigId())) {
-			configuration = getNewConfiguration(context);
-			DocuWareService.get().setCachedConfiguration(config, configuration);
-			Ivy.log().debug("Cached a new configuration: {0}", configuration);
-		}
+		var configuration = getConfiguration(context, config);
 
 		Ivy.log().debug("Fetching token from url ''{0}''", configuration.getTokenEndpoint());
 
-		var grantType = DocuWareService.get().getConfigGrantType(config, null);
-
-		if(grantType == null) {
-			authError("missingGrantType")
-			.withMessage("GrantType is missing for config '%s'".formatted(config))
-			.throwError();
-		}
-
+		var grantType = configuration.getGrantType();
 		var payload = new MultivaluedHashMap<String, String>();
 
 		payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(grantType.code()));
@@ -142,7 +152,6 @@ public class DocuWareAuthFeature implements Feature {
 			break;
 
 		}
-
 
 		// TODO send correct payload
 		// TODO handle connection parameters like timeout and logging
@@ -169,6 +178,17 @@ public class DocuWareAuthFeature implements Feature {
 		// TODO test token 
 		// return new Token(map);
 		return token;
+	}
+
+	private Configuration getConfiguration(ClientRequestContext context, String config) {
+		var configuration = DocuWareService.get().getCachedConfiguration(config);
+
+		if(configuration == null || !DocuWareService.get().isValidConfigId(config, configuration.getConfigId())) {
+			configuration = getNewConfiguration(context);
+			DocuWareService.get().setCachedConfiguration(config, configuration);
+			Ivy.log().debug("Cached a new configuration: {0}", configuration);
+		}
+		return configuration;
 	}
 
 	private Configuration getNewConfiguration(ClientRequestContext context) {

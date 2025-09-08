@@ -2,7 +2,7 @@
 RestClients:
   DocuWare:
     UUID: 02d1eec1-32e9-4316-afc3-793448486203
-    Url: donotset
+    Url: URI.PLACEHOLDER
     Icon: res:/webContent/icons/docuware.png
     Features:
     - ch.ivyteam.ivy.rest.client.mapper.JsonFeature

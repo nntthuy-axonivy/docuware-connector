@@ -36,6 +36,11 @@ Variables:
       # DW name is taken from an attribute of the current session (needs to be set by a service function)
       # ^session
       impersonateUser: ""
+      # Where to find the DW token (only used for granttype dwtoken).
+      #
+      # DW token is taken from an attribute of the current session (needs to be set by a service function)
+      # ^session
+      dwToken: ""
       # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
       # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
       connectTimeout: "0"
