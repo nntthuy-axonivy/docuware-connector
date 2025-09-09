@@ -3,6 +3,8 @@ package com.axonivy.connector.docuware.connector;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -79,6 +81,8 @@ public class DocuWareService {
 	 * This is the format: /Date(1652285631000)/
 	 */
 	protected static UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
+	public static final String CONFIG_PROPERTY = "config";
+	public static final String APP_ATT_TOKEN_PREFIX = Token.class.getCanonicalName();
 
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
@@ -153,6 +157,28 @@ public class DocuWareService {
 				.collect(Collectors.toSet());
 	}
 
+	/**
+	 * Clear all cached configurations and tokens.
+	 */
+	public String clearCaches() {
+		try (var sw = new StringWriter();
+				var pw = new PrintWriter(sw)) {
+			var cachedNames = IApplication.current().getAttributeNames().stream()
+					.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(APP_ATT_TOKEN_PREFIX))
+					.sorted()
+					.toList();
+
+			pw.println("Removing caches:");
+			for (var name : cachedNames) {
+				IApplication.current().removeAttribute(name);
+				pw.println(name);
+			}
+
+			return sw.toString();
+		} catch (IOException e) {
+			throw new RuntimeException("Error while removing caches.", e);
+		}
+	}
 
 	/**
 	 * Stuff below this line needs review.
@@ -492,7 +518,7 @@ public class DocuWareService {
 
 
 	private String createTokenCacheKey(String configKey, String extra) {
-		var key = "%s:%s".formatted(Token.class.getCanonicalName(), Configuration.knownOrDefaultKey(configKey));
+		var key = "%s:%s".formatted(APP_ATT_TOKEN_PREFIX, Configuration.knownOrDefaultKey(configKey));
 		if(extra != null) {
 			key = "%s:%s".formatted(key, extra);
 		}
@@ -549,6 +575,7 @@ public class DocuWareService {
 		Response response = null;
 		try {
 			response = client
+					.property(CONFIG_PROPERTY, "jhfgsfjshgfsjghf")
 					.path("Organization/LoginToken")
 					.request(MediaType.APPLICATION_JSON)
 					.post(Entity.json(generateLoginTokenBody()));

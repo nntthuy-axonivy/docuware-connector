@@ -22,6 +22,7 @@ public abstract class Configuration {
 	 * Name of the default configuration.
 	 */
 	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
+	public static final String APP_ATT_CONFIG_PREFIX = Configuration.class.getCanonicalName();
 	protected static final String DOCUWARE_USERNAME = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwusername");
 	protected static final String DOCUWARE_TOKEN = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwtoken");
 	protected static final String CONFIG_ERROR = DocuWareService.DOCUWARE_ERROR + "configuration:";
@@ -96,7 +97,7 @@ public abstract class Configuration {
 	}
 
 	protected static String createConfigurationCacheKey(String configKey) {
-		return "%s:%s".formatted(Configuration.class.getCanonicalName(), configKey);
+		return "%s:%s".formatted(APP_ATT_CONFIG_PREFIX, configKey);
 	}
 
 	/**
@@ -140,7 +141,7 @@ public abstract class Configuration {
 
 	protected <T> T internalGet(Function<Configuration, T> getter, Set<String> seen) {
 		var val = getter.apply(this);
-		if(val == null && StringUtils.isNotBlank(inherit)) {
+		if((val == null || StringUtils.isBlank(val.toString())) && StringUtils.isNotBlank(inherit)) {
 			if(seen.add(inherit)) {
 				var cfg = getKnownConfiguration(inherit);
 				if(cfg != null) {
@@ -372,9 +373,9 @@ public abstract class Configuration {
 	@Override
 	public String toString() {
 		return String.format(
-				"Configuration [key=%s, configId=%s, inherit=%s, url=%s, grantType=%s, username=%s, password=%s, impersonateStrategy=%s, dwTokenStrategy=%s, integrationPassword=%s, connectTimeout=%s, readTimeout=%s, loggingEntityMaxSize=%s, tokenEndpoint=%s]",
-				configKey, configId, inherit, url, grantType, username, safeShow(password), impersonateStrategy, dwTokenStrategy,
-				safeShow(integrationPassphrase), connectTimeout, readTimeout, loggingEntityMaxSize, tokenEndpoint);
+				"Configuration [key=%s, configId=%s, inherit=%s, url=%s, grantType=%s, username=%s, password=%s, impersonateStrategy=%s, dwTokenStrategy=%s, integrationPassphrase=%s, connectTimeout=%s, readTimeout=%s, loggingEntityMaxSize=%s, tokenEndpoint=%s]",
+				getConfigKey(), getConfigId(), getInherit(), getUrl(), getGrantType(), getUsername(), safeShow(getPassword()), getImpersonateStrategy(), getDwTokenStrategy(),
+				safeShow(getIntegrationPassphrase()), getConnectTimeout(), getReadTimeout(), getLoggingEntityMaxSize(), getTokenEndpoint());
 	}
 
 	private String safeShow(String sensitive) {

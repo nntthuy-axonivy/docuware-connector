@@ -44,6 +44,9 @@ Variables:
       # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
       # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
       connectTimeout: "0"
+      # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+      # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+      readTimeout: "0"
       # This property defines the maximum number of characters of an entity that will be logged.
       loggingEntityMaxSize: "8192"
       # The password used for encrypting parameters of embedded urls (set in Configurations/Organization Settings/Security)

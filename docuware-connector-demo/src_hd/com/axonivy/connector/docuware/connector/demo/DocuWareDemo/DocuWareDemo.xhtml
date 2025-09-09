@@ -74,6 +74,12 @@
 										my="left" at="left top" />
 								</p:outputPanel>
 							</div>
+							<div class="col-12 md:col-6 lg:col-2">
+									<p:commandButton id="clearCaches" styleClass="p-ml-4" actionListener="#{logic.clearCaches}" value="Clear all caches" update="@form" />
+									<p:tooltip for="@previous" escape="false"
+										value="Clear all configurations and tokens. This is useful for testing the authorization workflow."
+										my="left" at="left top" />
+							</div>
 						</div>
 						<p:outputPanel rendered="#{not empty data.ctrl.fileCabinetId}">
 							<div class="grid">

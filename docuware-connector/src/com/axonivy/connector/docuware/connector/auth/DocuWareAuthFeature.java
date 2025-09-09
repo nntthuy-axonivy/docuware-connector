@@ -38,7 +38,6 @@ public class DocuWareAuthFeature implements Feature {
 	public static final String BEARER = "Bearer ";
 	public static final String SKIP_FILTER = "Skip-%s".formatted(DocuWareBearerFilter.class.getCanonicalName());
 	public static final String URI_PLACEHOLDER = "URI.PLACEHOLDER";
-	public static final String CONFIG_PROPERTY = "config";
 
 	@Override
 	public boolean configure(FeatureContext context) {
@@ -55,7 +54,11 @@ public class DocuWareAuthFeature implements Feature {
 		 */
 		@Override
 		public void filter(ClientRequestContext context) throws IOException {
-			var configKey = getConfigKey(context);
+			var skip = context.getProperty(SKIP_FILTER) == Boolean.TRUE;
+
+			// If the request is coming from the feature itself, then the configuration
+			// does not contain the configKey but it must be fetched from the request context directly.
+			var configKey = skip ? getContextKey(context) : getConfigKey(context);
 
 			var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
@@ -63,8 +66,7 @@ public class DocuWareAuthFeature implements Feature {
 			context.setProperty("jersey.config.client.readTimeout", cfg.getReadTimeout());
 			context.setProperty("jersey.config.client.logging.entity.maxSize", cfg.getLoggingEntityMaxSize());
 
-			var skip = context.getProperty(SKIP_FILTER);
-			if(skip == Boolean.TRUE) {
+			if(skip) {
 				Ivy.log().debug("Request filter is skipped for ''{0}''.", context.getUri());
 			}
 			else {
@@ -167,6 +169,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
+				.property(DocuWareService.CONFIG_PROPERTY, configKey)
 				.post(Entity.form(payload));
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -202,6 +205,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
+				.property(DocuWareService.CONFIG_PROPERTY, configKey)
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -233,6 +237,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
+				.property(DocuWareService.CONFIG_PROPERTY, configKey)
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -255,13 +260,23 @@ public class DocuWareAuthFeature implements Feature {
 	}
 
 	/**
-	 * Get the current config key used.
+	 * Get the current config key used from the configuration.
 	 * 
 	 * @param context
 	 * @return
 	 */
 	private String getConfigKey(ClientRequestContext context) {
-		return Configuration.knownOrDefaultKey((String)context.getConfiguration().getProperty(CONFIG_PROPERTY));
+		return Configuration.knownOrDefaultKey((String)context.getConfiguration().getProperty(DocuWareService.CONFIG_PROPERTY));
+	}
+
+	/**
+	 * Get the current config key used from the request context.
+	 * 
+	 * @param context
+	 * @return
+	 */
+	private String getContextKey(ClientRequestContext context) {
+		return Configuration.knownOrDefaultKey((String)context.getProperty(DocuWareService.CONFIG_PROPERTY));
 	}
 
 	/**

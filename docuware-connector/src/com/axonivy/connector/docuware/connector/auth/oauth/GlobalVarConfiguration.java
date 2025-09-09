@@ -11,7 +11,7 @@ import ch.ivyteam.ivy.environment.Ivy;
 
 public class GlobalVarConfiguration extends Configuration {
 	/**
-	 * Base of all DocueWare connector variables.
+	 * Base of all DocuWare connector variables.
 	 */
 	public static final String DOCUWARE_CONNECTOR_VAR = "docuwareConnector";
 
