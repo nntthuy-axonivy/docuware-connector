@@ -33,25 +33,22 @@ public class DwTokenStrategy {
 			""",
 			Pattern.COMMENTS);
 	private Strategy strategy;
-	private String config;
 
 	private DwTokenStrategy() {};
 
 	/**
 	 * Create a new {@link DwTokenStrategy}.
 	 * 
-	 * @param config
 	 * @param dwToken 
 	 * @return new strategy or <code>null</code> if doToken is blank.
 	 */
-	public static DwTokenStrategy create(String config, String dwToken) {
+	public static DwTokenStrategy create(String dwToken) {
 		var valid = false;
 		DwTokenStrategy ts = null;
 		if(StringUtils.isNotBlank(dwToken)) {
 			Exception ex = null;
 			try {
 				ts = new DwTokenStrategy();
-				ts.config = config;
 
 				var m = DW_TOKEN_PATTERN.matcher(dwToken);
 
@@ -80,10 +77,6 @@ public class DwTokenStrategy {
 		}
 
 		return ts;
-	}
-
-	public String getConfig() {
-		return config;
 	}
 
 	public Strategy getStrategy() {

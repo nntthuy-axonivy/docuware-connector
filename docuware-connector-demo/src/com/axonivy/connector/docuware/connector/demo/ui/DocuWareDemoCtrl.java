@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.core.Response;
 
@@ -26,7 +24,7 @@ import com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters;
 import com.axonivy.connector.docuware.connector.DocuWareProperties;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
 import com.axonivy.connector.docuware.connector.DocuWareService;
-import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
+import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
 import com.docuware.dev.schema._public.services.platform.CheckInReturnDocument;
 import com.docuware.dev.schema._public.services.platform.Document;
 import com.docuware.dev.schema._public.services.platform.DocumentIndexField;
@@ -57,11 +55,13 @@ public class DocuWareDemoCtrl {
 	private String checkedOutFilename;
 	private List<Field> fields;
 	private List<String> configs;
-	private String config;
+	private String configKey;
+	private Configuration configuration;
 	private static final Random RND = new Random();
 
 	public DocuWareDemoCtrl() {
 		configs = DocuWareService.get().getConfigs().stream().sorted().toList();
+		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
 		organizationId = Ivy.var().get("docuwareConnector.organization");
 		fileCabinetId = Ivy.var().get("docuwareConnector.filecabinetid");
 		fields = new ArrayList<>();
@@ -77,30 +77,16 @@ public class DocuWareDemoCtrl {
 	}
 
 	public String getConfigurationDescription() {
-		var svc = DocuWareService.get();
-		return 	"""
-				Current configuration: %s
-
-				Known DocuWare global variables:
-				================================
-				%s
-				""".formatted(
-						getConfig(),
-						Stream.of(DocuWareVariable.values())
-						.filter(v -> !v.isObsolete())
-						.map(v -> "%s: %s".formatted(
-								v.varName(),
-								v.isSecret() ? safeShow(svc.getConfigVar(config, v, null)) : svc.getConfigVar(config, v, null)))
-						.collect(Collectors.joining("\n"))
-						);
+		return "Current configuration: %s".formatted(configuration); 	
 	}
 
-	public String getConfig() {
-		return DocuWareService.get().safeConfig(config);
+	public String getConfigKey() {
+		return configKey;
 	}
 
-	public void setConfig(String config) {
-		this.config = config;
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
+		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
 		organizationId = null;
 		fileCabinetId = null;
 	}
@@ -165,16 +151,15 @@ public class DocuWareDemoCtrl {
 	public boolean hasAccessToken() {
 		var result = false;
 		try {
-			var configuration = DocuWareService.get().getCachedConfiguration(config);
 			if(configuration != null) {
 				String extra = null;
 				switch(configuration.getGrantType()) {
 				case TRUSTED:
-					extra = DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy());
+					extra = configuration.getImpersonateUserName();
 				default:
 					break;
 				}
-				result = DocuWareService.get().getCachedToken(config, extra) != null;
+				result = DocuWareService.get().getCachedToken(configKey, extra) != null;
 
 			}
 		} catch (Exception e) {
@@ -276,7 +261,7 @@ public class DocuWareDemoCtrl {
 	}
 
 	public boolean isIntegrationPasswordSet() {
-		return StringUtils.isNotBlank(DocuWareService.get().getConfigVar(config, DocuWareVariable.INTEGRATION_PASSPHRASE, null));
+		return configuration != null && StringUtils.isNotBlank(configuration.getIntegrationPassphrase());
 	}
 
 	public void prepareDownloadedFile(Response response, InputStream result) throws IOException {
@@ -333,21 +318,17 @@ public class DocuWareDemoCtrl {
 		return props;
 	}
 
-	private String safeShow(String sensitive) {
-		return sensitive == null ? null : sensitive.replaceAll(".", "*");
-	}
-
 	public String buildViewerUrl() {
 		var dwService = DocuWareService.get();
 		var loginToken = dwService.getLoginTokenString();
-		viewerUrl = dwService.getViewerUrl(null, loginToken, fileCabinetId, documentId);
+		viewerUrl = dwService.getViewerUrl(configuration.getConfigKey(), null, loginToken, fileCabinetId, documentId);
 		return viewerUrl;
 	}
 
 	public String buildCabinetResultListAndViewerUrl() {
 		var dwService = DocuWareService.get();
 		var loginToken = dwService.getLoginTokenString();
-		resultListUrl = dwService.getCabinetResultListAndViewerUrl(null, loginToken, fileCabinetId);
+		resultListUrl = dwService.getCabinetResultListAndViewerUrl(configuration.getConfigKey(), null, loginToken, fileCabinetId);
 		return resultListUrl;
 	}
 

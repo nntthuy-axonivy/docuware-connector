@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +52,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
-import com.axonivy.connector.docuware.connector.auth.oauth.DwTokenStrategy;
-import com.axonivy.connector.docuware.connector.auth.oauth.ImpersonateStrategy;
+import com.axonivy.connector.docuware.connector.auth.oauth.GlobalVarConfiguration;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
 import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 import com.axonivy.connector.docuware.connector.enums.GrantType;
@@ -81,16 +79,6 @@ public class DocuWareService {
 	 * This is the format: /Date(1652285631000)/
 	 */
 	protected static UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
-	/**
-	 * Base of all DocueWare connector variables.
-	 */
-	protected static final String DOCUWARE_CONNECTOR_VAR = "docuwareConnector";
-	/**
-	 * Name of the default configuration.
-	 */
-	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
-	protected static final String DOCUWARE_USERNAME = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwusername");
-	protected static final String DOCUWARE_TOKEN = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwtoken");
 
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
@@ -118,202 +106,21 @@ public class DocuWareService {
 	public static final String ACCESS_TOKEN_REQUEST_USERNAME = "username";
 	public static final String ACCESS_TOKEN_REQUEST_PASSWORD = "password";
 
-	/**
-	 * Get the name of the default configuration.
-	 * 
-	 * @return
-	 */
-	public String getDefaultConfig() {
-		return DOCUWARE_DEFAULT_CONFIG;
-	}
-
-	/**
-	 * Get the id of a configuration.
-	 * 
-	 * <p>
-	 * The id of a configuration is only used to determine, whether a configuration has changed
-	 * (and therefore cached values must be re-read). You can put there any value. A timestamp
-	 * and a user name might be informative.
-	 * </p>
-	 * @param config
-	 * @return
-	 */
-	public String getConfigId(String config) {
-		return getConfigVar(config, DocuWareVariable.CONFIG_ID, null);
-	}
-
-
-	/**
-	 * Get a variable in the Docuware Namespace and handle inheritance.
-	 * 
-	 * <p>
-	 * Convenience function to use predefined variable names.
-	 * </p>
-	 * 
-	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
-	 * @param variable variable inside config
-	 * @param def default value
-	 * @return
-	 */
-	public String getConfigVar(String config, DocuWareVariable variable, String def) {
-		return getConfigVar(config, variable.varName(), def);
-	}
-
-	/**
-	 * Get a variable in the Docuware Namespace and handle inheritance.
-	 * 
-	 * <p>
-	 * Convenience function to use predefined variable names.
-	 * </p>
-	 * 
-	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
-	 * @param variable variable inside config
-	 * @param def default value
-	 * @return
-	 */
-	public Long getConfigVarAsLong(String config, DocuWareVariable variable, Long def) {
-		Long result = def;
-		var val = getConfigVar(config, variable.varName(), null);
-		if(val != null) {
-			result = Long.valueOf(val);
-		}
-		return result;
-	}
-
-	/**
-	 * Get a variable in the Docuware Namespace and handle inheritance.
-	 * 
-	 * @param config if <code>null</code> then use {@link #DOCUWARE_DEFAULT_CONFIG}
-	 * @param name name inside config
-	 * @param def default value
-	 * @return
-	 */
-	public String getConfigVar(String config, String name, String def) {
-		String result = null;
-		var cfg = safeConfig(config);
-		var seen = new HashSet<String>();
-		while(StringUtils.isBlank(result)) {
-			result = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, name), def);
-			if(StringUtils.isBlank(result)) {
-				var inherit = getVar("%s.%s.%s".formatted(DOCUWARE_CONNECTOR_VAR, cfg, DocuWareVariable.INHERIT), def);
-				if(!StringUtils.isBlank(inherit)) {
-					if(seen.add(inherit)) { 
-						cfg = inherit;
-					}
-					else {
-						BpmError
-						.create(DOCUWARE_ERROR + "invalidconfiguration")
-						.withMessage("Found inheritance loop for config '%s'".formatted(config))
-						.throwError();
-					}
-				}
-				else {
-					result = def;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Get the config id of a configuration.
-	 * 
-	 * @param config
-	 * @param def
-	 * @return
-	 */
-	public String getConfigId(String config, String def) {
-		return getConfigVar(config, DocuWareVariable.CONFIG_ID, def);
-	}
-
-	/**
-	 * Check if the configId is up to date.
-	 * 
-	 * @param config
-	 * @param configId
-	 * @return
-	 */
-	public boolean isValidConfigId(String config, String configId) {
-		return StringUtils.equals(getConfigId(config), configId);
-	}
-
-	/**
-	 * Create a configuration by reading basic attributes.
-	 * 
-	 * <p>
-	 * This configuration is used for caching important attributes. Not all attributes of the configuration might be available.
-	 * </p>
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public Configuration createConfiguration(String config) {
-		var configuration = new Configuration();
-		configuration.setConfig(config);
-		configuration.setConfigId(DocuWareService.get().getConfigId(config));
-		configuration.setImpersonateStrategy(DocuWareService.get().getImpersonateStrategy(config));
-		configuration.setDwTokenStrategy(DocuWareService.get().getDwTokenStrategy(config));
-		var grantTypeVar = getConfigVar(config, DocuWareVariable.GRANT_TYPE, null);
-
-		if(StringUtils.isNotBlank(grantTypeVar)) {
-			configuration.setGrantType(GrantType.of(grantTypeVar));
-		}
-		else {
-			BpmError.create(DOCUWARE_ERROR + "missingGrantType")
-			.withMessage("GrantType is missing for config '%s'".formatted(config))
-			.throwError();
-		}
-
-		return configuration;
-	}
-
-	/**
-	 * Get the cached configuration from the application store.
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public Configuration getCachedConfiguration(String config) {
-		Configuration configuration = null;
-		var key = createConfigurationCacheKey(config);
-		try {
-			configuration = (Configuration)IApplication.current().getAttribute(key);
-		} catch (ClassCastException e) {
-			Ivy.log().error("Cache contained an old version of the configuration class, ignoring it.");
-		}
-		return configuration;
-	}
-
-	public void setCachedConfiguration(String config, Configuration configuration) {
-		var key = createConfigurationCacheKey(config);
-		IApplication.current().setAttribute(key, configuration);
-	}
 
 	/**
 	 * Get the cached token from the grant-type specific store.
-	 * @param extra 
 	 * 
+	 * @param configKey
+	 * @param extra
 	 * @return
 	 */
-	public Token getCachedToken(String config, String extra) {
-
-		// FIXME if grant type is trusted user then the key must also contain the impersonated user! The impersonated name needs to be an additional parameter.
-
-		var key = createTokenCacheKey(safeConfig(config), extra);
+	public Token getCachedToken(String configKey, String extra) {
+		var key = createTokenCacheKey(configKey, extra);
 		Token token = null;
 		try {
-			try {
-				token = (Token)IApplication.current().getAttribute(key);
-			} catch (ClassCastException e) {
-				Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
-			}
-		} catch (Exception e) {
-			BpmError
-			.create(DOCUWARE_ERROR + "cachedtoken")
-			.withCause(e)
-			.withMessage("Could not load token with key '%s'. Note: in the Designer ClassCastExecptions can occur on source changes.".formatted(key))
-			.throwError();
+			token = (Token)IApplication.current().getAttribute(key);
+		} catch (ClassCastException e) {
+			Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
 		}
 		return token;
 	}
@@ -326,7 +133,7 @@ public class DocuWareService {
 	 * @param token
 	 */
 	public void setCachedToken(String config, String extra, Token token) {
-		var key = createTokenCacheKey(safeConfig(config), extra);
+		var key = createTokenCacheKey(config, extra);
 		IApplication.current().setAttribute(key, token);
 	}
 
@@ -337,7 +144,7 @@ public class DocuWareService {
 	 */
 	public Collection<String> getConfigs() {
 		// Search for all variables in our namespace containing at least one child variable.
-		var configPattern = Pattern.compile("%s[.]([^.]+)[.].+".formatted(DOCUWARE_CONNECTOR_VAR));
+		var configPattern = Pattern.compile("%s[.]([^.]+)[.].+".formatted(GlobalVarConfiguration.DOCUWARE_CONNECTOR_VAR));
 
 		return Ivy.var().names().stream()
 				.map(n -> configPattern.matcher(n))
@@ -346,174 +153,6 @@ public class DocuWareService {
 				.collect(Collectors.toSet());
 	}
 
-	/**
-	 * If config is <code>null</code> return the name of the default config.
-	 * @param config
-	 * @return
-	 */
-	public String safeConfig(String config) {
-		return config != null ? config : DOCUWARE_DEFAULT_CONFIG;
-	}
-
-	/**
-	 * Get a variable with absolute path.
-	 * 
-	 * @param name absolute path
-	 * @param def default value
-	 * @return
-	 */
-	public String getVar(String name, String def) {
-		return Optional.ofNullable(Ivy.var().get(name)).orElse(def);
-	}
-
-	/**
-	 * Parse the impersonateUser and prepare a strategy.
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public ImpersonateStrategy getImpersonateStrategy(String config) {
-		return ImpersonateStrategy.create(safeConfig(config), getConfigVar(config, DocuWareVariable.IMPERSONATE_USER, null));
-	}
-
-	/**
-	 * Parse the impersonateUser and prepare a strategy.
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public DwTokenStrategy getDwTokenStrategy(String config) {
-		return DwTokenStrategy.create(safeConfig(config), getConfigVar(config, DocuWareVariable.DW_TOKEN, null));
-	}
-
-	/**
-	 * Get the DW user name based on the strategy. 
-	 * 
-	 * @param impersonateStrategy
-	 * @return
-	 */
-	public String getImpersonateUserName(ImpersonateStrategy impersonateStrategy) {
-		String result = null;
-		var session = Ivy.session();
-
-		switch(impersonateStrategy.getStrategy()) {
-		case CONSTANT:
-			result = impersonateStrategy.getSystemUser();
-			break;
-		case FIXED:
-			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
-				result = impersonateStrategy.getSystemUser();
-			}
-			else if(session.isSessionUserUnknown()) {
-				result = impersonateStrategy.getAnonymousUser();
-			}
-			else {
-				result = impersonateStrategy.getIvyUser();
-			}
-			break;
-		case IVY:
-			if(session.isSessionUserSystemUser() || ISecurityConstants.DEVELOPER_USER_NAME.equals(session.getSessionUserName())) {
-				result = impersonateStrategy.getSystemUser();
-			}
-			else if(session.isSessionUserUnknown()) {
-				result = impersonateStrategy.getAnonymousUser();
-			}
-			else {
-				result = session.getSessionUserName();
-			}
-			break;
-		case SESSION:
-			result = getSessionDocuwareUser(impersonateStrategy.getConfig());
-			break;
-		default:
-			break;
-		}
-		return result;
-	}
-
-	/**
-	 * Get the DW token based on the strategy. 
-	 * 
-	 * @param dwTokenStrategy
-	 * @return
-	 */
-	public String getDwToken(DwTokenStrategy dwTokenStrategy) {
-		String result = null;
-
-		switch(dwTokenStrategy.getStrategy()) {
-		case SESSION:
-			result = getSessionDocuwareToken(dwTokenStrategy.getConfig());
-			break;
-		default:
-			break;
-		}
-		return result;
-	}
-
-
-	/**
-	 * Get a username stored in session.
-	 * 
-	 * <p>
-	 * Use to impersonate user of type session.
-	 * </p>
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public String getSessionDocuwareUser(String config) {
-		return (String) Ivy.session().getAttribute(docuWareUserKey(config));
-	}
-
-	/**
-	 * Set a username stored in session.
-	 * 
-	 * <p>
-	 * Use to impersonate user of type session.
-	 * </p>
-	 * 
-	 * @param config
-	 * @param username
-	 */
-	public void setSessionDocuwareUser(String config, String username) {
-		Ivy.session().setAttribute(docuWareUserKey(config), username);
-	}
-
-	/**
-	 * Get a dw token stored in session.
-	 * 
-	 * <p>
-	 * Use for dw token of type session.
-	 * </p>
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public String getSessionDocuwareToken(String config) {
-		return (String) Ivy.session().getAttribute(docuWareTokenKey(config));
-	}
-
-	/**
-	 * Set a dw token stored in session.
-	 * 
-	 * <p>
-	 * Use for dw token of type session.
-	 * </p>
-	 * 
-	 * @param config
-	 * @param token
-	 */
-	public void setSessionDocuwareToken(String config, String token) {
-		Ivy.session().setAttribute(docuWareTokenKey(config), token);
-	}
-
-	public String docuWareUserKey(String config) {
-		return "%s:%s".formatted(DOCUWARE_USERNAME, config);
-	}
-
-	public String docuWareTokenKey(String config) {
-		return "%s:%s".formatted(DOCUWARE_TOKEN, config);
-	}
 
 	/**
 	 * Stuff below this line needs review.
@@ -604,13 +243,14 @@ public class DocuWareService {
 	/**
 	 * Get the URL of a viewer usable for embedding. 
 	 * 
+	 * @param configKey
 	 * @param organizationName
 	 * @param loginToken
 	 * @param cabinetId
 	 * @param documentId
 	 * @return
 	 */
-	public String getViewerUrl(String organizationName, String loginToken, String cabinetId, String documentId) {
+	public String getViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId, String documentId) {
 		var url = getIntegrationUrl(organizationName);
 
 		var params = new LinkedHashMap<String, String>();
@@ -629,7 +269,7 @@ public class DocuWareService {
 
 		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
 
-		var ep = dwEncrypt(clear);
+		var ep = dwEncrypt(configKey, clear);
 
 		url.addParameter("ep", ep);
 
@@ -639,13 +279,13 @@ public class DocuWareService {
 	/**
 	 * Get the URL of a viewer usable for embedding. 
 	 * 
+	 * @param configKey
 	 * @param organizationName
 	 * @param loginToken
 	 * @param cabinetId
-	 * @param documentId
 	 * @return
 	 */
-	public String getCabinetResultListAndViewerUrl(String organizationName, String loginToken, String cabinetId) {
+	public String getCabinetResultListAndViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId) {
 		var url = getIntegrationUrl(organizationName);
 
 		var params = new LinkedHashMap<String, String>();
@@ -661,7 +301,7 @@ public class DocuWareService {
 
 		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
 
-		var ep = dwEncrypt(clear);
+		var ep = dwEncrypt(configKey, clear);
 
 		url.addParameter("ep", ep);
 
@@ -727,13 +367,16 @@ public class DocuWareService {
 	 * Key and Iv parameter needed for the Cipher are determined by building the SHA-512 hash of the password
 	 * and taking the first 256 bits for the key and the next 128 bits for the Iv parameter.
 	 * 
+	 * @param configKey
 	 * @param mode
-	 * @return 
+	 * @return
 	 */
-	public Cipher getCipher(int mode) {
+	public Cipher getCipher(String configKey, int mode) {
+
+		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
+
 		Cipher cipher = null;
-		// TODO onyl quick fix
-		var passphrase = getConfigVar(null, DocuWareVariable.INTEGRATION_PASSPHRASE.varName(), null);
+		var passphrase = cfg.getIntegrationPassphrase();
 		if(StringUtils.isBlank(passphrase)) {
 			BpmError
 			.create(DOCUWARE_ERROR + "missingintegrationpassphrase")
@@ -771,12 +414,13 @@ public class DocuWareService {
 	/**
 	 * Encrypt a String.
 	 * 
+	 * @param configKey
 	 * @param clear
 	 * @return
 	 */
-	public String dwEncrypt(String clear) {
+	public String dwEncrypt(String configKey, String clear) {
 		String encoded = null;
-		var cipher = getCipher(Cipher.ENCRYPT_MODE);
+		var cipher = getCipher(configKey, Cipher.ENCRYPT_MODE);
 
 		try {
 			var encrypted = cipher.doFinal(clear.getBytes("UTF-8"));
@@ -795,13 +439,14 @@ public class DocuWareService {
 	/**
 	 * Decrypt a String.
 	 * 
+	 * @param configKey
 	 * @param encrypted
 	 * @return
 	 */
-	public String dwDecrypt(String encrypted) {
+	public String dwDecrypt(String configKey, String encrypted) {
 		String decrypted = null;
 
-		var cipher = getCipher(Cipher.DECRYPT_MODE);
+		var cipher = getCipher(configKey, Cipher.DECRYPT_MODE);
 
 		try {
 			var decoded = dwUrlDecode(encrypted);
@@ -846,16 +491,12 @@ public class DocuWareService {
 	}
 
 
-	private String createTokenCacheKey(String config, String extra) {
-		var key = "%s:%s".formatted(Token.class.getCanonicalName(), safeConfig(config));
+	private String createTokenCacheKey(String configKey, String extra) {
+		var key = "%s:%s".formatted(Token.class.getCanonicalName(), Configuration.knownOrDefaultKey(configKey));
 		if(extra != null) {
 			key = "%s:%s".formatted(key, extra);
 		}
 		return key;
-	}
-
-	private String createConfigurationCacheKey(String config) {
-		return "%s:%s".formatted(Configuration.class.getCanonicalName(), safeConfig(config));
 	}
 
 	/**

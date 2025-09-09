@@ -48,25 +48,22 @@ public class ImpersonateStrategy {
 	private String systemUser;
 	private String anonymousUser;
 	private String ivyUser;
-	private String config;
 
 	private ImpersonateStrategy() {};
 
 	/**
 	 * Create a new {@link ImpersonateStrategy}.
 	 * 
-	 * @param config
 	 * @param impersonateUser
 	 * @return new strategy or <code>null</code> if impersonateUser is blank
 	 */
-	public static ImpersonateStrategy create(String config, String impersonateUser) {
+	public static ImpersonateStrategy create(String impersonateUser) {
 		var valid = false;
 		ImpersonateStrategy is = null;
 		if(StringUtils.isNotBlank(impersonateUser)) {
 			Exception ex = null;
 			try {
 				is = new ImpersonateStrategy();
-				is.config = config;
 
 				var m = IMP_USER_PATTERN.matcher(impersonateUser);
 
@@ -127,10 +124,6 @@ public class ImpersonateStrategy {
 		}
 
 		return is;
-	}
-
-	public String getConfig() {
-		return config;
 	}
 
 	public Strategy getStrategy() {

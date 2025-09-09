@@ -14,13 +14,13 @@ public class TestImpersonateStrategy {
 	@Test
 	public void testDirect() {
 		var s = ImpersonateStrategy.create("pst");
-		assertThat(s.getStrategy()).isEqualTo(Strategy.DIRECT);
+		assertThat(s.getStrategy()).isEqualTo(Strategy.CONSTANT);
 		assertThat(s.getSystemUser()).isEqualTo("pst");
 		assertThat(s.getAnonymousUser()).isEqualTo("pst");
 		assertThat(s.getIvyUser()).isEqualTo("pst");
 
 		s = ImpersonateStrategy.create(" pst ");
-		assertThat(s.getStrategy()).isEqualTo(Strategy.DIRECT);
+		assertThat(s.getStrategy()).isEqualTo(Strategy.CONSTANT);
 		assertThat(s.getSystemUser()).isEqualTo("pst");
 		assertThat(s.getAnonymousUser()).isEqualTo("pst");
 		assertThat(s.getIvyUser()).isEqualTo("pst");

@@ -15,10 +15,10 @@ public enum DocuWareVariable {
 	PASSWORD("password", true),
 	IMPERSONATE_USER("impersonateUser"),
 	DW_TOKEN("dwToken"),
+	INTEGRATION_PASSPHRASE("integrationPassphrase", true),
 	CONNECT_TIMEOUT("connectTimeout"),
 	READ_TIMEOUT("readTimeout"),
 	LOGGING_ENTITY_MAX_SIZE("loggingEntityMaxSize"),
-	INTEGRATION_PASSPHRASE("integrationPassphrase", true),
 
 	/**
 	 * @deprecated 

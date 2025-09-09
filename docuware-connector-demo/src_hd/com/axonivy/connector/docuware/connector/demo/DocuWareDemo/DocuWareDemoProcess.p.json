@@ -132,7 +132,7 @@
             "Accept" : "application/xml"
           },
           "properties" : {
-            "config" : "in.ctrl.config"
+            "config" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -693,7 +693,7 @@
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "in.ctrl.cryptOut = DocuWareService.get().dwEncrypt(in.ctrl.cryptIn);",
+            "in.ctrl.cryptOut = DocuWareService.get().dwEncrypt(in.ctrl.configKey, in.ctrl.cryptIn);",
             "",
             "in.ctrl.log(\"Crypt In:  ''{0}''\", in.ctrl.cryptIn);",
             "in.ctrl.log(\"Crypt Out: ''{0}''\", in.ctrl.cryptOut);"
@@ -715,7 +715,7 @@
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "in.ctrl.cryptOut = DocuWareService.get().dwDecrypt(in.ctrl.cryptIn);",
+            "in.ctrl.cryptOut = DocuWareService.get().dwDecrypt(in.ctrl.configKey, in.ctrl.cryptIn);",
             "",
             "in.ctrl.log(\"Crypt In:  ''{0}''\", in.ctrl.cryptIn);",
             "in.ctrl.log(\"Crypt Out: ''{0}''\", in.ctrl.cryptOut);"

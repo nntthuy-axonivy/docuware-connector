@@ -19,7 +19,7 @@
 							<p:outputLabel for="@next" value="Configuration" />
 						</div>
 						<div class="col-12 md:col-6 lg:col-2">
-							<p:selectOneMenu id="config" value="#{data.ctrl.config}">
+							<p:selectOneMenu id="config" value="#{data.ctrl.configKey}">
  								<f:selectItem itemLabel="Select Configuration" itemValue="" />
                     			<f:selectItems value="#{data.ctrl.configs}" />
                     			<p:ajax update="@form"/>

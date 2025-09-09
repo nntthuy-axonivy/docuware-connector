@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
-import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;
@@ -39,6 +38,7 @@ public class DocuWareAuthFeature implements Feature {
 	public static final String BEARER = "Bearer ";
 	public static final String SKIP_FILTER = "Skip-%s".formatted(DocuWareBearerFilter.class.getCanonicalName());
 	public static final String URI_PLACEHOLDER = "URI.PLACEHOLDER";
+	public static final String CONFIG_PROPERTY = "config";
 
 	@Override
 	public boolean configure(FeatureContext context) {
@@ -55,21 +55,23 @@ public class DocuWareAuthFeature implements Feature {
 		 */
 		@Override
 		public void filter(ClientRequestContext context) throws IOException {
-			var config = getConfig(context);
+			var configKey = getConfigKey(context);
 
-			context.setProperty("jersey.config.client.connectTimeout", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.CONNECT_TIMEOUT, null));
-			context.setProperty("jersey.config.client.readTimeout", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.READ_TIMEOUT, null));
-			context.setProperty("jersey.config.client.logging.entity.maxSize", DocuWareService.get().getConfigVarAsLong(config, DocuWareVariable.LOGGING_ENTITY_MAX_SIZE, null));
+			var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
+
+			context.setProperty("jersey.config.client.connectTimeout", cfg.getConnectTimeout());
+			context.setProperty("jersey.config.client.readTimeout", cfg.getReadTimeout());
+			context.setProperty("jersey.config.client.logging.entity.maxSize", cfg.getLoggingEntityMaxSize());
 
 			var skip = context.getProperty(SKIP_FILTER);
 			if(skip == Boolean.TRUE) {
 				Ivy.log().debug("Request filter is skipped for ''{0}''.", context.getUri());
 			}
 			else {
-				String accessToken = getAccessToken(context);
+				var accessToken = getAccessToken(context);
 				context.getHeaders().add(AUTHORIZATION, BEARER + accessToken);
 				var uri = context.getUri().toString();
-				context.setUri(URI.create(uri.replace(URI_PLACEHOLDER, DocuWareService.get().getConfigVar(config, DocuWareVariable.URL, ""))));
+				context.setUri(URI.create(uri.replace(URI_PLACEHOLDER, cfg.getUrl())));
 				Ivy.log().debug("Changed Uri ''{0}'' to ''{1}''", uri, context.getUri());
 			}
 		}
@@ -82,32 +84,35 @@ public class DocuWareAuthFeature implements Feature {
 	 * @return
 	 */
 	private String getAccessToken(ClientRequestContext context) {
-		var config = getConfig(context);
+		var configKey = getConfigKey(context);
 
-		var configuration = getConfiguration(context, config);
+		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
 		String extra = null;
 
-		switch(configuration.getGrantType()) {
+		switch(cfg.getGrantType()) {
 		case TRUSTED:
-			extra = DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy());
+			extra = cfg.getImpersonateUserName();
+			break;
+		case DW_TOKEN:
+			extra = cfg.getDwToken();
 			break;
 		default:
 			break;
 		}
 
-		var token = DocuWareService.get().getCachedToken(config, extra);
+		var token = DocuWareService.get().getCachedToken(configKey, extra);
 
-		if (token == null || token.isExpired() || !DocuWareService.get().isValidConfigId(config, token.getConfigId())) {
-			token = getNewAccessToken(context);
-			DocuWareService.get().setCachedToken(config, extra, token);
+		if (token == null || token.isExpired() || !token.getConfigId().equals(cfg.getConfigId())) {
+			token = fetchAccessToken(context);
+			DocuWareService.get().setCachedToken(configKey, extra, token);
 			Ivy.log().debug("Cached a new token: {0}", token);
 		}
 
 		if (!token.hasAccessToken()) {
-			DocuWareService.get().setCachedToken(config, extra, null);
+			DocuWareService.get().setCachedToken(configKey, extra, null);
 			authError("accesstoken")
-			.withMessage("Failed to get access token for config '%s' and token %s".formatted(config, token))
+			.withMessage("Failed to get access token for config '%s' and token %s".formatted(configKey, token))
 			.throwError();
 		}
 
@@ -121,14 +126,18 @@ public class DocuWareAuthFeature implements Feature {
 	 * @param config
 	 * @return
 	 */
-	private Token getNewAccessToken(ClientRequestContext context) {
-		var config = getConfig(context);
+	private Token fetchAccessToken(ClientRequestContext context) {
+		var configKey = getConfigKey(context);
 
-		var configuration = getConfiguration(context, config);
+		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
-		Ivy.log().debug("Fetching token from url ''{0}''", configuration.getTokenEndpoint());
+		if(!cfg.hasTokenEndpoint()) {
+			cfg.setTokenEndpoint(fetchEnpointUrl(context));
+		}
 
-		var grantType = configuration.getGrantType();
+		Ivy.log().debug("Fetching token from url ''{0}''", cfg.getTokenEndpoint());
+
+		var grantType = cfg.getGrantType();
 		var payload = new MultivaluedHashMap<String, String>();
 
 		payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_GRANT_TYPE, List.of(grantType.code()));
@@ -137,33 +146,31 @@ public class DocuWareAuthFeature implements Feature {
 
 		switch(grantType) {
 		case PASSWORD:
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.USERNAME, null)));
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.PASSWORD, null)));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(cfg.getUsername()));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(cfg.getPassword()));
 			break;
 		case TRUSTED:
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.USERNAME, null)));
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(DocuWareService.get().getConfigVar(config, DocuWareVariable.PASSWORD, null)));
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(DocuWareService.get().getImpersonateUserName(configuration.getImpersonateStrategy())));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(cfg.getUsername()));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(cfg.getPassword()));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(cfg.getImpersonateUserName()));
 			break;
 		case DW_TOKEN:
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(DocuWareService.get().getDwToken(configuration.getDwTokenStrategy())));
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(cfg.getDwToken()));
 			break;
 		default:
 			break;
 
 		}
 
-		// TODO send correct payload
-		// TODO handle connection parameters like timeout and logging
 		var response = context.getClient()
-				.target(configuration.getTokenEndpoint())
+				.target(cfg.getTokenEndpoint())
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
 				.post(Entity.form(payload));
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
-			authError("fetchtoken").withMessage("Failed to get Token from '%s' for config '%s', response: %s".formatted(configuration.getTokenEndpoint(), config, response))
+			authError("fetchtoken").withMessage("Failed to get Token from '%s' for config '%s', response: %s".formatted(cfg.getTokenEndpoint(), configKey, response))
 			.withAttribute("status", response.getStatus())
 			.withAttribute("payload", response.readEntity(String.class))
 			.throwError();
@@ -172,42 +179,24 @@ public class DocuWareAuthFeature implements Feature {
 		var map = response.readEntity(new GenericType<Map<String, Object>>(Map.class));
 
 		var token = new Token(map);
-		token.setConfig(config);
-		token.setConfigId(configuration.getConfigId());
+		token.setConfig(configKey);
+		token.setConfigId(cfg.getConfigId());
 
-		// TODO test token 
-		// return new Token(map);
 		return token;
 	}
 
-	private Configuration getConfiguration(ClientRequestContext context, String config) {
-		var configuration = DocuWareService.get().getCachedConfiguration(config);
+	private String fetchEnpointUrl(ClientRequestContext context) {
+		var configKey = getConfigKey(context);
 
-		if(configuration == null || !DocuWareService.get().isValidConfigId(config, configuration.getConfigId())) {
-			configuration = getNewConfiguration(context);
-			DocuWareService.get().setCachedConfiguration(config, configuration);
-			Ivy.log().debug("Cached a new configuration: {0}", configuration);
-		}
-		return configuration;
-	}
-
-	private Configuration getNewConfiguration(ClientRequestContext context) {
-		var config = getConfig(context);
-		var url = DocuWareService.get().getConfigVar(config, DocuWareVariable.URL, null);
-		if(url == null) {
-			authError("noidentityserviceinfourl")
-			.withMessage("The url is not set for config '%s'".formatted(config))
-			.throwError();
-		}
+		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
 		var identityServiceInfoUrl = UriBuilder
-				.fromPath(url)
+				.fromPath(cfg.getUrl())
 				.path(IDENTITY_SERVICE_INFO_URL)
 				.build();
 
 		Ivy.log().debug("Fetching identity service info from url ''{0}''", identityServiceInfoUrl);
 
-		// TODO handle connection parameters like timeout and logging
 		var response = context.getClient()
 				.target(identityServiceInfoUrl)
 				.request()
@@ -216,7 +205,7 @@ public class DocuWareAuthFeature implements Feature {
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
-			authError("fetchidentityserviceinfourl").withMessage("Failed to get Identity Service Info Url for config '%s', response: %s".formatted(config, response))
+			authError("fetchidentityserviceinfourl").withMessage("Failed to get Identity Service Info Url for config '%s', response: %s".formatted(configKey, response))
 			.withAttribute("status", response.getStatus())
 			.withAttribute("payload", response.readEntity(String.class))
 			.throwError();
@@ -228,7 +217,7 @@ public class DocuWareAuthFeature implements Feature {
 
 		if(StringUtils.isBlank(responseIdentityServiceUrl)) {
 			authError("noidentityserviceurl")
-			.withMessage("Did not receive an identity service url for config '%s'".formatted(config))
+			.withMessage("Did not receive an identity service url for config '%s'".formatted(configKey))
 			.throwError();
 		}
 
@@ -239,7 +228,6 @@ public class DocuWareAuthFeature implements Feature {
 
 		Ivy.log().debug("Fetching identity service from url ''{0}''", identityServiceUrl);
 
-		// TODO handle connection parameters like timeout and logging
 		response = context.getClient()
 				.target(identityServiceUrl)
 				.request()
@@ -248,7 +236,7 @@ public class DocuWareAuthFeature implements Feature {
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
-			authError("fetchidentityserviceurl").withMessage("Failed to get Identity Service Url for config '%s', response: %s".formatted(config, response))
+			authError("fetchidentityserviceurl").withMessage("Failed to get Identity Service Url for config '%s', response: %s".formatted(configKey, response))
 			.withAttribute("status", response.getStatus())
 			.withAttribute("payload", response.readEntity(String.class))
 			.throwError();
@@ -260,22 +248,20 @@ public class DocuWareAuthFeature implements Feature {
 
 		if(StringUtils.isBlank(responseTokenEndpointUrl)) {
 			authError("notokenendpointurl")
-			.withMessage("Did not receive a token endpoint URL for config '%s'".formatted(config))
+			.withMessage("Did not receive a token endpoint URL for config '%s'".formatted(configKey))
 			.throwError();
 		}
-		var configuration = DocuWareService.get().createConfiguration(config);
-		configuration.setTokenEndpoint(responseTokenEndpointUrl);
-		return configuration;
+		return responseTokenEndpointUrl;
 	}
 
 	/**
-	 * Get the current config used.
+	 * Get the current config key used.
 	 * 
 	 * @param context
 	 * @return
 	 */
-	private String getConfig(ClientRequestContext context) {
-		return DocuWareService.get().safeConfig((String)context.getConfiguration().getProperty("config"));
+	private String getConfigKey(ClientRequestContext context) {
+		return Configuration.knownOrDefaultKey((String)context.getConfiguration().getProperty(CONFIG_PROPERTY));
 	}
 
 	/**
