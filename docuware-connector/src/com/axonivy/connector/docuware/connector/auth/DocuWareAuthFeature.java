@@ -169,7 +169,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
-				.property(DocuWareService.CONFIG_PROPERTY, configKey)
+				.property(DocuWareService.CONFIG_KEY_PROPERTY, configKey)
 				.post(Entity.form(payload));
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -205,7 +205,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
-				.property(DocuWareService.CONFIG_PROPERTY, configKey)
+				.property(DocuWareService.CONFIG_KEY_PROPERTY, configKey)
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -237,7 +237,7 @@ public class DocuWareAuthFeature implements Feature {
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
-				.property(DocuWareService.CONFIG_PROPERTY, configKey)
+				.property(DocuWareService.CONFIG_KEY_PROPERTY, configKey)
 				.get();
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
@@ -266,7 +266,7 @@ public class DocuWareAuthFeature implements Feature {
 	 * @return
 	 */
 	private String getConfigKey(ClientRequestContext context) {
-		return Configuration.knownOrDefaultKey((String)context.getConfiguration().getProperty(DocuWareService.CONFIG_PROPERTY));
+		return Configuration.knownOrDefaultKey((String)context.getConfiguration().getProperty(DocuWareService.CONFIG_KEY_PROPERTY));
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class DocuWareAuthFeature implements Feature {
 	 * @return
 	 */
 	private String getContextKey(ClientRequestContext context) {
-		return Configuration.knownOrDefaultKey((String)context.getProperty(DocuWareService.CONFIG_PROPERTY));
+		return Configuration.knownOrDefaultKey((String)context.getProperty(DocuWareService.CONFIG_KEY_PROPERTY));
 	}
 
 	/**

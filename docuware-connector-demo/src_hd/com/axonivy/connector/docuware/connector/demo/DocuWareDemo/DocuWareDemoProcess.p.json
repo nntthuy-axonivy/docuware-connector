@@ -132,7 +132,7 @@
             "Accept" : "application/xml"
           },
           "properties" : {
-            "config" : "in.ctrl.configKey"
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -172,7 +172,7 @@
             "Accept" : "application/xml"
           },
           "properties" : {
-            "config" : "in.ctrl.configKey"
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -389,6 +389,9 @@
             "q" : "",
             "fields" : "",
             "sortOrder" : ""
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -452,6 +455,9 @@
           "queryParams" : {
             "targetFileType" : "",
             "keepAnnotations" : ""
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -592,7 +598,7 @@
             "import javax.ws.rs.core.Response;",
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "Response response = DocuWareService.get().getLoginTokenResponse();",
+            "Response response = DocuWareService.get().getLoginTokenResponse(in.ctrl.configKey);",
             "",
             "in.ctrl.log(\"{0}\", DocuWareDemoService.get().getLog(response));",
             "",

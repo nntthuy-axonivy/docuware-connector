@@ -81,7 +81,7 @@ public class DocuWareService {
 	 * This is the format: /Date(1652285631000)/
 	 */
 	protected static UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
-	public static final String CONFIG_PROPERTY = "config";
+	public static final String CONFIG_KEY_PROPERTY = "configKey";
 	public static final String APP_ATT_TOKEN_PREFIX = Token.class.getCanonicalName();
 
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
@@ -247,9 +247,8 @@ public class DocuWareService {
 	}
 
 
-	public WebTarget getClient() {
-		var host = DocuWareService.get().getIvyVar(DocuWareVariable.HOST);
-		return Ivy.rest().client(CLIENT_ID).resolveTemplate("host", host);
+	public WebTarget getClient(String configKey) {
+		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, configKey);
 
 	}
 
@@ -528,22 +527,25 @@ public class DocuWareService {
 	/**
 	 * Get a LoginToken based on the current access token.
 	 * 
+	 * @param configKey
 	 * @return
 	 */
-	public String getLoginTokenString() {
-		return getLoginTokenString(null);
+	public String getLoginTokenString(String configKey) {
+		return getLoginTokenString(configKey, null);
 	}
 
 	/**
 	 * Get a LoginToken based on the access token.
 	 * 
+	 * @param configKey
+	 * @param token
 	 * @return
 	 */
-	public String getLoginTokenString(Token token) {
+	public String getLoginTokenString(String configKey, Token token) {
 		String loginToken = null;
 		Response response = null;
 		try {
-			response = getLoginTokenResponse(token);
+			response = getLoginTokenResponse(configKey, token);
 
 			if (Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
 				loginToken = response.readEntity(String.class);
@@ -560,22 +562,24 @@ public class DocuWareService {
 	/**
 	 * Get a LoginToken based on the current access token.
 	 * 
+	 * @param configKey
 	 * @return
 	 */
-	public Response getLoginTokenResponse() {
-		return getLoginTokenResponse(null);
+	public Response getLoginTokenResponse(String configKey) {
+		return getLoginTokenResponse(configKey, null);
 	}
 	/**
 	 * Get a LoginToken based on the access token.
 	 * 
+	 * @param configKey
+	 * @param token
 	 * @return
 	 */
-	public Response getLoginTokenResponse(Token token) {
-		var client = getClient();
+	public Response getLoginTokenResponse(String configKey, Token token) {
+		var client = getClient(configKey);
 		Response response = null;
 		try {
 			response = client
-					.property(CONFIG_PROPERTY, "jhfgsfjshgfsjghf")
 					.path("Organization/LoginToken")
 					.request(MediaType.APPLICATION_JSON)
 					.post(Entity.json(generateLoginTokenBody()));

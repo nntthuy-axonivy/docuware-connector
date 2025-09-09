@@ -149,9 +149,10 @@ public abstract class Configuration {
 				}
 			}
 			else {
+				DocuWareService.get().clearCaches();
 				BpmError
 				.create(DocuWareService.DOCUWARE_ERROR + "invalidconfiguration")
-				.withMessage("Found inheritance loop for key '%s'".formatted(inherit))
+				.withMessage("Found inheritance loop for key '%s'. Clearing all caches.".formatted(inherit))
 				.throwError();
 			}
 		}

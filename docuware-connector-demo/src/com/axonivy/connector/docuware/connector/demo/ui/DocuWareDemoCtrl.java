@@ -95,6 +95,10 @@ public class DocuWareDemoCtrl {
 		return configs;
 	}
 
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
 	public Organizations getOrganizations() {
 		return organizations;
 	}
@@ -320,15 +324,15 @@ public class DocuWareDemoCtrl {
 
 	public String buildViewerUrl() {
 		var dwService = DocuWareService.get();
-		var loginToken = dwService.getLoginTokenString();
-		viewerUrl = dwService.getViewerUrl(configuration.getConfigKey(), null, loginToken, fileCabinetId, documentId);
+		var loginToken = dwService.getLoginTokenString(configKey);
+		viewerUrl = dwService.getViewerUrl(configKey, null, loginToken, fileCabinetId, documentId);
 		return viewerUrl;
 	}
 
 	public String buildCabinetResultListAndViewerUrl() {
 		var dwService = DocuWareService.get();
-		var loginToken = dwService.getLoginTokenString();
-		resultListUrl = dwService.getCabinetResultListAndViewerUrl(configuration.getConfigKey(), null, loginToken, fileCabinetId);
+		var loginToken = dwService.getLoginTokenString(configKey);
+		resultListUrl = dwService.getCabinetResultListAndViewerUrl(configKey, null, loginToken, fileCabinetId);
 		return resultListUrl;
 	}
 
