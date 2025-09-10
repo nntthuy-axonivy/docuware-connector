@@ -3,7 +3,7 @@
   "id" : "193491716B13EC6A",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI.DocuWareDemoUIData"
+    "data" : "com.axonivy.connector.docuware.connector.demo.DocumentTable.DocumentTableData"
   },
   "elements" : [ {
       "id" : "f0",

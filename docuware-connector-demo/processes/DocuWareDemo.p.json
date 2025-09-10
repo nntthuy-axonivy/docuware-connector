@@ -940,9 +940,9 @@
     }, {
       "id" : "f87",
       "type" : "DialogCall",
-      "name" : "DocuWareDemoUI",
+      "name" : "DocumentTable",
       "config" : {
-        "dialog" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemoUI:start(com.docuware.dev.schema._public.services.platform.FileCabinet,List<com.docuware.dev.schema._public.services.platform.Document>)",
+        "dialog" : "com.axonivy.connector.docuware.connector.demo.DocumentTable:start(com.docuware.dev.schema._public.services.platform.FileCabinet,List<com.docuware.dev.schema._public.services.platform.Document>)",
         "call" : {
           "map" : {
             "param.fileCabinet" : "in.cabinet",
@@ -983,6 +983,22 @@
       "connect" : [
         { "id" : "f101", "to" : "f87" }
       ]
+    }, {
+      "id" : "f5",
+      "type" : "ProcessAnnotation",
+      "name" : "This demo works with the defaultConfig. If you want to work with a single DocuWare instance, you do not need to set the configKey.",
+      "visual" : {
+        "at" : { "x" : 1298, "y" : 192 },
+        "size" : { "width" : 188, "height" : 80 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "ProcessAnnotation",
+      "name" : "This demo shows some basic calls and connects to all DocuWare instances defined in global variables.",
+      "visual" : {
+        "at" : { "x" : 1296, "y" : 64 },
+        "size" : { "width" : 188, "height" : 80 }
+      }
     } ],
   "layout" : {
     "lanes" : [ {
