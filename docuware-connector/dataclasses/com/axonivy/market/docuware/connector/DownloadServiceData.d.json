@@ -4,7 +4,13 @@
   "namespace" : "com.axonivy.market.docuware.connector",
   "isBusinessCaseData" : false,
   "fields" : [ {
+    "name" : "configKey",
+    "type" : "String"
+  }, {
     "name" : "documentId",
+    "type" : "String"
+  }, {
+    "name" : "fileCabinetId",
     "type" : "String"
   }, {
     "name" : "document",
@@ -12,12 +18,6 @@
   }, {
     "name" : "file",
     "type" : "File"
-  }, {
-    "name" : "configuration",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
-  }, {
-    "name" : "error",
-    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
   }, {
     "name" : "downloadFolder",
     "type" : "String"

@@ -4,14 +4,14 @@
   "namespace" : "com.axonivy.market.docuware.connector",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "configuration",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
+    "name" : "configKey",
+    "type" : "String"
+  }, {
+    "name" : "fileCabinetId",
+    "type" : "String"
   }, {
     "name" : "documentId",
     "type" : "String"
-  }, {
-    "name" : "error",
-    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
   }, {
     "name" : "file",
     "type" : "File"

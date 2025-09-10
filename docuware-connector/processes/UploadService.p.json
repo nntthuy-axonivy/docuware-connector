@@ -9,7 +9,7 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 616, "y" : 80 }
+        "at" : { "x" : 432, "y" : 144 }
       }
     }, {
       "id" : "f3",
@@ -21,11 +21,13 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Documents",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId",
-            "host" : ""
+            "FileCabinetId" : "in.#fileCabinetId"
           },
           "queryParams" : {
-            "StoreDialogId" : "in.configuration.storeDialogId"
+            "StoreDialogId" : "in.#storeDialogId"
+          },
+          "properties" : {
+            "configKey" : "in.#configKey"
           }
         },
         "body" : {
@@ -45,7 +47,6 @@
           }
         },
         "code" : [
-          "import java.io.FileInputStream;",
           "import ch.ivyteam.ivy.bpm.error.BpmError;",
           "import com.axonivy.connector.docuware.connector.DocuWareException;",
           "import com.axonivy.connector.docuware.connector.DocuWareService;",
@@ -53,62 +54,49 @@
           "try {",
           "  in.document = DocuWareService.get().upload(client, in.fileStream, in.fileName, in.properties);",
           "} catch(DocuWareException dex) {",
-          "  in.error = BpmError.create(DocuWareService.DOCUWARE_ERROR + \":rest\").withCause(dex).withMessage(dex.getErrorMessage()).build();",
-          "  ivy.log.error(\"Document upload failed.\", dex);",
+          "  BpmError.create(DocuWareService.DOCUWARE_ERROR + \"uploaderror\")",
+          "  .withCause(dex)",
+          "  .withMessage(dex.getErrorMessage())",
+          "  .throwError();",
           "}"
         ]
       },
       "visual" : {
-        "at" : { "x" : 432, "y" : 80 },
+        "at" : { "x" : 296, "y" : 144 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
-      "boundaries" : [ {
-          "id" : "f22",
-          "type" : "ErrorBoundaryEvent",
-          "config" : {
-            "output" : {
-              "map" : {
-                "out" : "in",
-                "out.error" : "error"
-              }
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 464, "y" : 122 }
-          },
-          "connect" : [
-            { "id" : "f23", "to" : "f1" }
-          ]
-        } ],
       "connect" : [
         { "id" : "f2", "to" : "f1" }
       ]
     }, {
       "id" : "f14",
       "type" : "CallSubStart",
-      "name" : "uploadFileWithIndexFields(File, List<DocuWareProperty>, DocuWareEndpointConfiguration)",
+      "name" : "uploadFileWithIndexFields(File, List<DocuWareProperty>, String, String, String)",
       "config" : {
         "signature" : "uploadFileWithIndexFields",
         "input" : {
           "params" : [
-            { "name" : "file", "type" : "java.io.File", "desc" : "" },
+            { "name" : "file", "type" : "File", "desc" : "" },
             { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "null for default values" }
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "storeDialogId", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "out.configuration" : "param.#configuration",
+            "out.configKey" : "param.#configKey",
+            "out.fileCabinetId" : "param.#fileCabinetId",
+            "out.fileName" : "param.#file.getName()",
+            "out.fileStream" : "new java.io.ByteArrayInputStream(param.#file.readBinary())",
             "out.properties.properties" : "param.#indexFields",
             "out.uploadFile" : "param.#file"
           }
         },
         "result" : {
           "params" : [
-            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" },
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" }
           ],
           "map" : {
-            "result.document" : "in.#document",
-            "result.error" : "in.#error"
+            "result.document" : "in.#document"
           }
         }
       },
@@ -117,39 +105,16 @@
       ],
       "visual" : {
         "at" : { "x" : 96, "y" : 208 },
-        "labelOffset" : { "x" : 217, "y" : -39 },
+        "labelOffset" : { "x" : 201, "y" : 49 },
         "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
-        { "id" : "f16", "to" : "f15" }
-      ]
-    }, {
-      "id" : "f15",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import java.io.FileInputStream;",
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "",
-            "in.configuration = DocuWareService.get().initializeConfiguration(in.configuration);",
-            "",
-            "in.fileStream = new FileInputStream(in.uploadFile);",
-            "in.fileName = in.uploadFile.getName();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 208 }
-      },
-      "connect" : [
-        { "id" : "f4", "to" : "f3", "via" : [ { "x" : 320, "y" : 208 }, { "x" : 320, "y" : 80 } ] }
+        { "id" : "f16", "to" : "f3", "via" : [ { "x" : 160, "y" : 208 }, { "x" : 160, "y" : 144 } ] }
       ]
     }, {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "uploadFileWithIndexFields(InputStream,String,List<DocuWareProperty>,DocuWareEndpointConfiguration)",
+      "name" : "uploadFileWithIndexFields(InputStream,String,List<DocuWareProperty>,String,String,String)",
       "config" : {
         "signature" : "uploadFileWithIndexFields",
         "input" : {
@@ -157,23 +122,25 @@
             { "name" : "fileStream", "type" : "java.io.InputStream", "desc" : "" },
             { "name" : "fileName", "type" : "String", "desc" : "" },
             { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "null for default values" }
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "storeDialogId", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "out.configuration" : "param.#configuration",
+            "out.configKey" : "param.#configKey",
+            "out.fileCabinetId" : "param.#fileCabinetId",
             "out.fileName" : "param.#fileName",
             "out.fileStream" : "param.#fileStream",
-            "out.properties.properties" : "param.#indexFields"
+            "out.properties.properties" : "param.#indexFields",
+            "out.storeDialogId" : "param.#storeDialogId"
           }
         },
         "result" : {
           "params" : [
-            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" },
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" }
           ],
           "map" : {
-            "result.document" : "in.#document",
-            "result.error" : "in.#error"
+            "result.document" : "in.#document"
           }
         }
       },
@@ -186,26 +153,7 @@
         "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
-        { "id" : "f6", "to" : "f7" }
-      ]
-    }, {
-      "id" : "f7",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "",
-            "in.configuration = DocuWareService.get().initializeConfiguration(in.configuration);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 80 }
-      },
-      "connect" : [
-        { "id" : "f8", "to" : "f3", "color" : "default" }
+        { "id" : "f6", "to" : "f3", "via" : [ { "x" : 160, "y" : 80 }, { "x" : 160, "y" : 144 } ] }
       ]
     } ]
 }

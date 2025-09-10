@@ -215,6 +215,9 @@
           },
           "headers" : {
             "Accept" : "application/xml"
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "body" : {
@@ -838,12 +841,13 @@
       "type" : "SubProcessCall",
       "name" : "Document Upload With Fields",
       "config" : {
-        "processCall" : "UploadService:uploadFileWithIndexFields(java.io.File,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration)",
+        "processCall" : "UploadService:uploadFileWithIndexFields(File,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String,String)",
         "call" : {
           "map" : {
-            "param.file" : "in.file.getJavaFile()",
+            "param.file" : "in.file",
             "param.indexFields" : "in.ctrl.createProperties().properties",
-            "param.configuration.fileCabinetId" : "in.ctrl.fileCabinetId"
+            "param.configKey" : "in.ctrl.configKey",
+            "param.fileCabinetId" : "in.ctrl.fileCabinetId"
           }
         }
       },
@@ -858,11 +862,12 @@
       "type" : "SubProcessCall",
       "name" : "Check out",
       "config" : {
-        "processCall" : "CheckinService:checkOutToFileSystemAsStream(String,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration)",
+        "processCall" : "CheckinService:checkOutToFileSystemAsStream(String,String,String)",
         "call" : {
           "map" : {
+            "param.configKey" : "in.ctrl.configKey",
             "param.documentId" : "in.ctrl.documentId",
-            "param.configuration.fileCabinetId" : "in.ctrl.fileCabinetId"
+            "param.fileCabinetId" : "in.ctrl.fileCabinetId"
           }
         },
         "output" : {
@@ -892,13 +897,14 @@
       "type" : "SubProcessCall",
       "name" : "Check in",
       "config" : {
-        "processCall" : "CheckinService:checkInFromFileSystem(String,String,java.io.InputStream,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration,com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters)",
+        "processCall" : "CheckinService:checkInFromFileSystem(String,String,String,String,java.io.InputStream,com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters)",
         "call" : {
           "map" : {
+            "param.configKey" : "in.ctrl.configKey",
             "param.documentId" : "in.ctrl.documentId",
+            "param.fileCabinetId" : "in.ctrl.fileCabinetId",
             "param.fileName" : "in.ctrl.checkedOutFilename",
             "param.stream" : "new java.io.ByteArrayInputStream(in.ctrl.checkedOut)",
-            "param.configuration.fileCabinetId" : "in.ctrl.fileCabinetId",
             "param.checkInParameters" : "in.ctrl.createCheckInActionParameters()"
           }
         },

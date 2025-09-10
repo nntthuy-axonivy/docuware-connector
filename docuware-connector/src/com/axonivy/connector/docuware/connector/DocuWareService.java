@@ -110,6 +110,7 @@ public class DocuWareService {
 	public static final String AUTHORIZATION_CODE = "authorization_code";
 	public static final String ACCESS_TOKEN_REQUEST_USERNAME = "username";
 	public static final String ACCESS_TOKEN_REQUEST_PASSWORD = "password";
+	public static final String RESPONSE_STATUS_CODE_ATTRIBUTE = "RestClientResponseStatusCode";
 
 
 	/**
