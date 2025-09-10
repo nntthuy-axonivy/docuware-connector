@@ -17,8 +17,8 @@
             { "name" : "documents", "type" : "List<com.docuware.dev.schema._public.services.platform.Document>", "desc" : "" }
           ],
           "map" : {
-            "out.documents" : "param.documents",
-            "out.fileCabinet" : "param.fileCabinet"
+            "out.ctrl.documents" : "param.documents",
+            "out.ctrl.fileCabinet" : "param.fileCabinet"
           }
         },
         "guid" : "193491716B25A2A9"
@@ -65,7 +65,7 @@
             { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "out.documentId" : "param.documentId"
+            "out.ctrl.documentId" : "param.documentId"
           }
         },
         "guid" : "1934DEB39566411B"
@@ -86,8 +86,8 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
           "templateParams" : {
-            "DocumentId" : "in.documentId",
-            "FileCabinetId" : "in.fileCabinet.getId()"
+            "FileCabinetId" : "in.ctrl.fileCabinet.getId()",
+            "DocumentId" : "in.ctrl.documentId"
           },
           "headers" : {
             "Accept" : "application/xml"
@@ -109,7 +109,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Documents",
           "templateParams" : {
-            "FileCabinetId" : "in.fileCabinet.getId()"
+            "FileCabinetId" : "in.ctrl.fileCabinet.getId()"
           },
           "queryParams" : {
             "q" : "",
@@ -124,7 +124,7 @@
           "entity" : {
             "type" : "com.docuware.dev.schema._public.services.platform.DocumentsQueryResult",
             "map" : {
-              "out.documents" : "result.items.getItem()"
+              "out.ctrl.documents" : "result.items.getItem()"
             }
           }
         }
@@ -152,7 +152,7 @@
             { "name" : "documentId", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "out.documentId" : "param.documentId"
+            "out.ctrl.documentId" : "param.documentId"
           }
         },
         "guid" : "1935FA55672C1004"
@@ -172,8 +172,8 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
           "templateParams" : {
-            "DocumentId" : "in.documentId",
-            "FileCabinetId" : "in.fileCabinet.id"
+            "FileCabinetId" : "in.ctrl.fileCabinet.id",
+            "DocumentId" : "in.ctrl.documentId"
           },
           "headers" : {
             "Accept" : "application/json"
@@ -187,10 +187,10 @@
               "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
               "import com.axonivy.connector.docuware.connector.DocuWareProperties;",
               "",
-              "out.properties = new DocuWareProperties();",
+              "out.ctrl.properties = new DocuWareProperties();",
               "for (DocuWareProperty property : result.properties) {",
               "  if (ItemType.INT.getValue() == property.itemElementName || ItemType.DECIMAL.getValue() == property.itemElementName || ItemType.STRING.getValue() == property.itemElementName) {",
-              "    out.properties.properties.add(property);",
+              "    out.ctrl.properties.properties.add(property);",
               "  }",
               "}"
             ]

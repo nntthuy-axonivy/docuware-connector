@@ -1,0 +1,9 @@
+Dialogs:
+  com:
+    axonivy:
+      connector:
+        docuware:
+          connector:
+            demo:
+              DocumentTable:
+                editHeader: ''

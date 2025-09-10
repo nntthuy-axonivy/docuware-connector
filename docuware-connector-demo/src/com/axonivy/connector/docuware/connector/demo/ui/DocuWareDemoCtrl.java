@@ -326,6 +326,7 @@ public class DocuWareDemoCtrl {
 		var dwService = DocuWareService.get();
 		var loginToken = dwService.getLoginTokenString(configKey);
 		viewerUrl = dwService.getViewerUrl(configKey, null, loginToken, fileCabinetId, documentId);
+		Ivy.log().info("Created viewer URL: {0}", viewerUrl);
 		return viewerUrl;
 	}
 
@@ -333,6 +334,7 @@ public class DocuWareDemoCtrl {
 		var dwService = DocuWareService.get();
 		var loginToken = dwService.getLoginTokenString(configKey);
 		resultListUrl = dwService.getCabinetResultListAndViewerUrl(configKey, null, loginToken, fileCabinetId);
+		Ivy.log().info("Created result list URL: {0}", resultListUrl);
 		return resultListUrl;
 	}
 

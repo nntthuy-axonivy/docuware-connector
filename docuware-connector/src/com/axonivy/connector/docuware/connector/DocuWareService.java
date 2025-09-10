@@ -204,14 +204,14 @@ public class DocuWareService {
 
 
 	/**
-	 * Get the Integration URL for embedding DocuWare into an IFrame including an optional organizationName (if more than one org is available).
+	 * Get the Integration URL for embedding DocuWare into an IFrame including an optional organizationGuid (if more than one org is available).
 	 * 
 	 * @param configKey
-	 * @param organizationName 
+	 * @param organizationGuid 
 	 * @return
 	 */
-	public URIBuilder getIntegrationUrl(String configKey, String organizationName) {
-		return createUriBuilder(configKey, organizationName, "WebClient", "Integration");
+	public URIBuilder getIntegrationUrl(String configKey, String organizationGuid) {
+		return createUriBuilder(configKey, "WebClient", organizationGuid, "Integration");
 	}
 
 
@@ -876,40 +876,6 @@ public class DocuWareService {
 
 	protected File getUniquePropertiesFile() throws IOException {
 		return new File(PROPERTIES_FILE_NAME + UUID.randomUUID().toString() + PROPERTIES_FILE_EXTENSION, true);
-	}
-
-	/**
-	 * Initialize the default configuration from global vars.
-	 * 
-	 * @return
-	 */
-	public DocuWareEndpointConfiguration initializeConfiguration() {
-		return initializeConfiguration(null);
-	}
-
-	/**
-	 * Initialize the configuration overriding defaults.
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public DocuWareEndpointConfiguration initializeConfiguration(DocuWareEndpointConfiguration config) {
-		var result = new DocuWareEndpointConfiguration();
-
-		if(config != null && StringUtils.isNotBlank(config.getFileCabinetId())) {
-			result.setFileCabinetId(config.getFileCabinetId());
-		}
-		else {
-			result.setFileCabinetId(Ivy.var().get("docuwareConnector_filecabinetid"));
-		}
-
-		if(config != null && StringUtils.isNotBlank(config.getStoreDialogId())) {
-			result.setStoreDialogId(config.getStoreDialogId());
-		}
-		else {
-			result.setStoreDialogId(Ivy.var().get("docuwareConnector_storedialogid"));
-		}
-		return result;
 	}
 
 	/**

@@ -3,9 +3,12 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 	<ui:composition template="/layouts/frame-10.xhtml">
-		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/Title')}</ui:define>
+		<ui:define name="title">Basic DocuWare calls</ui:define>
 		<ui:define name="content">
 			<h:outputStylesheet name="layouts/styles/toolstyles.css" />
+			<p>
+			This demo allows you to connect and play around with one or many DocuWare configurations. 
+			</p>
 			<h:form id="form" enctype="multipart/form-data">
 				<p:growl id="messages" showDetail="true" />
 				<div class="card messages">
@@ -26,7 +29,9 @@
 							</p:selectOneMenu>
 						</div>
 						<div class="col-12 md:col-6 lg:col-1">
-							<p:commandButton update="commands" icon="fa-solid fa-refresh" />
+						</div>
+						<div class="col-12 md:col-6 lg:col-1">
+							<p:commandButton update="@form" icon="fa-solid fa-refresh" />
 						</div>
 					</div>
 					<div class="grid">

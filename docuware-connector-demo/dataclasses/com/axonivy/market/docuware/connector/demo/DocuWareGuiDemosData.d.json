@@ -1,0 +1,19 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "DocuWareGuiDemosData",
+  "namespace" : "com.axonivy.market.docuware.connector.demo",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "fileCabinet",
+    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
+  }, {
+    "name" : "fileCabinetId",
+    "type" : "String"
+  }, {
+    "name" : "organizationId",
+    "type" : "String"
+  }, {
+    "name" : "documents",
+    "type" : "java.util.List<com.docuware.dev.schema._public.services.platform.Document>"
+  } ]
+}

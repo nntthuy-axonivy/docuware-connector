@@ -7,62 +7,59 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 	<ui:composition template="/layouts/frame-10.xhtml">
-		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Title')}</ui:define>
+		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/title')}</ui:define>
 		<ui:define name="content">
 
-			<h3>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/ContentTitle',
-				[data.fileCabinet.name])}</h3>
+			<h3>#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/contentTitle', [data.ctrl.fileCabinet.name])}</h3>
 
+			<p>
+			#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/introduction')}
+			</p>
 			<h:form id="form">
 				<p:growl id="growl" showDetail="true" life="3000" />
 				<p:dataTable id="filesTable" var="document"
-					value="#{data.documents}" showGridlines="true"
+					value="#{data.ctrl.documents}" showGridlines="true"
 					resizableColumns="true" resizeMode="fit" paginator="true" rows="10"
 					paginatorPosition="bottom" rowsPerPageTemplate="10,25,50"
 					rowKey="#{document.id}"
 					emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}">
 					<p:column
-						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/IdHeaderText')}"
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/idHeaderText')}"
 						width="30" filterBy="#{document.id}" filterMatchMode="contains">
 						<h:outputText value="#{document.id}" />
 					</p:column>
 
 					<p:column
-						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ContentTypeHeaderText')}"
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/contentTypeHeaderText')}"
 						filterBy="#{document.contentType}" filterMatchMode="contains">
 						<h:outputText value="#{document.contentType}" />
 					</p:column>
 
 					<p:column
-						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/TitleHeaderText')}"
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/titleHeaderText')}"
 						filterBy="#{document.title}" filterMatchMode="contains">
 						<h:outputText value="#{document.title}" />
 					</p:column>
 					<p:column
-						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/HeaderText')}"
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/headerText')}"
 						width="150">
 						<div class="action-column">
 							<p:commandButton icon="pi pi-eye"
-								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
-								actionListener="#{docuWareDemoBean.buildDocumentUrl(document.id, data.fileCabinet.id)}"
-								oncomplete="PF('viewDocumentDialog').show()"
-								update=":form:viewDocumentDialog" />
-							<p:commandButton icon="pi pi-eye"
-								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/ViewDocumentBtnTitle')}"
-								actionListener="#{docuWareDemoBean.buildDocumentUrl2(document.id, data.fileCabinet.id)}"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/viewDocumentBtnTitle')}"
+								actionListener="#{data.ctrl.buildDocumentUrl(document.id, data.ctrl.fileCabinet.id)}"
 								oncomplete="PF('viewDocumentDialog').show()"
 								update=":form:viewDocumentDialog" />
 							<p:commandButton icon="pi pi-pencil"
-								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/EditPropertiesBtnTitle')}"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/editPropertiesBtnTitle')}"
 								actionListener="#{logic.onClickEditDocument(document.id)}"
 								oncomplete="PF('editIndexFieldsDialog').show()"
 								update=":form:editIndexFieldsDialog" />
 							<p:commandButton icon="pi pi-trash"
-								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/DocumentTable/ActionColumn/DeleteDocumentBtnTitle')}"
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/deleteDocumentBtnTitle')}"
 								update=":form:filesTable"
 								actionListener="#{logic.deleteDocument(document.id)}">
-								<p:confirm header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteHeader')}"
-									message="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/DeleteMessage')}"
+								<p:confirm header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/deleteHeader')}"
+									message="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/deleteMessage')}"
 									icon="fa fa-exclamation-triangle" />
 							</p:commandButton>
 						</div>
@@ -83,19 +80,20 @@
 				</p:confirmDialog>
 				<p:dialog id="viewDocumentDialog" widgetVar="viewDocumentDialog"
 					modal="true" resizable="false"
-					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/ViewHeader')}"
+					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/viewHeader')}"
 					width="90vw" height="80vh">
-					<iframe src="#{docuWareDemoBean.documentUrl}" width="100%"
+					<iframe src="#{data.ctrl.documentUrl}" width="100%"
 						height="99%" class="document-viewer" />
 				</p:dialog>
 				<p:dialog id="editIndexFieldsDialog"
 					widgetVar="editIndexFieldsDialog" modal="true" resizable="false"
-					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/Dialog/EditHeader')}"
+					header="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocumentTable/editHeader')}"
 					width="90vw" height="80vh">
 					<ic:com.axonivy.connector.docuware.connector.demo.component.UpdateDocumentFields
-						documentId="#{data.documentId}"
-						fileCabinetId="#{data.fileCabinet.id}"
-						documentProperties="#{data.properties}" />
+						ctrl="#{data.ctrl}"
+						documentId="#{data.ctrl.documentId}"
+						fileCabinetId="#{data.ctrl.fileCabinet.id}"
+						documentProperties="#{data.ctrl.properties}" />
 				</p:dialog>
 			</h:form>
 

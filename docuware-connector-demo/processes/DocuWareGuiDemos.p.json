@@ -1,0 +1,262 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
+  "id" : "1811FD33E36CAB39",
+  "config" : {
+    "data" : "com.axonivy.market.docuware.connector.demo.DocuWareGuiDemosData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "basicCalls.ivp",
+      "config" : {
+        "signature" : "basicCalls",
+        "request" : {
+          "name" : "Basic DocuWare calls",
+          "description" : "UI to demonstrate some basic UI calls."
+        },
+        "permission" : {
+          "anonymous" : false
+        },
+        "persistOnStart" : true
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 128, "y" : 64 },
+        "labelOffset" : { "x" : 12, "y" : 37 },
+        "description" : "Start a simple UI to demonstrate some DocuWare calls."
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 408, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "DocuWare Demo",
+      "config" : {
+        "dialog" : "com.axonivy.connector.docuware.connector.demo.DocuWareDemo:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 248, "y" : 64 },
+        "icon" : "res:/webContent/icons/docuware.png"
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f51",
+      "type" : "RequestStart",
+      "name" : "viewAndEditDocument.ivp",
+      "config" : {
+        "signature" : "viewAndEditDocument",
+        "input" : {
+          "map" : {
+            "out.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
+            "out.organizationId" : "ivy.var.docuwareWorkflow_organizationId"
+          }
+        },
+        "request" : {
+          "name" : "View/Edit Documents",
+          "description" : "UI for viewing or editing documents."
+        }
+      },
+      "tags" : [
+        "demo"
+      ],
+      "visual" : {
+        "at" : { "x" : 128, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f91", "to" : "f84" }
+      ]
+    }, {
+      "id" : "f69",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 1168, "y" : 192 }
+      }
+    }, {
+      "id" : "f74",
+      "type" : "RestClientCall",
+      "name" : [
+        "Load",
+        "Organizations"
+      ],
+      "config" : {
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/Organizations"
+        },
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.Organizations",
+            "map" : {
+              "out.organizationId" : "result.getOrganization().get(0).getId()"
+            }
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 328, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f98", "to" : "f81" }
+      ]
+    }, {
+      "id" : "f81",
+      "type" : "RestClientCall",
+      "name" : "Get FileCabinets By Org",
+      "config" : {
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets",
+          "queryParams" : {
+            "orgid" : "in.organizationId"
+          }
+        },
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.FileCabinets",
+            "map" : {
+              "out.fileCabinetId" : "result.getFileCabinet().get(0).getId()"
+            }
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 504, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f92", "to" : "f83" }
+      ]
+    }, {
+      "id" : "f83",
+      "type" : "RestClientCall",
+      "name" : [
+        "Query",
+        "Documents"
+      ],
+      "config" : {
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents",
+          "templateParams" : {
+            "FileCabinetId" : "in.fileCabinetId"
+          },
+          "queryParams" : {
+            "q" : "",
+            "fields" : "",
+            "sortOrder" : ""
+          }
+        },
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.DocumentsQueryResult",
+            "map" : {
+              "out.documents" : "result.items.getItem()"
+            }
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 680, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f93", "to" : "f89" }
+      ]
+    }, {
+      "id" : "f84",
+      "type" : "Alternative",
+      "name" : "Check variables exist",
+      "config" : {
+        "conditions" : {
+          "f97" : "org.apache.commons.lang3.StringUtils.isNotBlank(in.fileCabinetId)",
+          "f90" : "org.apache.commons.lang3.StringUtils.isNotBlank(in.organizationId)"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 208, "y" : 192 },
+        "labelOffset" : { "y" : -16 }
+      },
+      "connect" : [
+        { "id" : "f97", "to" : "f83", "via" : [ { "x" : 208, "y" : 128 }, { "x" : 688, "y" : 128 } ], "label" : {
+            "name" : "Already has cabinetId",
+            "offset" : { "x" : 65, "y" : -18 }
+          } },
+        { "id" : "f90", "to" : "f81", "via" : [ { "x" : 208, "y" : 256 }, { "x" : 504, "y" : 256 } ], "label" : {
+            "name" : "Already has organizationId",
+            "offset" : { "x" : 81, "y" : 22 }
+          } },
+        { "id" : "f96", "to" : "f74" }
+      ]
+    }, {
+      "id" : "f87",
+      "type" : "DialogCall",
+      "name" : "DocumentTable",
+      "config" : {
+        "dialog" : "com.axonivy.connector.docuware.connector.demo.DocumentTable:start(com.docuware.dev.schema._public.services.platform.FileCabinet,List<com.docuware.dev.schema._public.services.platform.Document>)",
+        "call" : {
+          "map" : {
+            "param.fileCabinet" : "in.fileCabinet",
+            "param.documents" : "in.documents"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 1032, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f100", "to" : "f69" }
+      ]
+    }, {
+      "id" : "f89",
+      "type" : "RestClientCall",
+      "name" : "Read Cabinet",
+      "config" : {
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}",
+          "templateParams" : {
+            "FileCabinetId" : "in.fileCabinetId"
+          }
+        },
+        "response" : {
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet",
+            "map" : {
+              "out.fileCabinet" : "result"
+            }
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 856, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f101", "to" : "f87" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "ProcessAnnotation",
+      "name" : "This demo works with the defaultConfig. If you want to work with a single DocuWare instance, you do not need to set the configKey.",
+      "visual" : {
+        "at" : { "x" : 1298, "y" : 192 },
+        "size" : { "width" : 188, "height" : 80 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "ProcessAnnotation",
+      "name" : "This demo shows some basic calls and connects to all DocuWare instances defined in global variables.",
+      "visual" : {
+        "at" : { "x" : 1296, "y" : 64 },
+        "size" : { "width" : 188, "height" : 80 }
+      }
+    } ]
+}

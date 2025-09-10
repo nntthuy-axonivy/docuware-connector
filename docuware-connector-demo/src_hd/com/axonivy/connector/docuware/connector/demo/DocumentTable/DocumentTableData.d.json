@@ -4,20 +4,11 @@
   "namespace" : "com.axonivy.connector.docuware.connector.demo.DocumentTable",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "fileCabinet",
-    "type" : "com.docuware.dev.schema._public.services.platform.FileCabinet"
-  }, {
-    "name" : "documents",
-    "type" : "List<com.docuware.dev.schema._public.services.platform.Document>"
-  }, {
-    "name" : "documentId",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
-  }, {
-    "name" : "properties",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties"
-  }, {
     "name" : "error",
     "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
+  }, {
+    "name" : "ctrl",
+    "type" : "com.axonivy.connector.docuware.connector.demo.ui.DocumentTableCtrl",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }

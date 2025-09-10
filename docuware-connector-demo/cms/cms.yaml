@@ -6,45 +6,44 @@ Dialogs:
           connector:
             demo:
               DocuWareDemo:
-                Title: DocuWare Demo
-                UploadMessageFailed: Upload doc to Docuware failed
-                UploadMessageOK: Upload doc to Docuware successful
-              DocuWareDemoUI:
-                Title: DocuWare Demo UI
-                ContentTitle: 'Documents in {0}'
-                DocumentTable:
-                  IdHeaderText: Id
-                  ContentTypeHeaderText: Content Type
-                  TitleHeaderText: Title
-                  ActionColumn:
-                    HeaderText: Action
-                    ViewDocumentBtnTitle: View Document
-                    EditPropertiesBtnTitle: Edit Properties
-                    DeleteDocumentBtnTitle: Delete Document
-                PropertyTable:
-                  IndexHeaderText: Index
-                  FieldNameHeaderText: Field Name
-                  UpdateValueHeaderText: Update Value
-                Dialog:
-                  DeleteHeader: Delete Document
-                  DeleteMessage: Are you sure you want to delete this document?
-                  ViewHeader: Document Preview
-                  EditHeader: Edit Document Properties
-                  SuccessEditMessage: Update completed successfully!
-                  FailedEditMessage: Update unsuccessful!
+                title: DocuWare Demo
+                uploadMessageFailed: Upload doc to Docuware failed
+                uploadMessageOK: Upload doc to Docuware successful
+              DocumentTable:
+                contentTitle: Documents in {0}
+                contentTypeHeaderText: Content Type
+                deleteDocumentBtnTitle: Delete Document
+                deleteHeader: Delete Document
+                deleteMessage: Are you sure you want to delete this document?
+                editHeader: Edit Document Properties
+                editPropertiesBtnTitle: Edit Properties
+                failedEditMessage: Update unsuccessful!
+                headerText: Action
+                idHeaderText: Id
+                introduction: This demo uses the <b>defaultConfig</b> DocuWare connection. The simple viewer integration requires a login.
+                successEditMessage: Update completed successfully!
+                title: DocuWare Demo UI
+                titleHeaderText: Title
+                viewDocumentBtnTitle: View Document
+                viewHeader: Document Preview
+              component:
+                UpdateDocumentFields:
+                  fieldNameHeaderText: Field Name
+                  indexHeaderText: Index
+                  updateValueHeaderText: Update Value
 Labels:
   CabinetId: 'Cabinet Id: {0}'
-  Close: Close
-  FileCabinets: File Cabinets
-  Organizations: Organizations
-  Result: Result
-  Upload: Upload
-  NoRecordsFound: No records found. Please try a different search.
   Cancel: Cancel
-  Save: Save
-  Success: Success
+  Close: Close
   Failed: Failed
-  'YES':
-    name: 'Yes'
+  FileCabinets: File Cabinets
   'NO':
     name: 'No'
+  NoRecordsFound: No records found. Please try a different search.
+  Organizations: Organizations
+  Result: Result
+  Save: Save
+  Success: Success
+  Upload: Upload
+  'YES':
+    name: 'Yes'
