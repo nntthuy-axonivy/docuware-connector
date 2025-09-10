@@ -45,14 +45,14 @@ public class RequestLoginTokenBean {
 		Token token = generateNewIdentityToken();
 
 		try {
-			loginToken = DocuWareService.get().getLoginTokenString(token);
+			loginToken = DocuWareService.get().getLoginTokenString(null, token);
 			if(loginToken != null) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 						Ivy.cms().co("/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/GotLoginToken"),
 						Ivy.cms().co(
 								"/Dialogs/com/axonivy/market/docuware/connector/RequestLoginToken/GotLoginTokenMessage"));
 				FacesContext.getCurrentInstance().addMessage(null, message);
-				DocuWareService.get().setIvyVar(DocuWareVariable.LOGIN_TOKEN, loginToken);
+				// DocuWareService.get().setIvyVar(DocuWareVariable.LOGIN_TOKEN, loginToken);
 			}
 		} catch (Exception e) {
 			Ivy.log().error(e);

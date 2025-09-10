@@ -528,6 +528,9 @@
           "queryParams" : {
             "targetFileType" : "",
             "keepAnnotations" : ""
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -768,6 +771,9 @@
           "templateParams" : {
             "FileCabinetId" : "in.ctrl.fileCabinetId",
             "DocumentId" : "in.ctrl.documentId"
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {
@@ -983,6 +989,9 @@
           "templateParams" : {
             "FileCabinetId" : "in.ctrl.fileCabinetId",
             "DocumentId" : "in.ctrl.documentId"
+          },
+          "properties" : {
+            "configKey" : "in.ctrl.configKey"
           }
         },
         "response" : {

@@ -24,15 +24,15 @@ public class DocuWareDemoBean implements Serializable {
 	private final String DOCUMENT_URL_FORMAT = "https://%s/DocuWare/Platform/WebClient/Client/Document?did=%s&fc=%s&token=%s";
 
 	public void buildDocumentUrl(String documentId, String fileCabinetId) {
-		var token = DocuWareService.get().getLoginTokenString();
+		var token = DocuWareService.get().getLoginTokenString(null);
 		String host = Ivy.var().get("docuwareConnector.host");
 		this.documentUrl = DOCUMENT_URL_FORMAT.formatted(host, documentId, fileCabinetId, token);
 	}
 
 	public void buildDocumentUrl2(String documentId, String fileCabinetId) throws URISyntaxException {
 		DocuWareService dwService = DocuWareService.get();
-		var token = dwService.getLoginTokenString();
-		var url = dwService.getIntegrationUrl(Ivy.var().get("docuwareConnector.organization"));
+		var token = dwService.getLoginTokenString(null);
+		var url = dwService.getIntegrationUrl(null, Ivy.var().get("docuwareConnector.organization"));
 		url.addParameter("ep", token);
 		this.documentUrl = url.build().toString();
 	}

@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
@@ -181,12 +182,6 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Stuff below this line needs review.
-	 */
-	private void xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx() {}
-
-
-	/**
 	 * @deprecated use String version with inheritance instead
 	 * @param variable
 	 * @return
@@ -196,67 +191,77 @@ public class DocuWareService {
 		return Ivy.var().get(variable.varName());
 	}
 
-	public String setIvyVar(DocuWareVariable variable, String value) {
-		return Ivy.var().set(variable.varName(), value);
-	}
-
+	/**
+	 * @deprecated
+	 * @return
+	 */
+	@Deprecated
 	public GrantType getIvyVarGrantType() {
 		var type = getIvyVar(DocuWareVariable.GRANT_TYPE);
 		return Optional.ofNullable(GrantType.of(type)).orElse(GrantType.PASSWORD);
 	}
 
 
-
-	/**
-	 * Get the DocuWare Base URL.
-	 * 
-	 * @return
-	 */
-	public URIBuilder getBaseUrl() {
-		return new URIBuilder()
-				.setScheme(getIvyVar(DocuWareVariable.SCHEME))
-				.setHost(getIvyVar(DocuWareVariable.HOST))
-				.setPathSegments("DocuWare", "Platform");
-	}
-
-	/**
-	 * Get the WebClient URL including an optional organizationName (if more than one org is available).
-	 * 
-	 * @param organizationName
-	 * @return
-	 */
-	public URIBuilder getWebClientUrl(String organizationName) {
-		var url = getBaseUrl();
-		if(StringUtils.isNotBlank(organizationName)) {
-			addPathSegments(url, organizationName);
-		}
-		addPathSegments(url, "WebClient");
-		return url;
-	}
-
 	/**
 	 * Get the Integration URL for embedding DocuWare into an IFrame including an optional organizationName (if more than one org is available).
 	 * 
-	 * @param organizationName
+	 * @param configKey
+	 * @param organizationName 
 	 * @return
 	 */
-	public URIBuilder getIntegrationUrl(String organizationName) {
-		var url = getWebClientUrl(organizationName);
-		addPathSegments(url, "Integration");
-		return url;
+	public URIBuilder getIntegrationUrl(String configKey, String organizationName) {
+		return createUriBuilder(configKey, organizationName, "WebClient", "Integration");
 	}
 
 
+	/**
+	 * Get the client for a configuration.
+	 * 
+	 * @param configKey
+	 * @return
+	 */
 	public WebTarget getClient(String configKey) {
-		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, configKey);
+		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, Configuration.knownOrDefaultKey(configKey));
 
 	}
 
+	/**
+	 * Create a URIBuilder into DowuWare with pathSegments.
+	 * 
+	 * @param configKey
+	 * @param pathSegments
+	 * @return
+	 */
+	public URIBuilder createUriBuilder(String configKey, String...pathSegments) {
+		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
+		try {
+			var builder = new URIBuilder(cfg.getUrl());
+			addPathSegments(builder, pathSegments);
+			return builder;
+		} catch (URISyntaxException e) {
+			throw BpmError
+			.create(DOCUWARE_ERROR + "invalidurlformat")
+			.withCause(e)
+			.withMessage("Could not convert '%s' to a valid integration URL for configKey '%s' and path segments: %s".formatted(cfg.getUrl(), configKey, String.join(", ", pathSegments)))
+			.build();
+		}
+
+	}
+
+	/**
+	 * Convenience function to build URLs.
+	 * 
+	 * @param builder
+	 * @param pathSegments
+	 * @return
+	 */
 	protected URIBuilder addPathSegments(URIBuilder builder, String...pathSegments) {
 		List<String> segs = new ArrayList<>(builder.getPathSegments());
 
 		for (String pathSegment : pathSegments) {
-			segs.add(pathSegment);
+			if(StringUtils.isNotBlank(pathSegment)) {
+				segs.add(pathSegment);
+			}
 		}
 
 		builder.setPathSegments(segs);
@@ -276,7 +281,7 @@ public class DocuWareService {
 	 * @return
 	 */
 	public String getViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId, String documentId) {
-		var url = getIntegrationUrl(organizationName);
+		var url = getIntegrationUrl(configKey, organizationName);
 
 		var params = new LinkedHashMap<String, String>();
 
@@ -311,7 +316,7 @@ public class DocuWareService {
 	 * @return
 	 */
 	public String getCabinetResultListAndViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId) {
-		var url = getIntegrationUrl(organizationName);
+		var url = getIntegrationUrl(configKey, organizationName);
 
 		var params = new LinkedHashMap<String, String>();
 
