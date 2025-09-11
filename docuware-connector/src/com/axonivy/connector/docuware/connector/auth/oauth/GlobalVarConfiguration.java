@@ -9,6 +9,9 @@ import com.axonivy.connector.docuware.connector.enums.GrantType;
 
 import ch.ivyteam.ivy.environment.Ivy;
 
+/**
+ * Configuration which reads from global variables.
+ */
 public class GlobalVarConfiguration extends Configuration {
 	/**
 	 * Base of all DocuWare connector variables.

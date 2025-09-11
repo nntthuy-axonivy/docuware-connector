@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -100,7 +98,6 @@ public class DocuWareService {
 	public static DocuWareService get() {
 		return INSTANCE;
 	}
-
 
 	public static final String ACCESS_TOKEN_REQUEST_GRANT_TYPE = "grant_type";
 	public static final String ACCESS_TOKEN_REQUEST_CLIENT_ID = "client_id";
@@ -671,69 +668,6 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Upload a file.
-	 * 
-	 * @deprecated use {@link #upload(WebTarget, InputStream, String, DocuWareProperties)}
-	 * 
-	 * @param target
-	 * @param file
-	 * @param configuration
-	 * @param properties
-	 * @return
-	 * @throws IOException
-	 * @throws DocuWareException
-	 */
-	@Deprecated
-	public Document uploadFile(WebTarget target, java.io.File file,
-			DocuWareEndpointConfiguration configuration,
-			DocuWareProperties properties) throws IOException, DocuWareException {
-		byte[] bytes = Files.readAllBytes(file.toPath());
-		return uploadStream(target, bytes, file.getName(), properties);
-	}
-
-	/**
-	 * Upload a file.
-	 * 
-	 * @deprecated use {@link #upload(WebTarget, InputStream, String, DocuWareProperties)}
-	 * 
-	 * @param target
-	 * @param fileBytes
-	 * @param fileName
-	 * @param configuration
-	 * @param properties
-	 * @return
-	 * @throws IOException
-	 * @throws DocuWareException
-	 */
-	@Deprecated
-	public Document uploadStream(WebTarget target, ch.ivyteam.ivy.scripting.objects.List<Byte> fileBytes,
-			String fileName, DocuWareEndpointConfiguration configuration, DocuWareProperties properties)
-					throws IOException, DocuWareException {
-		Byte[] bytes = fileBytes.toArray(new Byte[fileBytes.size()]);
-		byte[] byteArray = ArrayUtils.toPrimitive(bytes);
-		return uploadStream(target, byteArray, fileName, properties);
-	}
-
-	/**
-	 * Upload a file.
-	 * 
-	 * @deprecated use {@link #upload(WebTarget, InputStream, String, DocuWareProperties)}
-	 * 
-	 * @param target
-	 * @param file
-	 * @param fileName
-	 * @param properties
-	 * @return
-	 * @throws IOException
-	 * @throws DocuWareException
-	 */
-	@Deprecated
-	public Document uploadStream(WebTarget target, byte[] file, String fileName, DocuWareProperties properties)
-			throws IOException, DocuWareException {
-		return upload(target, new ByteArrayInputStream(file), fileName, properties);
-	}
-
-	/**
 	 * Upload a document.
 	 * 
 	 * @param target
@@ -969,5 +903,4 @@ public class DocuWareService {
 		}
 		return null;
 	}
-
 }
