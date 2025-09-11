@@ -1,18 +1,12 @@
 package com.axonivy.connector.docuware.connector.demo.service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.function.Consumer;
 
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.File;
 
 
 public class DocuWareDemoService {
@@ -78,18 +72,5 @@ public class DocuWareDemoService {
 		var result = sw.toString();
 		Ivy.log().info("{0}", result);
 		return result;
-	}
-
-
-	public static java.io.File exportFromCMS(String cmsUri, String ext) throws IOException {		   
-		var file = StringUtils.removeStart(cmsUri, "/") + "." + ext;
-		var tempFile = new File(file, true).getJavaFile();
-		tempFile.getParentFile().mkdirs();
-		var cov = Ivy.cms().root().child().file(cmsUri, ext).value().get();
-		try (var in = cov.read().inputStream();
-				var fos = new FileOutputStream(tempFile)) {
-			IOUtils.copy(in, fos);
-		}
-		return tempFile;
 	}
 }

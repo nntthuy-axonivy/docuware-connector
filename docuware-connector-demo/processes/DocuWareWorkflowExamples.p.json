@@ -2,13 +2,13 @@
   "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
   "id" : "1993402433175A6F",
   "config" : {
-    "data" : "com.axonivy.market.docuware.connector.demo.DocuWareExamplesData"
+    "data" : "com.axonivy.market.docuware.connector.demo.DocuWareWorkflowExamplesData"
   },
   "elements" : [ {
       "id" : "f65",
       "type" : "TaskEnd",
       "visual" : {
-        "at" : { "x" : 1080, "y" : 320 }
+        "at" : { "x" : 904, "y" : 304 }
       }
     }, {
       "id" : "f58",
@@ -26,7 +26,7 @@
         "sudo" : true
       },
       "visual" : {
-        "at" : { "x" : 944, "y" : 320 }
+        "at" : { "x" : 768, "y" : 304 }
       },
       "connect" : [
         { "id" : "f66", "to" : "f65" }
@@ -36,23 +36,22 @@
       "type" : "SubProcessCall",
       "name" : "Download File",
       "config" : {
-        "processCall" : "DownloadService:downloadFile(String,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration)",
+        "processCall" : "DownloadService:downloadFile(String,String,String)",
         "call" : {
           "map" : {
             "param.documentId" : "String.valueOf(in.document.id)",
-            "param.configration.fileCabinetId" : "in.configuration.fileCabinetId"
+            "param.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           }
         },
         "output" : {
           "map" : {
             "out" : "in",
-            "out.error" : "result.#error",
             "out.file" : "result.#file"
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 768, "y" : 320 },
+        "at" : { "x" : 592, "y" : 304 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -77,12 +76,12 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Query/DialogExpressionLink",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId"
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           },
           "queryParams" : {
-            "dialogId" : "in.dialog.id",
             "sortOrder" : "",
-            "fields" : ""
+            "fields" : "",
+            "dialogId" : "in.dialog.id"
           }
         },
         "body" : {
@@ -122,7 +121,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Query/DialogExpression",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId"
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           },
           "queryParams" : {
             "dialogId" : "in.dialog.id",
@@ -131,7 +130,10 @@
         },
         "body" : {
           "entity" : {
-            "type" : "com.docuware.dev.schema._public.services.platform.DialogExpression"
+            "type" : "com.docuware.dev.schema._public.services.platform.DialogExpression",
+            "map" : {
+              "param.count" : "3"
+            }
           }
         },
         "response" : {
@@ -160,11 +162,11 @@
       "type" : "SubProcessCall",
       "name" : "Update Index Fields",
       "config" : {
-        "processCall" : "UpdateService:updateDocument(String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration)",
+        "processCall" : "UpdateService:updateDocument(String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String)",
         "call" : {
           "map" : {
             "param.documentId" : "String.valueOf(in.document.id)",
-            "param.configuration.fileCabinetId" : "in.configuration.fileCabinetId"
+            "param.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           },
           "code" : [
             "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
@@ -174,20 +176,12 @@
             "dp.setFieldName(\"VENDOR_NAME\");",
             "dp.setItem(\"EXAMPLE\");",
             "dp.setItemElementName(\"String\");",
-            "properties.add(dp);",
-            "",
-            "param.indexFields = properties;"
+            "param.indexFields.add(dp);"
           ]
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.error" : "result.#error"
-          }
         }
       },
       "visual" : {
-        "at" : { "x" : 592, "y" : 320 },
+        "at" : { "x" : 416, "y" : 304 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -198,14 +192,14 @@
       "type" : "RestClientCall",
       "name" : [
         "Get Dialog",
-        "By ID"
+        "By Id"
       ],
       "config" : {
         "target" : {
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Dialogs/{SearchDialogId}",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId",
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
             "SearchDialogId" : "in.dialog.id"
           },
           "queryParams" : {
@@ -230,32 +224,63 @@
       "type" : "SubProcessCall",
       "name" : "Upload File from CMS",
       "config" : {
-        "processCall" : "UploadService:uploadFileWithIndexFields(java.io.File,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration)",
+        "processCall" : "UploadService:uploadFileWithIndexFields(java.io.InputStream,String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String,String)",
         "call" : {
           "map" : {
-            "param.file" : "com.axonivy.connector.docuware.connector.demo.service.DocuWareDemoService.exportFromCMS(\"/Files/uploadSample\", \"pdf\")",
-            "param.indexFields" : "in.properties",
-            "param.configuration.fileCabinetId" : "in.configuration.fileCabinetId"
-          }
+            "param.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
+          },
+          "code" : [
+            "import java.time.LocalDateTime;",
+            "import ch.ivyteam.ivy.cm.ContentObject;",
+            "import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;",
+            "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
+            "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
+            "",
+            "param.fileStream = (ivy.cms.get(\"/Files/uploadSample\").get() as ContentObject).value().get().read().inputStream();",
+            "param.fileName = \"UploadSample-%tY%<tm%<td%<tH%<tM%<tS.pdf\".formatted(LocalDateTime.now());",
+            "",
+            "import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;",
+            "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
+            "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
+            "",
+            "//Note IndexFields are individual for each docuware instance. This is just an example",
+            "DocuWareProperty dp = new DocuWareProperty();",
+            "dp.setFieldName(\"VENDOR_NAME\");",
+            "dp.setItem(\"DUMMY INC.\");",
+            "dp.setItemElementName(\"String\");",
+            "param.indexFields.add(dp);",
+            "",
+            "DocuWareFieldTableItem dwt = new DocuWareFieldTableItem();",
+            "dwt.createRow().addColumnValue(\"LINE__INVOICE_LINE_NUMBER\", \"1\", \"String\")",
+            "  .addColumnValue(\"LINE__QTY\", \"3\", \"String\")",
+            "  .addColumnValue(\"LINE__UNIT_PRICE\", \"18.00\", \"String\");",
+            "",
+            "DocuWareProperty dwtp = new DocuWareProperty(\"LINE___ITEM\", dwt, \"Table\");",
+            "param.indexFields.add(dwtp);",
+            "",
+            "DocuWareKeywordsField keywordField = new DocuWareKeywordsField();",
+            "keywordField.append(\"1st Keyword\");",
+            "keywordField.append(\"2nd Keyword\");",
+            "",
+            "DocuWareProperty keywordProperty = new DocuWareProperty(\"VALIDATION_CHECK\", keywordField, \"Keywords\");",
+            "param.indexFields.add(keywordProperty);"
+          ]
         },
         "output" : {
           "map" : {
             "out" : "in",
-            "out.document" : "result.#document",
-            "out.error" : "result.#error"
+            "out.document" : "result.#document"
           },
           "code" : [
             "ivy.log.info(\"***DocuWareDemo-Index Upload status\");",
             "if(result.#document is initialized) {",
             "  ivy.log.info(\"-New uploaded file has document id: {0}\", result.document.id);",
-            "} else {",
-            "  ivy.log.info(\"-Uploaded file failed: {0}\", result.error);",
             "}"
           ]
         }
       },
       "visual" : {
-        "at" : { "x" : 416, "y" : 320 },
+        "at" : { "x" : 240, "y" : 304 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -279,7 +304,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Sections",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId"
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           },
           "queryParams" : {
             "docid" : "in.document.id.toString()"
@@ -320,7 +345,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Sections/{Section}",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId",
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
             "Section" : "in.section.id"
           },
           "queryParams" : {
@@ -352,7 +377,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Sections/{Section}/Data",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId",
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
             "Section" : "in.section.id"
           },
           "queryParams" : {
@@ -391,7 +416,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Sections",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId",
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
             "Section" : "in.section.id"
           },
           "queryParams" : {
@@ -433,7 +458,7 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Dialogs",
           "templateParams" : {
-            "FileCabinetId" : "in.configuration.fileCabinetId"
+            "FileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           },
           "queryParams" : {
             "dialogType" : ""
@@ -499,48 +524,6 @@
         { "id" : "f99", "to" : "f31" }
       ]
     }, {
-      "id" : "f47",
-      "type" : "Script",
-      "name" : "build required properties",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;",
-            "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
-            "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
-            "",
-            "//Note IndexFields are individual for each docuware instance. This is just an example",
-            "DocuWareProperty dp = new DocuWareProperty();",
-            "dp.setFieldName(\"VENDOR_NAME\");",
-            "dp.setItem(\"DUMMY INC.\");",
-            "dp.setItemElementName(\"String\");",
-            "in.properties.add(dp);",
-            "",
-            "DocuWareFieldTableItem dwt = new DocuWareFieldTableItem();",
-            "dwt.createRow().addColumnValue(\"LINE__INVOICE_LINE_NUMBER\", \"1\", \"String\")",
-            "  .addColumnValue(\"LINE__QTY\", \"3\", \"String\")",
-            "  .addColumnValue(\"LINE__UNIT_PRICE\", \"18.00\", \"String\");",
-            "",
-            "DocuWareProperty dwtp = new DocuWareProperty(\"LINE___ITEM\", dwt, \"Table\");",
-            "in.properties.add(dwtp);",
-            "",
-            "DocuWareKeywordsField keywordField = new DocuWareKeywordsField();",
-            "keywordField.append(\"1st Keyword\");",
-            "keywordField.append(\"2nd Keyword\");",
-            "",
-            "DocuWareProperty keywordProperty = new DocuWareProperty(\"VALIDATION_CHECK\", keywordField, \"Keywords\");",
-            "in.properties.add(keywordProperty);"
-          ]
-        },
-        "sudo" : true
-      },
-      "visual" : {
-        "at" : { "x" : 240, "y" : 320 }
-      },
-      "connect" : [
-        { "id" : "f46", "to" : "f60" }
-      ]
-    }, {
       "id" : "f38",
       "type" : "RequestStart",
       "name" : "sections.ivp",
@@ -597,15 +580,15 @@
         "demo"
       ],
       "visual" : {
-        "at" : { "x" : 96, "y" : 320 }
+        "at" : { "x" : 96, "y" : 304 }
       },
       "connect" : [
-        { "id" : "f2", "to" : "f47" }
+        { "id" : "f2", "to" : "f60" }
       ]
     }, {
       "id" : "f3",
       "type" : "ProcessAnnotation",
-      "name" : "To run these demos, please configure a defaultConfig DocuWare configuration and set the fileCabinetId and the dialogId global Variables to useful values of your DocuWare installation.",
+      "name" : "To run these demos, please configure a defaultConfig DocuWare configuration and set the fileCabinetId and the dialogId global variables to useful values of your DocuWare installation.",
       "visual" : {
         "at" : { "x" : 1237, "y" : 149 },
         "size" : { "width" : 134, "height" : 166 }

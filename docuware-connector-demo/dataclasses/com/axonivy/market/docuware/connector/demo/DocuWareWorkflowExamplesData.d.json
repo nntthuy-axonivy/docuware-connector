@@ -1,0 +1,19 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "DocuWareWorkflowExamplesData",
+  "namespace" : "com.axonivy.market.docuware.connector.demo",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "document",
+    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+  }, {
+    "name" : "file",
+    "type" : "File"
+  }, {
+    "name" : "section",
+    "type" : "com.docuware.dev.schema._public.services.platform.Section"
+  }, {
+    "name" : "dialog",
+    "type" : "com.docuware.dev.schema._public.services.platform.Dialog"
+  } ]
+}
