@@ -58,8 +58,7 @@
         "signature" : "viewAndEditDocument",
         "input" : {
           "map" : {
-            "out.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId",
-            "out.organizationId" : "ivy.var.docuwareWorkflow_organizationId"
+            "out.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
           }
         },
         "request" : {
