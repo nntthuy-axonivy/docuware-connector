@@ -21,15 +21,29 @@ Before you start the demo, unpackit and provide at least one configuration for a
 
 ### Docuware Demo
 
-~~Start **Basic DocuWare Calls** and either configure a fixed organization and file cabinet in global variables or **Fetch Organizations** and **Fetch FileCabinets** to use the first objects found instead.
-Once you select a file cabinet id, additional functions to **Fetch Documents** will be available. The first document found will be used as the demo document. Nevertheless, you
-can enter ids manually for all input fields to use different objects. Once a document id is set, the document can be downloaded or attached to the current case. If you upload
-a document, it's documentId will be set automatically and you can directly work with it.~~
+DocuWare Demo provides a complex GUI to play around with some DocuWare functions and one or more DocuWare configurations. Not all features will be available at all times. To use all demo features, you should provide multiple configurations with all different grant types. Most buttons have a validation check and will only be visible when they are also usable, e.g. when a cabinet id is available. In some situations it might be necessary to use the refresh button. The following functions can be tested:
+
+- using the default or any other configuration
+- using configuration of grant type `dwtoken` with a provided or generated login token
+- fetching organizations
+- fetching cabinets
+- fetching documents
+- get document fields
+- download of a document
+- creating a new version of a document
+- attaching a document to an Ivy case
+- uploading a document
+- uploading a document with index fields
+- viewing files with the embedded DocuWare viewer (if the configuration has an `integrationPassphrase` set and your DocuWare installation allows embedding in a frame - check your DocuWare#s content security policy!)
+- encrypting and decrypting parameters for embedding
+
+![docuwaredemo](images/docuwaredemo.png)
 
 ### Document Table
 
-~~Start **View/Edit Document** to get basic viewer showing how to add, change, view and delete documents. Note, that viewing of documents might require additional setup of your DocuWare installation to allow embedding
-of DocuWare frames into your AxonIvy frames.~~
+Start **Document Table** to get basic viewer showing how to add, change, view and delete documents. Note, that viewing of documents might require additional setup of your DocuWare installation's content security
+policy  to allow embedding
+of DocuWare frames into your AxonIvy frames.
 
    ![view-document](images/view-document.png)
 
