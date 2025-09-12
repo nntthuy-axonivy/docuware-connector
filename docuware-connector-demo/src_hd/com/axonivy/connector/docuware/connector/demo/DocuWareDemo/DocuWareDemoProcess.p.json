@@ -108,7 +108,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 912 },
+        "at" : { "x" : 96, "y" : 984 },
         "labelOffset" : { "x" : 11, "y" : 35 }
       },
       "connect" : [
@@ -118,7 +118,7 @@
       "id" : "f13",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 448, "y" : 992 }
+        "at" : { "x" : 448, "y" : 1064 }
       }
     }, {
       "id" : "f15",
@@ -264,10 +264,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 320, "y" : 912 }
+        "at" : { "x" : 320, "y" : 984 }
       },
       "connect" : [
-        { "id" : "f23", "to" : "f13", "via" : [ { "x" : 400, "y" : 912 }, { "x" : 400, "y" : 992 } ] }
+        { "id" : "f23", "to" : "f13", "via" : [ { "x" : 400, "y" : 984 }, { "x" : 400, "y" : 1064 } ] }
       ]
     }, {
       "id" : "f14",
@@ -277,7 +277,7 @@
         "guid" : "1966876CCB3F55FE"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1776 }
+        "at" : { "x" : 96, "y" : 1848 }
       },
       "connect" : [
         { "id" : "f22", "to" : "f24" }
@@ -286,7 +286,7 @@
       "id" : "f21",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1776 },
+        "at" : { "x" : 352, "y" : 1848 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -299,7 +299,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1776 }
+        "at" : { "x" : 224, "y" : 1848 }
       },
       "connect" : [
         { "id" : "f25", "to" : "f21", "color" : "default" }
@@ -314,7 +314,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 192, "y" : 912 },
+        "at" : { "x" : 192, "y" : 984 },
         "labelOffset" : { "y" : -24 }
       },
       "connect" : [
@@ -322,7 +322,7 @@
             "name" : "yes",
             "offset" : { "x" : -11, "y" : 14 }
           }, "color" : "default" },
-        { "id" : "f29", "to" : "f28", "via" : [ { "x" : 192, "y" : 992 } ], "label" : {
+        { "id" : "f29", "to" : "f28", "via" : [ { "x" : 192, "y" : 1064 } ], "label" : {
             "name" : "no",
             "segment" : 1.06,
             "offset" : { "x" : 4, "y" : -41 }
@@ -349,7 +349,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 320, "y" : 992 }
+        "at" : { "x" : 320, "y" : 1064 }
       },
       "connect" : [
         { "id" : "f30", "to" : "f13" }
@@ -365,7 +365,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 624 }
+        "at" : { "x" : 96, "y" : 696 }
       },
       "connect" : [
         { "id" : "f33", "to" : "f34" }
@@ -374,7 +374,7 @@
       "id" : "f32",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 624 },
+        "at" : { "x" : 352, "y" : 696 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -414,7 +414,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 624 },
+        "at" : { "x" : 224, "y" : 696 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -431,7 +431,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 720 }
+        "at" : { "x" : 96, "y" : 792 }
       },
       "connect" : [
         { "id" : "f38", "to" : "f39" }
@@ -440,7 +440,7 @@
       "id" : "f37",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 720 },
+        "at" : { "x" : 352, "y" : 792 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -487,7 +487,7 @@
         ]
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 720 },
+        "at" : { "x" : 224, "y" : 792 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -504,7 +504,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 816 }
+        "at" : { "x" : 96, "y" : 888 }
       },
       "connect" : [
         { "id" : "f43", "to" : "f44" }
@@ -513,7 +513,7 @@
       "id" : "f42",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 816 },
+        "at" : { "x" : 352, "y" : 888 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -564,7 +564,7 @@
         ]
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 816 },
+        "at" : { "x" : 224, "y" : 888 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
       "connect" : [
@@ -604,11 +604,7 @@
             "import javax.ws.rs.core.Response;",
             "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "",
-            "Response response = DocuWareService.get().getLoginTokenResponse(in.ctrl.configKey);",
-            "",
-            "in.ctrl.log(\"{0}\", DocuWareDemoService.get().getLog(response));",
-            "",
-            "in.ctrl.loginToken = response.readEntity(String.class) as String;",
+            "in.ctrl.loginToken = DocuWareService.get().getLoginTokenString(in.ctrl.configKey);",
             "",
             "in.ctrl.log(\"Fresh Login Token: ''{0}''\", in.ctrl.loginToken);"
           ]
@@ -628,7 +624,7 @@
         "guid" : "1968103BE61A1213"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1200 }
+        "at" : { "x" : 96, "y" : 1272 }
       },
       "connect" : [
         { "id" : "f53", "to" : "f54" }
@@ -637,7 +633,7 @@
       "id" : "f52",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1200 },
+        "at" : { "x" : 352, "y" : 1272 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -654,7 +650,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1200 }
+        "at" : { "x" : 224, "y" : 1272 }
       },
       "connect" : [
         { "id" : "f55", "to" : "f52", "color" : "default" }
@@ -667,7 +663,7 @@
         "guid" : "19681AFD5603E937"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1584 }
+        "at" : { "x" : 96, "y" : 1656 }
       },
       "connect" : [
         { "id" : "f58", "to" : "f62" }
@@ -676,7 +672,7 @@
       "id" : "f57",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1584 },
+        "at" : { "x" : 352, "y" : 1656 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -687,7 +683,7 @@
         "guid" : "19681AFE017EFCB7"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1680 }
+        "at" : { "x" : 96, "y" : 1752 }
       },
       "connect" : [
         { "id" : "f61", "to" : "f64" }
@@ -696,7 +692,7 @@
       "id" : "f60",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1680 },
+        "at" : { "x" : 352, "y" : 1752 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -716,7 +712,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1584 }
+        "at" : { "x" : 224, "y" : 1656 }
       },
       "connect" : [
         { "id" : "f63", "to" : "f57", "color" : "default" }
@@ -738,7 +734,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1680 }
+        "at" : { "x" : 224, "y" : 1752 }
       },
       "connect" : [
         { "id" : "f65", "to" : "f60", "color" : "default" }
@@ -751,7 +747,7 @@
         "guid" : "19682690F6221D02"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1392 }
+        "at" : { "x" : 96, "y" : 1464 }
       },
       "connect" : [
         { "id" : "f68", "to" : "f69" }
@@ -760,7 +756,7 @@
       "id" : "f67",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 656, "y" : 1392 },
+        "at" : { "x" : 656, "y" : 1464 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -793,7 +789,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1392 }
+        "at" : { "x" : 224, "y" : 1464 }
       },
       "connect" : [
         { "id" : "f70", "to" : "f76", "color" : "default" }
@@ -806,7 +802,7 @@
         "guid" : "196C931C95F53D56"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1072 }
+        "at" : { "x" : 96, "y" : 1144 }
       },
       "connect" : [
         { "id" : "f77", "to" : "f78" }
@@ -822,11 +818,11 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 192, "y" : 1072 },
+        "at" : { "x" : 192, "y" : 1144 },
         "labelOffset" : { "y" : 40 }
       },
       "connect" : [
-        { "id" : "f80", "to" : "f28", "via" : [ { "x" : 192, "y" : 992 } ], "label" : {
+        { "id" : "f80", "to" : "f28", "via" : [ { "x" : 192, "y" : 1064 } ], "label" : {
             "name" : "no",
             "segment" : 1.02,
             "offset" : { "x" : 8, "y" : 38 }
@@ -852,10 +848,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 320, "y" : 1072 }
+        "at" : { "x" : 320, "y" : 1144 }
       },
       "connect" : [
-        { "id" : "f82", "to" : "f13", "via" : [ { "x" : 400, "y" : 1088 }, { "x" : 400, "y" : 992 } ], "color" : "default" }
+        { "id" : "f82", "to" : "f13", "via" : [ { "x" : 400, "y" : 1160 }, { "x" : 400, "y" : 1064 } ], "color" : "default" }
       ]
     }, {
       "id" : "f76",
@@ -887,7 +883,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 1392 }
+        "at" : { "x" : 392, "y" : 1464 }
       },
       "connect" : [
         { "id" : "f84", "to" : "f83" }
@@ -920,7 +916,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 552, "y" : 1392 }
+        "at" : { "x" : 552, "y" : 1464 }
       },
       "connect" : [
         { "id" : "f85", "to" : "f67" }
@@ -933,7 +929,7 @@
         "guid" : "196E9A088229F07E"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1296 }
+        "at" : { "x" : 96, "y" : 1368 }
       },
       "connect" : [
         { "id" : "f73", "to" : "f74" }
@@ -942,7 +938,7 @@
       "id" : "f72",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1296 },
+        "at" : { "x" : 352, "y" : 1368 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -959,7 +955,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1296 }
+        "at" : { "x" : 224, "y" : 1368 }
       },
       "connect" : [
         { "id" : "f86", "to" : "f72", "color" : "default" }
@@ -972,7 +968,7 @@
         "guid" : "19715A70B1A97447"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1488 }
+        "at" : { "x" : 96, "y" : 1560 }
       },
       "connect" : [
         { "id" : "f89", "to" : "f90" }
@@ -981,7 +977,7 @@
       "id" : "f88",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1488 },
+        "at" : { "x" : 352, "y" : 1560 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -1014,7 +1010,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1488 }
+        "at" : { "x" : 224, "y" : 1560 }
       },
       "connect" : [
         { "id" : "f91", "to" : "f88", "color" : "default" }
@@ -1027,7 +1023,7 @@
         "guid" : "1992F4764D7D0A9F"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 536 }
+        "at" : { "x" : 96, "y" : 608 }
       },
       "connect" : [
         { "id" : "f94", "to" : "f95" }
@@ -1036,7 +1032,7 @@
       "id" : "f93",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 536 },
+        "at" : { "x" : 352, "y" : 608 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -1053,10 +1049,45 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 536 }
+        "at" : { "x" : 224, "y" : 608 }
       },
       "connect" : [
         { "id" : "f96", "to" : "f93", "color" : "default" }
+      ]
+    }, {
+      "id" : "f97",
+      "type" : "HtmlDialogEventStart",
+      "name" : "setLoginToken",
+      "config" : {
+        "guid" : "1993EEC71B34D0BE"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f99", "to" : "f100" }
+      ]
+    }, {
+      "id" : "f98",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 528 },
+        "labelOffset" : { "x" : 10, "y" : 30 }
+      }
+    }, {
+      "id" : "f100",
+      "type" : "Script",
+      "name" : "Set Login Token",
+      "config" : {
+        "output" : {
+          "code" : "in.ctrl.setLoginTokenToDwConfig(in.ctrl.dwTokenConfigKey, in.ctrl.loginToken);"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 528 }
+      },
+      "connect" : [
+        { "id" : "f101", "to" : "f98", "color" : "default" }
       ]
     } ]
 }

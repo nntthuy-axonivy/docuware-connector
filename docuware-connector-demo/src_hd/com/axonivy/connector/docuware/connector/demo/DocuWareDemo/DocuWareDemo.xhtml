@@ -24,12 +24,12 @@
 								<p:selectOneMenu id="config" value="#{data.ctrl.configKey}">
 									<f:selectItem itemLabel="Select Configuration" itemValue="" />
 									<f:selectItems value="#{data.ctrl.configs}" />
-									<p:ajax update="mainPage" />
+									<p:ajax update=":form:mainPage" />
 								</p:selectOneMenu>
 							</div>
 							<div class="col-12 md:col-6 lg:col-1"></div>
 							<div class="col-12 md:col-6 lg:col-1">
-								<p:commandButton update="mainPage" icon="fa-solid fa-refresh" />
+								<p:commandButton update=":form:mainPage" icon="fa-solid fa-refresh" />
 							</div>
 						</div>
 						<div class="grid">
@@ -58,28 +58,19 @@
 						<p:tab title="Commands">
 							<div class="grid">
 								<div class="col-12 md:col-6 lg:col-2">
-									<p:commandButton id="organizations" actionListener="#{logic.organizations}" value="Fetch Organizations" update="mainPage" />
+									<p:commandButton id="organizations" actionListener="#{logic.organizations}" value="Fetch Organizations" update=":form:mainPage" />
 									<p:tooltip for="@previous" value="Fetch organizations, the user belongs to. Note: many calls will also work without an organization."
 										my="left" at="left top" />
 								</div>
 								<div class="col-12 md:col-6 lg:col-2">
-									<p:commandButton id="fileCabinets" styleClass="p-ml-4" actionListener="#{logic.fileCabinets}" value="Fetch FileCabinets" update="mainPage" />
+									<p:commandButton id="fileCabinets" styleClass="p-ml-4" actionListener="#{logic.fileCabinets}" value="Fetch FileCabinets" update=":form:mainPage" />
 									<p:tooltip for="@previous"
 										value="Fetch file cabinets of the. The id of the first cabinet returned will be inserted into the cabinet id field." my="left"
 										at="left top" />
 								</div>
-								<div class="col-12 md:col-6 lg:col-2"></div>
+								<div class="col-12 md:col-6 lg:col-6"></div>
 								<div class="col-12 md:col-6 lg:col-2">
-									<p:outputPanel rendered="#{data.ctrl.hasAccessToken()}">
-										<p:commandButton id="loginToken" styleClass="p-ml-4" actionListener="#{logic.loginToken}" value="Create login token" update="mainPage" />
-										<p:tooltip for="@previous" escape="false"
-											value="Create a login token, which can be used in certain URLs (this is not the normal access token used for API calls).
-									&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; this token can only be created when an access token is available (i.e. after at least one API call)!&lt;/p&gt;"
-											my="left" at="left top" />
-									</p:outputPanel>
-								</div>
-								<div class="col-12 md:col-6 lg:col-2">
-									<p:commandButton id="clearCaches" styleClass="p-ml-4" actionListener="#{logic.clearCaches}" value="Clear all caches" update="mainPage" />
+									<p:commandButton id="clearCaches" styleClass="p-ml-4" actionListener="#{logic.clearCaches}" value="Clear all caches" update=":form:mainPage" />
 									<p:tooltip for="@previous" escape="false"
 										value="Clear all configurations and tokens. This is useful for testing the authorization workflow." my="left" at="left top" />
 								</div>
@@ -87,39 +78,39 @@
 							<p:outputPanel rendered="#{not empty data.ctrl.fileCabinetId}">
 								<div class="grid">
 									<div class="col-12 md:col-6 lg:col-2">
-										<p:commandButton id="documents" actionListener="#{logic.documents}" value="Fetch Documents" update="mainPage" />
+										<p:commandButton id="documents" actionListener="#{logic.documents}" value="Fetch Documents" update=":form:mainPage" />
 									</div>
 								</div>
 								<p:outputPanel rendered="#{not empty data.ctrl.documentId}">
 									<div class="grid">
 										<div class="col-12 md:col-6 lg:col-2">
-											<p:commandButton value="Get document Info" ajax="true" actionListener="#{logic.getDocumentInfo}" update="mainPage" />
+											<p:commandButton value="Get document Info" ajax="true" actionListener="#{logic.getDocumentInfo}" update=":form:mainPage" />
 										</div>
 										<div class="col-12 md:col-6 lg:col-2">
-											<p:commandButton value="Download Document" ajax="true" actionListener="#{logic.prepareDownload}" update="mainPage">
+											<p:commandButton value="Download Document" ajax="true" actionListener="#{logic.prepareDownload}" update=":form:mainPage">
 												<p:fileDownload value="#{data.ctrl.downloadedFile}" />
 											</p:commandButton>
 										</div>
 										<div class="col-12 md:col-6 lg:col-2">
-											<p:commandButton value="Create new version" ajax="true" actionListener="#{logic.createNewVersion}" update="mainPage" />
+											<p:commandButton value="Create new version" ajax="true" actionListener="#{logic.createNewVersion}" update=":form:mainPage" />
 										</div>
 										<div class="col-12 md:col-6 lg:col-2">
 											<p:commandButton value="Fetch and attach Document to case" ajax="true" actionListener="#{logic.downloadAndAttachToCase}"
-												update="mainPage" />
+												update=":form:mainPage" />
 										</div>
 									</div>
 									<p:outputPanel rendered="#{not empty data.ctrl.configuration.integrationPassphrase}">
 										<div class="grid">
 											<div class="col-12 md:col-6 lg:col-2">
 												<p:commandButton icon="pi pi-eye" value="Embedded Viewer" actionListener="#{logic.buildViewerUrl}"
-													oncomplete="PF('viewDocumentDialog').show()" update="mainPage" />
+													oncomplete="PF('viewDocumentDialog').show()" update=":form:mainPage" />
 											</div>
 											<div class="col-12 md:col-6 lg:col-2">
 												<a href="#{data.ctrl.buildViewerUrl()}" target="_blank">Open document #{data.ctrl.documentId} in new tab</a>
 											</div>
 											<div class="col-12 md:col-6 lg:col-2">
 												<p:commandButton icon="pi pi-eye" value="Embedded Cabinet List And Viewer"
-													actionListener="#{logic.buildCabinetResultListAndViewerUrl}" oncomplete="PF('viewResultListDialog').show()" update="mainPage" />
+													actionListener="#{logic.buildCabinetResultListAndViewerUrl}" oncomplete="PF('viewResultListDialog').show()" update=":form:mainPage" />
 											</div>
 										</div>
 									</p:outputPanel>
@@ -171,6 +162,51 @@
 								</div>
 							</p:outputPanel>
 						</p:tab>
+						<p:tab title="Login Token">
+							<div class="grid">
+								<div class="col-12 md:col-16 lg:col-12">
+									Here you can create a login token for the configured DocuWare instance OR you can enter a token if you
+									got it by other means. This login token can then be set for the selected configuration. Note, that only
+									configurations with <b>grantType dwtoken</b> can be selected. After the token is set, the configuration should
+									work in a normal way.
+								</div>
+							</div>
+							<div class="grid">
+								<div class="col-12 md:col-6 lg:col-2">
+										<p:commandButton id="createLoginToken" styleClass="p-ml-4" actionListener="#{logic.loginToken}" value="Create login token" update=":form:mainPage" rendered="#{data.ctrl.hasAccessToken()}"/>
+										<p:tooltip for="@previous" escape="false"
+											value="Create a login token, which can be used in certain URLs (this is not the normal access token used for API calls).
+									&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; this token can only be created when an access token is available (i.e. after at least one API call)!&lt;/p&gt;"
+											my="left" at="left top" />
+								</div>
+								<div class="col-12 md:col-6 lg:col-6">
+									<p:inputText id="loginToken" value="#{data.ctrl.loginToken}" />
+								</div>
+							</div>
+							<p:outputPanel id="dwTokenSave" rendered="#{not empty data.ctrl.dwTokenConfigs}">
+								<div class="grid">
+									<div class="col-12 md:col-6 lg:col-2">
+											<p:commandButton id="setLoginToken" styleClass="p-ml-4" actionListener="#{logic.setLoginToken}" value="Set login token for..." update=":form:mainPage" />
+											<p:tooltip for="@previous" escape="false"
+												value="Set the login token to the selected configuration with grantType dwtoken"
+												my="left" at="left top" />
+									</div>
+									<div class="col-12 md:col-6 lg:col-4">
+										<p:selectOneMenu id="dwTokenConfig" value="#{data.ctrl.dwTokenConfigKey}">
+											<f:selectItems value="#{data.ctrl.dwTokenConfigs}" />
+											<p:ajax update=":form:mainPage" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+							</p:outputPanel>
+							<p:outputPanel id="dwTokenNoSave" rendered="#{empty data.ctrl.dwTokenConfigs}">
+								<div class="grid">
+									<div class="col-12 md:col-12 lg:col-12">
+										No configurations of <b>grantType dwtoken</b> were found.
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:tab>
 						<p:tab title="Encryption">
 							<div class="grid">
 								<div class="col-12 md:col-6 lg:col-12">If DocuWare is embedded into another page or frame, the DocuWare URL parameters can be
@@ -189,10 +225,10 @@
 								</div>
 								<div class="grid">
 									<div class="col-12 md:col-6 lg:col-2">
-										<p:commandButton value="Encrypt" ajax="true" actionListener="#{logic.encrypt}" update="mainPage" />
+										<p:commandButton value="Encrypt" ajax="true" actionListener="#{logic.encrypt}" update=":form:mainPage" />
 									</div>
 									<div class="col-12 md:col-6 lg:col-2">
-										<p:commandButton value="Decrypt" ajax="true" actionListener="#{logic.decrypt}" update="mainPage" />
+										<p:commandButton value="Decrypt" ajax="true" actionListener="#{logic.decrypt}" update=":form:mainPage" />
 									</div>
 								</div>
 								<div class="grid">

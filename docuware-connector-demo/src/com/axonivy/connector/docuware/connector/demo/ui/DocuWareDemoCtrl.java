@@ -25,6 +25,7 @@ import com.axonivy.connector.docuware.connector.DocuWareProperties;
 import com.axonivy.connector.docuware.connector.DocuWareProperty;
 import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
+import com.axonivy.connector.docuware.connector.enums.GrantType;
 import com.docuware.dev.schema._public.services.platform.CheckInReturnDocument;
 import com.docuware.dev.schema._public.services.platform.Document;
 import com.docuware.dev.schema._public.services.platform.DocumentIndexField;
@@ -56,11 +57,14 @@ public class DocuWareDemoCtrl {
 	private List<Field> fields;
 	private List<String> configs;
 	private String configKey;
+	private String dwTokenConfigKey;
 	private Configuration configuration;
+	private List<String> dwTokenConfigs;
 	private static final Random RND = new Random();
 
 	public DocuWareDemoCtrl() {
 		configs = DocuWareService.get().getConfigs().stream().sorted().toList();
+		dwTokenConfigs = configs.stream().filter(c -> Configuration.getKnownConfiguration(c).getGrantType() == GrantType.DW_TOKEN).toList();
 		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
 		organizationId = Ivy.var().get("docuwareConnector.organization");
 		fileCabinetId = Ivy.var().get("docuwareConnector.filecabinetid");
@@ -89,6 +93,19 @@ public class DocuWareDemoCtrl {
 		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
 		organizationId = null;
 		fileCabinetId = null;
+		loginToken = null;
+	}
+
+	public String getDwTokenConfigKey() {
+		return dwTokenConfigKey;
+	}
+
+	public void setDwTokenConfigKey(String dwTokenConfigKey) {
+		this.dwTokenConfigKey = dwTokenConfigKey;
+	}
+
+	public List<String> getDwTokenConfigs() {
+		return dwTokenConfigs;
 	}
 
 	public Collection<String> getConfigs() {
@@ -170,6 +187,11 @@ public class DocuWareDemoCtrl {
 			log("Error while checking access token, assuming no token is available.", e);
 		}
 		return result;
+	}
+
+	public void setLoginTokenToDwConfig(String dwConfig, String token) {
+		log("Setting token to session for config ''{0}''.", dwConfig);
+		Configuration.getKnownConfiguration(dwConfig).setSessionDocuwareToken(token);
 	}
 
 	public String getLoginToken() {
