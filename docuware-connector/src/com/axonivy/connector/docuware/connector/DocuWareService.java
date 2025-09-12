@@ -38,7 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -48,8 +47,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
@@ -676,10 +673,8 @@ public class DocuWareService {
 	 * @param properties
 	 * @return
 	 * @throws IOException
-	 * @throws DocuWareException
 	 */
-	public Document upload(WebTarget target, InputStream fileStream, String fileName, DocuWareProperties properties)
-			throws IOException, DocuWareException {
+	public Document upload(WebTarget target, InputStream fileStream, String fileName, DocuWareProperties properties) throws IOException {
 		var propertiesStream = new ByteArrayInputStream(writeObjectAsJsonBytes(properties));
 		Document document = null;
 
@@ -693,7 +688,7 @@ public class DocuWareService {
 			if (Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
 				document = response.readEntity(Document.class);
 			} else {
-				throw handleError(response);
+				throwErrorIfUnsuccessful(response);
 			}
 			response.close();
 		}
@@ -742,36 +737,42 @@ public class DocuWareService {
 	}
 
 
+	/**
+	 * Check a response for successful answer and if not, throw an error with a reason if any is available.
+	 * 
+	 * @param response
+	 */
+	public void throwErrorIfUnsuccessful(Response response) {
+		if(response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
+			var errXml = response.readEntity(String.class);
+			var error = BpmError
+					.create(DOCUWARE_ERROR + "callfailed")
+					.withMessage("DocuWare Service call failed")
+					.withAttribute(DocuWareService.RESPONSE_STATUS_CODE_ATTRIBUTE, response.getStatus());
 
-	public DocuWareException handleError(Response response) {
-		String errXml = response.readEntity(String.class);
-		String httpStatus = String.valueOf(response.getStatus());
-		String msg = "DocuWare Service call failed";
-		DocuWareException exception = new DocuWareException(msg, httpStatus);
-		try {
-			InputStream isr = new ByteArrayInputStream(errXml.getBytes(StandardCharsets.UTF_8));
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			org.w3c.dom.Document doc = db.parse(isr);
-			Element element = doc.getDocumentElement();
-			if (element != null && element.getNodeName() != null
-					&& element.getNodeName().contains(RESPONSE_XML_ERROR_NODE)) {
-				for (int n = 0; n < element.getChildNodes().getLength(); n++) {
-					Node node = element.getChildNodes().item(n);
-					if (node.getNodeName() != null && node.getNodeName().contains(RESPONSE_XML_MESSAGE_NODE)) {
-						if (node.getChildNodes() != null) {
-							Node child = node.getFirstChild();
-							msg = child.getNodeValue();
-							exception = new DocuWareException(msg, httpStatus);
+			try {
+				var isr = new ByteArrayInputStream(errXml.getBytes(StandardCharsets.UTF_8));
+				var db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				var doc = db.parse(isr);
+				var element = doc.getDocumentElement();
+				if (element != null && element.getNodeName() != null && element.getNodeName().contains(RESPONSE_XML_ERROR_NODE)) {
+					var children = element.getChildNodes();
+					for (var n = 0; n < children.getLength(); n++) {
+						var node = children.item(n);
+						if (node.getNodeName() != null && node.getNodeName().contains(RESPONSE_XML_MESSAGE_NODE)) {
+							if (node.getChildNodes() != null) {
+								error.withMessage(node.getFirstChild().getNodeValue());
+								break;
+							}
 						}
 					}
 				}
+			} catch (ParserConfigurationException | SAXException | IOException e) {
+				error.withCause(e);
 			}
-		} catch (ParserConfigurationException e) {
-		} catch (SAXException e) {
-		} catch (IOException e) {
+
+			throw error.build();
 		}
-		return exception;
 	}
 
 	public String getFilenameFromResponseHeader(Response response) {

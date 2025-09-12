@@ -47,18 +47,9 @@
           }
         },
         "code" : [
-          "import ch.ivyteam.ivy.bpm.error.BpmError;",
-          "import com.axonivy.connector.docuware.connector.DocuWareException;",
           "import com.axonivy.connector.docuware.connector.DocuWareService;",
           "",
-          "try {",
-          "  in.document = DocuWareService.get().upload(client, in.fileStream, in.fileName, in.properties);",
-          "} catch(DocuWareException dex) {",
-          "  BpmError.create(DocuWareService.DOCUWARE_ERROR + \"uploaderror\")",
-          "  .withCause(dex)",
-          "  .withMessage(dex.getErrorMessage())",
-          "  .throwError();",
-          "}"
+          "in.document = DocuWareService.get().upload(client, in.fileStream, in.fileName, in.properties);"
         ]
       },
       "visual" : {

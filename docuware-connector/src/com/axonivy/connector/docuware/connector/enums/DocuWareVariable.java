@@ -19,31 +19,6 @@ public enum DocuWareVariable {
 	CONNECT_TIMEOUT("connectTimeout"),
 	READ_TIMEOUT("readTimeout"),
 	LOGGING_ENTITY_MAX_SIZE("loggingEntityMaxSize"),
-
-	/**
-	 * @deprecated 
-	 */
-	SCHEME("docuwareConnector.scheme", false, true),
-	/**
-	 * @deprecated 
-	 */
-	HOST("docuwareConnector.host", false, true),
-	/**
-	 * @deprecated 
-	 */
-	PLATFORM("docuwareConnector.platform", false, true),
-	/**
-	 * @deprecated 
-	 */
-	TRUSTED_USERNAME("docuwareConnector.trustedUserName", false, true),
-	/**
-	 * @deprecated 
-	 */
-	TRUSTED_USER_PASSWORD("docuwareConnector.trustedUserPassword", true, true),
-	/**
-	 * @deprecated 
-	 */
-	LOGIN_TOKEN("docuwareConnector.loginToken", true, true)
 	;
 
 	private String varName;
