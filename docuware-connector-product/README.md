@@ -12,19 +12,24 @@ This connector:
 
 ## Demo
 
-The demo offers a GUI to guide you through some basic DocuWare features, a GUI to retrieve a list of documents from your default organization and the first file cabinet found and some workflows with examples of other calls.
+The demo offers
+- a GUI to navigate to one or more DocuWare instances
+- a GUI to view and edit document properties of the default DocuWare instance
+- some log-file-based example workflows
 
-### Basic Docuware Features
+Before you start the demo, unpackit and provide at least one configuration for a DocuWare instance in global variables.
 
-Start **Basic DocuWare Calls** and either configure a fixed organization and file cabinet in global variables or **Fetch Organizations** and **Fetch FileCabinets** to use the first objects found instead.
+### Docuware Demo
+
+~~Start **Basic DocuWare Calls** and either configure a fixed organization and file cabinet in global variables or **Fetch Organizations** and **Fetch FileCabinets** to use the first objects found instead.
 Once you select a file cabinet id, additional functions to **Fetch Documents** will be available. The first document found will be used as the demo document. Nevertheless, you
 can enter ids manually for all input fields to use different objects. Once a document id is set, the document can be downloaded or attached to the current case. If you upload
-a document, it's documentId will be set automatically and you can directly work with it.
+a document, it's documentId will be set automatically and you can directly work with it.~~
 
-### Document Viewing
+### Document Table
 
-Start **View/Edit Document** to get basic viewer showing how to add, change, view and delete documents. Note, that viewing of documents might require additional setup of your DocuWare installation to allow embedding
-of DocuWare frames into your AxonIvy frames.
+~~Start **View/Edit Document** to get basic viewer showing how to add, change, view and delete documents. Note, that viewing of documents might require additional setup of your DocuWare installation to allow embedding
+of DocuWare frames into your AxonIvy frames.~~
 
    ![view-document](images/view-document.png)
 
@@ -44,45 +49,49 @@ Other process starts show examples of DocuWare usage.
 
 ## Setup
 
-Before any interactions between the Axon Ivy Engine and DocuWare services can be run, they have to be introducted to each other.
-All configurations are done in global variables. Whether cloud or on-premise, you must define the `host` which is the hostname of
-your DocuWare installation.
+Before any interactions between the Axon Ivy Engine and DocuWare services can be run, they have to be introducted to each other. This connector offers _multi-instance_ support, i.e. it allows to work with multiple DocuWare instances in parallel. Instance configurations are stored in global variables in named _blocks_ of configuration variables below the `docuwareConnector` section. The configuration named `defaultConfig` is predefined in the connector so you only have to set specific values for your installation. Additionally, configurations can configure the `inherit` attribute to take over all non-empty values of the named configuration.
 
-The connector supports different grant-types. Depending on the grant-type, other credentials are used.
+Please see the provided `variables.yaml` file for the list and meaning of global variables. The most important will be shortly described here.
 
-### Grant type `password`
+### `configId`
 
-This is the typical type used for cloud solutions. Ivy will use a technical user to connect to DocuWare and all
-calls will be done using this user. The history of a document will show this technical user independent of the
-real Ivy user. For this grant-type you need to set `username` and `password` of the DocuWare user.
+Any value that identifies this version of the configuration. If the value changes, the cached configuration will be re-read next time needed. It might be a good idea to put there a timestamp and the username doing the change.
 
-### Grant type `trusted`
+### `inherit`
 
-This can be used in on-premise solutions. It will use a trusted user to connect, but it will impersonate the current
-Ivy user name for calls. Therefore, the history of a document will show the real Ivy user. For this grant-type
-you need to set `trustedUserName`, `trustedUserPassword` and `username` (to be used for special users).
+Any value which is **non-existent, empty or blank** in the current configuration will be looked up in the configuration mentioned in this variable. The lookup will be done recursively.
 
-Notes:
+### `grantType`
 
-* For this to work, the Ivy user must have the same name as the DocuWare user
-* For System user and unauthenticated users, the configured `username` will be used.
+This is the grant-type of your configuration. Possible values are `password`, `trusted`, `dwtoken`
 
-### Grant type `dw_token`
+#### `password`
 
-This can be used, if you got the user token by some other means. Note, that this use-case is probably not yet fully
-supported and should be seen as a demo. You can start the process **Request a LoginToken for DW-Token** to play
-around with this grant-type.
+Grant type `password` uses a fixed `username` and `password` to connect to your DocuWare instance. This means, that all operations will be performed by this user. Also all history entries will be show this user. It is a simple setup for a _technical user_ to connect to a cloud or on-premise instance of DocuWare.
+
+#### `trusted`
+
+Grant type `trusted` uses a `username` and `password` to connect as a trusted user to your DocuWare instance.Currently, DocuWare supports trusted users only for on-premise installations. The trusted user is not used directly, but impersonates another user. Which user to impersonate can be configured in the global variable `impersonateUser`.
+
+`impersonateUser` implements a special syntax to define which user to use for accesses by anonymous Ivy user, accesses by the system Ivy user and accesses by other Ivy users.
+
+- use a constant username for all situations
+- use constant user names for anonymous and system, but use the Ivy username for others
+- set the username to use in the user's session before any calls and use this name
+
+Please see the documentation in the `variables.yaml` file.
+
+#### `dwtoken`
+
+The token is generated by using an existing token of DocuWare. Note: This use-case is probably not fully supported. Which token to use is configured in `dwToken`. Currently, the existing token can only be loaded from the session.
 
 ### Other configuration variables
 
-Other configuration variables are documented directly in the variables supported by the connector. Please see there
-for a description and copy it to your project, if you are using it, so that it will be visible in the Engine cockpit
-for your application.
+Other configuration variables are documented directly in the variables supported by the connector. Please see there for a description and copy it to your project, if you are using it, so that it will be visible in the Engine cockpit for your application.
 
 ```
 @variables.yaml@
 ```
 
-If the connector misses features that you need, you can unpack it to your project and extend it there. In this case
-consider to propose/offer your change to the Axon Ivy market.
+If the connector misses features that you need, you can unpack it to your project and extend it there. In this case consider to propose/offer your change to the Axon Ivy market.
 
