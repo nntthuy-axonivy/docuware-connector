@@ -107,5 +107,18 @@ Other configuration variables are documented directly in the variables supported
 @variables.yaml@
 ```
 
+### Using a single DocuWare instance
+
+If you only work with one instance you should name it `defaultConfig` and it will be used automatically without any additional considerations.
+
+### Using multiple DocuWare instances simultaneously
+
+If you work with multiple instances, every call must know which instance to use. Therefore all instance-specific sub processes offered by this connector offer an additonal `configKey` parameter which must be set to the name of the configuration to use in this sub-process. If the `configKey` is empty, the `defaultConfig` will be used automatically.
+
+If you want to use REST calls of this connector directly, you can use the call's property `configKey` in the same way. Have a look at the instance-aware sub-processes to see how this is done!
+
+
+### Missing something?
+
 If the connector misses features that you need, you can unpack it to your project and extend it there. In this case consider to propose/offer your change to the Axon Ivy market.
 
