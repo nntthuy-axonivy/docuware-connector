@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,34 +12,24 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -52,25 +40,18 @@ import org.xml.sax.SAXException;
 import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
 import com.axonivy.connector.docuware.connector.auth.oauth.GlobalVarConfiguration;
 import com.axonivy.connector.docuware.connector.auth.oauth.Token;
-import com.axonivy.connector.docuware.connector.enums.DocuWareVariable;
-import com.axonivy.connector.docuware.connector.enums.GrantType;
 import com.docuware.dev.schema._public.services.platform.CheckInReturnDocument;
 import com.docuware.dev.schema._public.services.platform.Document;
-import com.docuware.dev.schema._public.services.platform.DocumentIndexField;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
-import ch.ivyteam.ivy.scripting.objects.File;
-import ch.ivyteam.ivy.security.ISecurityConstants;
-import ch.ivyteam.util.StringUtil;
 
 public class DocuWareService {
 	/*
@@ -108,36 +89,6 @@ public class DocuWareService {
 
 
 	/**
-	 * Get the cached token from the grant-type specific store.
-	 * 
-	 * @param configKey
-	 * @param extra
-	 * @return
-	 */
-	public Token getCachedToken(String configKey, String extra) {
-		var key = createTokenCacheKey(configKey, extra);
-		Token token = null;
-		try {
-			token = (Token)IApplication.current().getAttribute(key);
-		} catch (ClassCastException e) {
-			Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
-		}
-		return token;
-	}
-
-	/**
-	 * Set the cached token to the grant-type specific store.
-	 * 
-	 * @param config
-	 * @param extra 
-	 * @param token
-	 */
-	public void setCachedToken(String config, String extra, Token token) {
-		var key = createTokenCacheKey(config, extra);
-		IApplication.current().setAttribute(key, token);
-	}
-
-	/**
 	 * Get all available Docuware configurations.
 	 * 
 	 * @return
@@ -154,48 +105,40 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Clear all cached configurations and tokens.
+	 * Get the URL of a viewer usable for embedding. 
+	 * 
+	 * @param configKey
+	 * @param organizationName
+	 * @param loginToken
+	 * @param cabinetId
+	 * @param documentId
+	 * @return
 	 */
-	public String clearCaches() {
-		try (var sw = new StringWriter();
-				var pw = new PrintWriter(sw)) {
-			var cachedNames = IApplication.current().getAttributeNames().stream()
-					.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(APP_ATT_TOKEN_PREFIX))
-					.sorted()
-					.toList();
+	public String getViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId, String documentId) {
+		var url = getIntegrationUrl(configKey, organizationName);
 
-			pw.println("Removing caches:");
-			for (var name : cachedNames) {
-				IApplication.current().removeAttribute(name);
-				pw.println(name);
-			}
+		var params = new LinkedHashMap<String, String>();
 
-			return sw.toString();
-		} catch (IOException e) {
-			throw new RuntimeException("Error while removing caches.", e);
+		params.put("p", "V");
+
+		if(StringUtils.isNotBlank(loginToken)) {
+			params.put("lct", loginToken);
 		}
-	}
+		if(StringUtils.isNotBlank(cabinetId)) {
+			params.put("fc", cabinetId);
+		}
+		if(StringUtils.isNotBlank(documentId)) {
+			params.put("did", documentId);
+		}
 
-	/**
-	 * @deprecated use String version with inheritance instead
-	 * @param variable
-	 * @return
-	 */
-	@Deprecated
-	public String getIvyVar(DocuWareVariable variable) {
-		return Ivy.var().get(variable.varName());
-	}
+		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
 
-	/**
-	 * @deprecated
-	 * @return
-	 */
-	@Deprecated
-	public GrantType getIvyVarGrantType() {
-		var type = getIvyVar(DocuWareVariable.GRANT_TYPE);
-		return Optional.ofNullable(GrantType.of(type)).orElse(GrantType.PASSWORD);
-	}
+		var ep = dwEncrypt(configKey, clear);
 
+		url.addParameter("ep", ep);
+
+		return url.toString();
+	}
 
 	/**
 	 * Get the Integration URL for embedding DocuWare into an IFrame including an optional organizationGuid (if more than one org is available).
@@ -208,17 +151,6 @@ public class DocuWareService {
 		return createUriBuilder(configKey, "WebClient", organizationGuid, "Integration");
 	}
 
-
-	/**
-	 * Get the client for a configuration.
-	 * 
-	 * @param configKey
-	 * @return
-	 */
-	public WebTarget getClient(String configKey) {
-		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, Configuration.knownOrDefaultKey(configKey));
-
-	}
 
 	/**
 	 * Create a URIBuilder into DowuWare with pathSegments.
@@ -262,75 +194,6 @@ public class DocuWareService {
 		builder.setPathSegments(segs);
 
 		return builder;
-	}
-
-
-	/**
-	 * Get the URL of a viewer usable for embedding. 
-	 * 
-	 * @param configKey
-	 * @param organizationName
-	 * @param loginToken
-	 * @param cabinetId
-	 * @param documentId
-	 * @return
-	 */
-	public String getViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId, String documentId) {
-		var url = getIntegrationUrl(configKey, organizationName);
-
-		var params = new LinkedHashMap<String, String>();
-
-		params.put("p", "V");
-
-		if(StringUtils.isNotBlank(loginToken)) {
-			params.put("lct", loginToken);
-		}
-		if(StringUtils.isNotBlank(cabinetId)) {
-			params.put("fc", cabinetId);
-		}
-		if(StringUtils.isNotBlank(documentId)) {
-			params.put("did", documentId);
-		}
-
-		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
-
-		var ep = dwEncrypt(configKey, clear);
-
-		url.addParameter("ep", ep);
-
-		return url.toString();
-	}
-
-	/**
-	 * Get the URL of a viewer usable for embedding. 
-	 * 
-	 * @param configKey
-	 * @param organizationName
-	 * @param loginToken
-	 * @param cabinetId
-	 * @return
-	 */
-	public String getCabinetResultListAndViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId) {
-		var url = getIntegrationUrl(configKey, organizationName);
-
-		var params = new LinkedHashMap<String, String>();
-
-		params.put("p", "RLV");
-
-		if(StringUtils.isNotBlank(loginToken)) {
-			params.put("lct", loginToken);
-		}
-		if(StringUtils.isNotBlank(cabinetId)) {
-			params.put("fc", cabinetId);
-		}
-
-		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
-
-		var ep = dwEncrypt(configKey, clear);
-
-		url.addParameter("ep", ep);
-
-		return url.toString();
 	}
 
 
@@ -488,35 +351,60 @@ public class DocuWareService {
 		return decrypted;
 	}
 
-
 	/**
-	 * Get the DocuWare user to use based on the current Ivy user.
-	 * 
-	 * This is useful for trusted grant type, where this will be used for the impersonateName.
-	 * Normal Ivy users will be used with the user-name. Unknown (unauthenticated), system
-	 * or developer user will be matched to the fallback username. 
-	 * 
-	 * @return
+	 * Clear all cached configurations and tokens.
 	 */
-	public String getDocuwareUserBasedOnCurrentUser() {
-		var session = Ivy.session();
+	public String clearCaches() {
+		try (var sw = new StringWriter();
+				var pw = new PrintWriter(sw)) {
+			var cachedNames = IApplication.current().getAttributeNames().stream()
+					.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(APP_ATT_TOKEN_PREFIX))
+					.sorted()
+					.toList();
 
-		String username = null;
-
-		if (session.isSessionUserSystemUser() || session.isSessionUserUnknown()) {
-			username = getIvyVar(DocuWareVariable.USERNAME);
-		}
-		else {
-			username = session.getSessionUserName();
-			if(ISecurityConstants.DEVELOPER_USER_NAME.equals(username)) {
-				username = getIvyVar(DocuWareVariable.USERNAME);
+			pw.println("Removing caches:");
+			for (var name : cachedNames) {
+				IApplication.current().removeAttribute(name);
+				pw.println(name);
 			}
+
+			return sw.toString();
+		} catch (IOException e) {
+			throw new RuntimeException("Error while removing caches.", e);
 		}
-		return username;
 	}
 
+	/**
+	 * Get the cached token from the grant-type specific store.
+	 * 
+	 * @param configKey
+	 * @param extra
+	 * @return
+	 */
+	public Token getCachedToken(String configKey, String extra) {
+		var key = createTokenCacheKey(configKey, extra);
+		Token token = null;
+		try {
+			token = (Token)IApplication.current().getAttribute(key);
+		} catch (ClassCastException e) {
+			Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
+		}
+		return token;
+	}
 
-	private String createTokenCacheKey(String configKey, String extra) {
+	/**
+	 * Set the cached token to the grant-type specific store.
+	 * 
+	 * @param config
+	 * @param extra 
+	 * @param token
+	 */
+	public void setCachedToken(String config, String extra, Token token) {
+		var key = createTokenCacheKey(config, extra);
+		IApplication.current().setAttribute(key, token);
+	}
+
+	protected String createTokenCacheKey(String configKey, String extra) {
 		var key = "%s:%s".formatted(APP_ATT_TOKEN_PREFIX, Configuration.knownOrDefaultKey(configKey));
 		if(extra != null) {
 			key = "%s:%s".formatted(key, extra);
@@ -525,147 +413,41 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Get a LoginToken based on the current access token.
+	 * Get a login token.
 	 * 
 	 * @param configKey
 	 * @return
 	 */
 	public String getLoginTokenString(String configKey) {
-		return getLoginTokenString(configKey, null);
+		return getLoginTokenResponse(configKey).readEntity(String.class);
 	}
 
 	/**
-	 * Get a LoginToken based on the access token.
-	 * 
-	 * @param configKey
-	 * @param token
-	 * @return
-	 */
-	public String getLoginTokenString(String configKey, Token token) {
-		String loginToken = null;
-		Response response = null;
-		try {
-			response = getLoginTokenResponse(configKey, token);
-
-			if (Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-				loginToken = response.readEntity(String.class);
-			}
-		} catch (Exception e) {
-			BpmError.create(DOCUWARE_ERROR + "logintoken")
-			.withCause(e)
-			.withMessage("Could not get login token.")
-			.throwError();
-		}
-		return loginToken;
-	}
-
-	/**
-	 * Get a LoginToken based on the current access token.
+	 * Get a login token.
 	 * 
 	 * @param configKey
 	 * @return
 	 */
 	public Response getLoginTokenResponse(String configKey) {
-		return getLoginTokenResponse(configKey, null);
-	}
-	/**
-	 * Get a LoginToken based on the access token.
-	 * 
-	 * @param configKey
-	 * @param token
-	 * @return
-	 */
-	public Response getLoginTokenResponse(String configKey, Token token) {
 		var client = getClient(configKey);
 		Response response = null;
-		try {
-			response = client
-					.path("Organization/LoginToken")
-					.request(MediaType.APPLICATION_JSON)
-					.post(Entity.json(generateLoginTokenBody()));
+		response = client
+				.path("Organization/LoginToken")
+				.request(MediaType.APPLICATION_JSON)
+				.post(Entity.json("""
+						{
+						  "TargetProducts": ["PlatformService"],
+						  "Usage": "Multi",
+						  "Lifetime": "1.00:00:00"
+						}
+						"""));
+		throwErrorIfUnsuccessful(response);
 
-		} catch (Exception e) {
-			BpmError.create(DOCUWARE_ERROR + "logintoken")
-			.withCause(e)
-			.withMessage("Could not get login token.")
-			.throwError();
-		}
 		return response;
 	}
 
-	private String generateLoginTokenBody() {
-		return """
-				{
-				  "TargetProducts": [
-				      "PlatformService"
-				  ],
-				  "Usage": "Multi",
-				  "Lifetime": "1.00:00:00"
-				}
-				""";
-	}
-
-	public JsonNode getWebTargetResponseAsJsonNode(URI targetURI) {
-		Client client = ClientBuilder.newClient();
-		Response response = null;
-		try {
-			WebTarget target = client.target(targetURI);
-			response = target.request(MediaType.APPLICATION_JSON).get();
-			if (Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-				String jsonResponse = response.readEntity(String.class);
-				return parseToJsonNode(jsonResponse);
-			}
-		} catch (Exception e) {
-			Ivy.log().error("Error calling URL ''{0}'': status is {1} - {2}", e, targetURI, response != null ? response.getStatus() : null, response);
-		} finally {
-			if(response != null) {
-				response.close();
-			}
-			if(client != null) {
-				client.close();
-			}
-		}
-		return null;
-	}
-
-	public DocumentIndexField createDocumentIndexStringField(String fieldName, String item) {
-		DocumentIndexField field = new DocumentIndexField();
-		field.setFieldName(fieldName);
-		field.setString(item);
-		return field;
-	}
-
-	public DocumentIndexField createDocumentIndexDateField(String fieldName, Date date) {
-		DocumentIndexField field = new DocumentIndexField();
-		field.setFieldName(fieldName);
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setTime(date);
-		// set
-		return field;
-	}
-
-	public String dateToString(Date date) {
-		String string = null;
-		if (date != null) {
-			string = String.format("/Date(%d)/", date.getTime());
-		}
-		return string;
-	}
-
-	public Date stringToDate(String dateString) {
-		Date date = null;
-		if (dateString != null) {
-			Matcher matcher = DATE_PATTERN.matcher(dateString);
-			if (matcher.matches()) {
-				long timestamp = Long.parseLong(matcher.group(1));
-				date = new Date(timestamp);
-			}
-		}
-		return date;
-	}
-
 	/**
-	 * Upload a document.
+	 * Perform upload document call.
 	 * 
 	 * @param target
 	 * @param fileStream
@@ -683,18 +465,31 @@ public class DocuWareService {
 			.bodyPart(new StreamDataBodyPart(PROPERTIES_FILE_NAME, propertiesStream, "Properties.json", MediaType.APPLICATION_JSON_TYPE))
 			.bodyPart(new StreamDataBodyPart("File[]", fileStream, fileName));
 
-			var response = prepareRestClient(target).post(Entity.entity(multiPart, multiPart.getMediaType()));
+			var response = target
+					.request()
+					.header("X-Requested-By", "ivy")
+					.header("MIME-Version", "1.0")
+					.header("Accept", "application/xml")
+					.post(Entity.entity(multiPart, multiPart.getMediaType()));
 
-			if (Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-				document = response.readEntity(Document.class);
-			} else {
-				throwErrorIfUnsuccessful(response);
-			}
+			throwErrorIfUnsuccessful(response);
+			document = response.readEntity(Document.class);
+
 			response.close();
 		}
 		return document;
 	}
 
+	/**
+	 * Perform checkin from file system call.
+	 * 
+	 * @param target
+	 * @param params
+	 * @param fileName
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	public Document checkInFromFileSystem(WebTarget target, DocuWareCheckInActionParameters params, String fileName, InputStream file) throws IOException {
 		Document document = null;
 
@@ -706,11 +501,8 @@ public class DocuWareService {
 			.bodyPart(new StreamDataBodyPart("File[]", file, fileName));
 
 			var response = target.request().post(Entity.entity(multiPart, multiPart.getMediaType()));
-			if (Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-				document = response.readEntity(Document.class);
-			} else {
-				BpmError.create(DOCUWARE_ERROR + "checkin").build();
-			}
+			throwErrorIfUnsuccessful(response);
+			document = response.readEntity(Document.class);
 		} 
 		return document;
 	}
@@ -775,10 +567,16 @@ public class DocuWareService {
 		}
 	}
 
+	/**
+	 * Get the filename from the response's content disposition header according to RFC 5987.
+	 * 
+	 * @param response
+	 * @return
+	 */
 	public String getFilenameFromResponseHeader(Response response) {
 		String filename = null;
 		if (response != null) {
-			String disposition = response.getHeaderString(CONTENT_DISPOSITION);
+			var disposition = response.getHeaderString(CONTENT_DISPOSITION);
 
 			try {
 				var cd = new ContentDisposition(disposition);
@@ -793,24 +591,47 @@ public class DocuWareService {
 		return filename;
 	}
 
-	public File createPropertiesFile(List<DocuWareProperty> properties) throws IOException {
-		File propertiesFile = getUniquePropertiesFile();
-		DocuWareProperties docuWareproperties = new DocuWareProperties();
-		docuWareproperties.setProperties(properties);
-		FileUtils.write(propertiesFile.getJavaFile(), serializeProperties(docuWareproperties),
-				PROPERTIES_FILE_CHARSET);
-		return propertiesFile;
+	/**
+	 * Get the URL of a viewer usable for embedding. 
+	 * 
+	 * @param configKey
+	 * @param organizationName
+	 * @param loginToken
+	 * @param cabinetId
+	 * @return
+	 */
+	public String getCabinetResultListAndViewerUrl(String configKey, String organizationName, String loginToken, String cabinetId) {
+		var url = getIntegrationUrl(configKey, organizationName);
+
+		var params = new LinkedHashMap<String, String>();
+
+		params.put("p", "RLV");
+
+		if(StringUtils.isNotBlank(loginToken)) {
+			params.put("lct", loginToken);
+		}
+		if(StringUtils.isNotBlank(cabinetId)) {
+			params.put("fc", cabinetId);
+		}
+
+		var clear = params.entrySet().stream().map(e -> "%s=%s".formatted(e.getKey(), e.getValue())).collect(Collectors.joining("&"));
+
+		var ep = dwEncrypt(configKey, clear);
+
+		url.addParameter("ep", ep);
+
+		return url.toString();
 	}
 
-	protected Builder prepareRestClient(WebTarget target) {
-		return target.request()
-				.header("X-Requested-By", "ivy")
-				.header("MIME-Version", "1.0")
-				.header("Accept", "application/xml");
-	}
+	/**
+	 * Get the client for a configuration.
+	 * 
+	 * @param configKey
+	 * @return
+	 */
+	public WebTarget getClient(String configKey) {
+		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, Configuration.knownOrDefaultKey(configKey));
 
-	protected File getUniquePropertiesFile() throws IOException {
-		return new File(PROPERTIES_FILE_NAME + UUID.randomUUID().toString() + PROPERTIES_FILE_EXTENSION, true);
 	}
 
 	/**
@@ -836,29 +657,10 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Registers the timeModule within the class loader
-	 *
+	 * Convert an Object to JSON.
+	 * @param entity
 	 * @return
 	 */
-	protected Module timeModule() {
-		try {
-			return (Module) StringUtil.class.getClassLoader()
-					.loadClass("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule").getDeclaredConstructor().newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-			throw new RuntimeException("JSR time module not available", e);
-		}
-	}
-
-	public String writeObjectAsJson(Object entity) {
-		try {
-			return getObjectMapper().writeValueAsString(entity);
-		} catch (JsonProcessingException e) {
-			Ivy.log().warn(e.getMessage());
-		}
-		return null;
-	}
-
 	public byte[] writeObjectAsJsonBytes(Object entity) {
 		try {
 			return getObjectMapper().writeValueAsBytes(entity);
@@ -868,40 +670,20 @@ public class DocuWareService {
 		return null;
 	}
 
-	public <T> T convertJsonToObject(String json, Class<T> objectType) {
-		if (StringUtils.isEmpty(json)) {
-			return null;
-		}
-		try {
-			return getObjectMapper().readValue(json, objectType);
-		} catch (JsonProcessingException e) {
-			Ivy.log().warn(e.getMessage());
-		}
-		return null;
-	}
-
+	/**
+	 * Get an object mapper to convert JSON parts.
+	 * 
+	 * @return
+	 */
 	public ObjectMapper getObjectMapper() {
 		if (objectMapper == null) {
-			objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			Module timeModule = timeModule();
-			objectMapper.registerModule(timeModule);
-			objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-			objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
-			objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-			objectMapper.setSerializationInclusion(Include.NON_NULL);
+			objectMapper = new ObjectMapper()
+					.registerModule(new JavaTimeModule())
+					.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+					.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+					.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+					.setSerializationInclusion(Include.NON_NULL);
 		}
 		return objectMapper;
-	}
-
-
-	protected JsonNode parseToJsonNode(String value) {
-		try {
-			var jsonNode = getObjectMapper().readTree(value);
-			Ivy.log().info("JSON Response: " + jsonNode.toPrettyString());
-			return jsonNode;
-		} catch (Exception e) {
-			Ivy.log().error(e);
-		}
-		return null;
 	}
 }

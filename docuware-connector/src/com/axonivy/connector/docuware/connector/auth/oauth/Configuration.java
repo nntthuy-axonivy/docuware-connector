@@ -247,7 +247,6 @@ public abstract class Configuration {
 		return tokenEndpoint != null;
 	}
 
-
 	/**
 	 * Get the DW user name based on the strategy. 
 	 * 
