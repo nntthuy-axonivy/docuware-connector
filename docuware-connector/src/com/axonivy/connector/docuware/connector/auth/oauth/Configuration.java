@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.enums.GrantType;
@@ -116,7 +117,7 @@ public abstract class Configuration {
 	public void refresh() {
 		tokenEndpoint = null;
 
-		if(url == null) {
+		if(StringUtil.isBlank(url)) {
 			BpmError.create(CONFIG_ERROR + "nourl")
 			.withMessage("The url is not set for config '%s'".formatted(configKey))
 			.throwError();
