@@ -37,9 +37,9 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.xml.sax.SAXException;
 
-import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
-import com.axonivy.connector.docuware.connector.auth.oauth.GlobalVarConfiguration;
-import com.axonivy.connector.docuware.connector.auth.oauth.Token;
+import com.axonivy.connector.docuware.connector.oauth.Configuration;
+import com.axonivy.connector.docuware.connector.oauth.GlobalVarConfiguration;
+import com.axonivy.connector.docuware.connector.oauth.Token;
 import com.docuware.dev.schema._public.services.platform.CheckInReturnDocument;
 import com.docuware.dev.schema._public.services.platform.Document;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

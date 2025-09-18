@@ -8,7 +8,7 @@ import javax.ws.rs.client.ClientBuilder;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
-import com.axonivy.connector.docuware.connector.auth.DocuWareAuthFeature;
+import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;

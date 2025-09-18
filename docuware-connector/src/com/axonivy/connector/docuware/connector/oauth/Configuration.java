@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.auth.oauth;
+package com.axonivy.connector.docuware.connector.oauth;
 
 import java.util.HashSet;
 import java.util.Set;

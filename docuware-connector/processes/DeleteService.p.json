@@ -50,11 +50,11 @@
       "type" : "CallSubStart",
       "name" : "deleteDocument(String, String, String)",
       "config" : {
-        "signature" : "call",
+        "signature" : "deleteDocument",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" },
             { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "documentId", "type" : "String", "desc" : "" },
             { "name" : "fileCabinetId", "type" : "String", "desc" : "" }
           ],
           "map" : {

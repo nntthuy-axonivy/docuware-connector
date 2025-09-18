@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.auth;
+package com.axonivy.connector.docuware.connector.oauth;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,8 +20,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
-import com.axonivy.connector.docuware.connector.auth.oauth.Configuration;
-import com.axonivy.connector.docuware.connector.auth.oauth.Token;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.error.BpmPublicErrorBuilder;

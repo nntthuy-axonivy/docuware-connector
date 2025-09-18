@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.Test;
 
-import com.axonivy.connector.docuware.connector.auth.oauth.ImpersonateStrategy;
-import com.axonivy.connector.docuware.connector.auth.oauth.ImpersonateStrategy.Strategy;
+import com.axonivy.connector.docuware.connector.oauth.ImpersonateStrategy;
+import com.axonivy.connector.docuware.connector.oauth.ImpersonateStrategy.Strategy;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 
