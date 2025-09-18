@@ -79,15 +79,15 @@
     }, {
       "id" : "f9",
       "type" : "CallSubStart",
-      "name" : "updateDocument(String, List<DocuWareProperty>, String, String)",
+      "name" : "updateDocument(String, String, String, List<DocuWareProperty>)",
       "config" : {
         "signature" : "updateDocument",
         "input" : {
           "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" },
-            { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
             { "name" : "configKey", "type" : "String", "desc" : "" },
-            { "name" : "fileCabinetId", "type" : "String", "desc" : "" }
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" }
           ],
           "map" : {
             "out.configKey" : "param.#configKey",
