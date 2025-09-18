@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Path("docuWareMock")
@@ -74,7 +73,6 @@ public class DocuWareServiceMock {
 	@Path("FileCabinets/{FileCabinetId}/Documents/{DocumentId}")
 	public Response getDocument(@Context HttpServletRequest req, @PathParam(value = "FileCabinetId") String fileCabinetId,
 			@PathParam(value = "DocumentId") String documentId) {
-		Ivy.log().fatal("22222!!!!!!!!!in mock" + documentId);
 		if (!isAuthenticated(req)) {
 			// note: the real service would send details
 			return Response.status(401).build();
