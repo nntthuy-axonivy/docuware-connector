@@ -138,7 +138,7 @@ public class DocuWareServiceMock {
 			return Response.status(401).build();
 		} else {
 			String path = "xml/document.xml";
-			if (StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1)) {
+			if (StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG)) {
 				path = "xml/documentStoreDialogId.xml";
 			} else if (StringUtils.equals(storeDialogId, "" + Constants.EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2)) {
 				path = "xml/documentStoreDialogId2.xml";

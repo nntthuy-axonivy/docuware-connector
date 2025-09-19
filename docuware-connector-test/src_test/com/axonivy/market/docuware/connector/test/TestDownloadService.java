@@ -18,15 +18,15 @@ import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class TestDownloadService extends TestDocuWareConnector {
-	private static final BpmElement testeeGetDocument = BpmProcess.path("DownloadService").elementName("getDocument(String,String,String)");
-	private static final BpmElement testeeDownload = BpmProcess.path("DownloadService").elementName("downloadFile(String,String,String)");
+	private static final BpmElement GET_DOCUMENT_SP = BpmProcess.path("DownloadService").elementName("getDocument(String,String,String)");
+	private static final BpmElement DOWNLOAD_SP = BpmProcess.path("DownloadService").elementName("downloadFile(String,String,String)");
 
 	@Test
 	public void downloadDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
 		prepareRestClient(app, fixture);
 
 		var result = bpmClient.start()
-				.subProcess(testeeGetDocument)
+				.subProcess(GET_DOCUMENT_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)
 				.withParam("documentId", Constants.EXPECTED_DOCUMENT_ID)
 				.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)
@@ -41,7 +41,7 @@ public class TestDownloadService extends TestDocuWareConnector {
 		prepareRestClient(app, fixture);
 
 		var result = bpmClient.start()
-				.subProcess(testeeDownload)
+				.subProcess(DOWNLOAD_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)
 				.withParam("documentId", Constants.EXPECTED_DOCUMENT_ID)
 				.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)

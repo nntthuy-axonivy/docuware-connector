@@ -7,7 +7,7 @@ public class Constants {
 	public static final String DOCUMENT_ID_OK = "2";
 	public static final String DOCUMENT_ID_ERROR = "20";
 	public static final String EXPECTED_DOCUMENT_ID = "66";
-	public static final String EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_1 = "67";
+	public static final String EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG = "67";
 	public static final String EXPECTED_DOCUMENT_ID_FOR_STORE_DIALOG_2 = "68";
 	public static final String EXPECTED_FILE_NAME = "\u20ac rates.pdf";
 }

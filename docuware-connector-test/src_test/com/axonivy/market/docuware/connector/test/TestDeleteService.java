@@ -17,14 +17,14 @@ import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class TestDeleteService extends TestDocuWareConnector {
-	private static final BpmElement testeeDelete = BpmProcess.path("DeleteService").elementName("deleteDocument(String, String, String)");
+	private static final BpmElement DELETE_SP = BpmProcess.path("DeleteService").elementName("deleteDocument(String, String, String)");
 
 	@Test
 	public void deleteDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
 		prepareRestClient(app, fixture);
 
 		bpmClient.start()
-		.subProcess(testeeDelete)
+		.subProcess(DELETE_SP)
 		.withParam("configKey", Constants.CONFIG_KEY)
 		.withParam("documentId", Constants.DOCUMENT_ID_OK)
 		.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)
@@ -37,7 +37,7 @@ public class TestDeleteService extends TestDocuWareConnector {
 
 		assertThatExceptionOfType(BpmError.class).isThrownBy(() ->
 		bpmClient.start()
-		.subProcess(testeeDelete)
+		.subProcess(DELETE_SP)
 		.withParam("configKey", Constants.CONFIG_KEY)
 		.withParam("documentId", Constants.DOCUMENT_ID_ERROR)
 		.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)

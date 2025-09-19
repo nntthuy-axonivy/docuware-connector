@@ -18,14 +18,14 @@ import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class TestUpdateService extends TestDocuWareConnector {
-	private static final BpmElement testeeUpdateDocument = BpmProcess.path("UpdateService").elementName("updateDocument(String, String, String, List<DocuWareProperty>)");
+	private static final BpmElement UPDATE_DOCUMENT_SP = BpmProcess.path("UpdateService").elementName("updateDocument(String, String, String, List<DocuWareProperty>)");
 
 	@Test
 	public void updateDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
 		prepareRestClient(app, fixture);
 
 		var propertyList = prepareDocuWareProperties();
-		var result = bpmClient.start().subProcess(testeeUpdateDocument)
+		var result = bpmClient.start().subProcess(UPDATE_DOCUMENT_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)
 				.withParam("documentId", Constants.DOCUMENT_ID_OK)
 				.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)

@@ -62,15 +62,15 @@
     }, {
       "id" : "f14",
       "type" : "CallSubStart",
-      "name" : "uploadFileWithIndexFields(File, List<DocuWareProperty>, String, String, String)",
+      "name" : "uploadFileWithIndexFields(String,String,File,List<DocuWareProperty>,String)",
       "config" : {
         "signature" : "uploadFileWithIndexFields",
         "input" : {
           "params" : [
-            { "name" : "file", "type" : "File", "desc" : "" },
-            { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
             { "name" : "configKey", "type" : "String", "desc" : "" },
             { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "file", "type" : "File", "desc" : "" },
+            { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
             { "name" : "storeDialogId", "type" : "String", "desc" : "" }
           ],
           "map" : {
@@ -105,16 +105,16 @@
     }, {
       "id" : "f0",
       "type" : "CallSubStart",
-      "name" : "uploadFileWithIndexFields(InputStream,String,List<DocuWareProperty>,String,String,String)",
+      "name" : "uploadFileWithIndexFields(String,String,InputStream,String,List<DocuWareProperty>,String)",
       "config" : {
         "signature" : "uploadFileWithIndexFields",
         "input" : {
           "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
             { "name" : "fileStream", "type" : "java.io.InputStream", "desc" : "" },
             { "name" : "fileName", "type" : "String", "desc" : "" },
             { "name" : "indexFields", "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>", "desc" : "" },
-            { "name" : "configKey", "type" : "String", "desc" : "" },
-            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
             { "name" : "storeDialogId", "type" : "String", "desc" : "" }
           ],
           "map" : {
