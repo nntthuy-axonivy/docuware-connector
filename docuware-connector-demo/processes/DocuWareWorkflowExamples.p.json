@@ -224,7 +224,7 @@
       "type" : "SubProcessCall",
       "name" : "Upload File from CMS",
       "config" : {
-        "processCall" : "UploadService:uploadFileWithIndexFields(java.io.InputStream,String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String,String)",
+        "processCall" : "UploadService:uploadFileWithIndexFields(String,String,java.io.InputStream,String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String)",
         "call" : {
           "map" : {
             "param.fileCabinetId" : "ivy.var.docuwareWorkflow_fileCabinetId"
@@ -238,10 +238,6 @@
             "",
             "param.fileStream = (ivy.cms.get(\"/Files/uploadSample\").get() as ContentObject).value().get().read().inputStream();",
             "param.fileName = \"UploadSample-%tY%<tm%<td%<tH%<tM%<tS.pdf\".formatted(LocalDateTime.now());",
-            "",
-            "import com.axonivy.connector.docuware.connector.DocuWareKeywordsField;",
-            "import com.axonivy.connector.docuware.connector.DocuWareFieldTableItem;",
-            "import com.axonivy.connector.docuware.connector.DocuWareProperty;",
             "",
             "//Note IndexFields are individual for each docuware instance. This is just an example",
             "DocuWareProperty dp = new DocuWareProperty();",

@@ -837,7 +837,7 @@
       "type" : "SubProcessCall",
       "name" : "Document Upload With Fields",
       "config" : {
-        "processCall" : "UploadService:uploadFileWithIndexFields(File,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String,String)",
+        "processCall" : "UploadService:uploadFileWithIndexFields(String,String,File,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String)",
         "call" : {
           "map" : {
             "param.file" : "in.file",
