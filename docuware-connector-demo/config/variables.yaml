@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/variables.json
+# == Variables ==
+#
+# You can define here your project Variables.
+# If you want to define/override a Variable for a specific Environment, 
+# add an additional ‘variables.yaml’ file in a subdirectory in the ‘Config’ folder: 
+# '<project>/Config/_<environment>/variables.yaml
+#
+Variables:
+  docuwareConnector:
+    # Default configuration.
+    defaultConfig:
+      configId: "1"
+      url: "REMOVED"
+      grantType: "password"
+      username: "REMOVED"
+      #[password]
+      password: "REMOVED"
+    # Work with a single user.
+    techUser:
+      configId: "1"
+      inherit: defaultConfig
+      url: "REMOVED"
+      grantType: "REMOVED"
+      username: "REMOVED"
+      #[password]
+      password: "REMOVED"
+      connectTimeout: "10000"
+      readTimeout: "10000"
+      integrationPassphrase: "REMOVED"
+    # Work with different users authenticated by a trusted user.
+    trustedUser:
+      configId: "1"
+      inherit: defaultConfig
+      grantType: trusted
+      username: "REMOVED"
+      #[password]
+      password: "REMOVED"
+      impersonateUser: ^ivy:system=admin,anonymous=admin
+    # Work with a DW Token.
+    dwToken:
+      configId: "1"
+      url: "REMOVED"
+      grantType: dwtoken
+      dwToken: "^session"
+  # Variables used by the demo.
+  docuwareWorkflow:
+    fileCabinetId: "4b4be7af-629f-4340-82cb-126d249d2b95"
+    dialogId: "7156ccec-f3ea-464a-ad30-df1b9e841ec8"
