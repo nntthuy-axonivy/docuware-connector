@@ -173,14 +173,7 @@ public class DocuWareDemoCtrl {
 		var result = false;
 		try {
 			if(configuration != null) {
-				String extra = null;
-				switch(configuration.getGrantType()) {
-				case TRUSTED:
-					extra = configuration.getImpersonateUserName();
-				default:
-					break;
-				}
-				result = DocuWareService.get().getCachedToken(configKey, extra) != null;
+				result = DocuWareService.get().getCachedToken(configuration) != null;
 
 			}
 		} catch (Exception e) {

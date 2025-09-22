@@ -9,7 +9,6 @@ import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.rest.client.RestClient;
-import ch.ivyteam.ivy.rest.client.RestClient.Builder;
 import ch.ivyteam.ivy.rest.client.RestClientFeature;
 import ch.ivyteam.ivy.rest.client.RestClients;
 import ch.ivyteam.ivy.scripting.objects.List;
@@ -18,9 +17,9 @@ import ch.ivyteam.ivy.scripting.objects.List;
 public class TestDocuWareConnector {
 
 	protected void prepareRestClient(IApplication app, AppFixture fixture) {
-		RestClient restClient = RestClients.of(app).find("DocuWare");
+		var restClient = RestClients.of(app).find("DocuWare");
 		// Change created client.
-		Builder builder = RestClient.create(restClient.name()).uuid(restClient.uniqueId())
+		var builder = RestClient.create(restClient.name()).uuid(restClient.uniqueId())
 				.uri("http://{ivy.engine.host}:{ivy.engine.http.port}/{ivy.request.application}/api/docuWareMock")
 				.description(restClient.description()).properties(restClient.properties());
 		// use test feature instead of real one
@@ -36,7 +35,7 @@ public class TestDocuWareConnector {
 	}
 
 	protected List<DocuWareProperty> prepareDocuWareProperties() {
-		List<DocuWareProperty> propertyList = new List<DocuWareProperty>();
+		var propertyList = new List<DocuWareProperty>();
 		DocuWareProperty dwp = new DocuWareProperty();
 		dwp.setFieldName("ACCESS_LEVEL");
 		dwp.setItem("3");

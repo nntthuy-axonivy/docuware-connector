@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
 
+import ch.ivyteam.ivy.environment.Ivy;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Path("docuWareMock")
@@ -33,27 +35,42 @@ import io.swagger.v3.oas.annotations.Hidden;
 @Hidden
 public class DocuWareServiceMock {
 
-	/**
-	 * Logon Call.
-	 *
-	 * Note, that this call is currently not used for the tests because calling a
-	 * REST service from a feature in the Ivy Test environment is currently not
-	 * fully supported.
-	 *
-	 * @param userName
-	 * @param password
-	 * @param hostId
-	 * @param redirectToMyselfInCaseOfError
-	 * @return
-	 */
+	@Context
+	private UriInfo uriInfo;
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("Home/IdentityServiceInfo")
+	public Response homeIdentityServiceInfo() {
+		var entity = load("json/identityServiceInfo.json");
+		return Response.ok(entity).type(MediaType.APPLICATION_JSON).build();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("Identity/.well-known/openid-configuration")
+	public Response identityWellKnownOpenIdConfiguration() {
+		return Response.ok(load("json/openIdConfiguration.json")).type(MediaType.APPLICATION_JSON).build();
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("Account/Logon")
-	public Response accountLogon(@FormParam("UserName") String userName, @FormParam("Password") String password,
-			@FormParam("HostID") String hostId,
-			@FormParam("RedirectToMyselfInCaseOfError") String redirectToMyselfInCaseOfError) {
-		return Response.ok(load("json/account/logon.json")).type(MediaType.APPLICATION_JSON).build();
+	@Path("Identity/connect/token")
+	public Response accountLogon(
+			@FormParam("grant_type") String grantType,
+			@FormParam("scope") String scope,
+			@FormParam("client_id") String clienttId,
+			@FormParam("username") String userName,
+			@FormParam("password") String password,
+			@FormParam("token") String token,
+			@FormParam("impersonateName") String impersonateName) {
+		Ivy.log().warn("grantType: ''{0}'', scope: ''{1}'', client_id: ''{2}'', username: ''{3}'', password: ''{4}'', token: ''{5}'', impersonateName: ''{6}''",
+				grantType, scope, clienttId, userName, password, token, impersonateName);
+		var newtoken = load("json/token.json");
+		newtoken = newtoken.replaceAll("<TOKEN>", "%s:%s:%s:%s.%s.%s".formatted(grantType, userName, impersonateName, token, UUID.randomUUID(), "test"));
+		return Response.ok(newtoken).type(MediaType.APPLICATION_JSON).build();
+
 	}
 
 	@GET
@@ -151,9 +168,21 @@ public class DocuWareServiceMock {
 		return StringUtils.isNoneBlank(req.getHeader(DocuWareAuthFeature.AUTHORIZATION));
 	}
 
+	/**
+	 * Load resource and replace plaeholders.
+	 * 
+	 * @param path
+	 * @return
+	 */
 	private String load(String path) {
 		try (InputStream is = DocuWareServiceMock.class.getResourceAsStream(path)) {
-			return IOUtils.toString(is, StandardCharsets.UTF_8);
+			var content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+			var base = uriInfo.getBaseUri().toString();
+			while(base.endsWith("/")) {
+				base = base.substring(0, base.length() - 1);
+			}
+			var mockbase = "%s/docuWareMock".formatted(base);
+			return content.replaceAll("<MOCKBASE>", mockbase);
 		} catch (IOException ex) {
 			throw new RuntimeException("Failed to read resource: " + path);
 		}

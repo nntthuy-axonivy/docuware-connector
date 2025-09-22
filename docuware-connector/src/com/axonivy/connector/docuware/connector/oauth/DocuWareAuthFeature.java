@@ -88,29 +88,16 @@ public class DocuWareAuthFeature implements Feature {
 
 		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
-		String extra = null;
-
-		switch(cfg.getGrantType()) {
-		case TRUSTED:
-			extra = cfg.getImpersonateUserName();
-			break;
-		case DW_TOKEN:
-			extra = cfg.getDwToken();
-			break;
-		default:
-			break;
-		}
-
-		var token = DocuWareService.get().getCachedToken(configKey, extra);
+		var token = DocuWareService.get().getCachedToken(cfg);
 
 		if (token == null || token.isExpired() || !token.getConfigId().equals(cfg.getConfigId())) {
 			token = fetchAccessToken(context);
-			DocuWareService.get().setCachedToken(configKey, extra, token);
+			DocuWareService.get().setCachedToken(cfg, token);
 			Ivy.log().debug("Cached a new token: {0}", token);
 		}
 
 		if (!token.hasAccessToken()) {
-			DocuWareService.get().setCachedToken(configKey, extra, null);
+			DocuWareService.get().setCachedToken(cfg, null);
 			authError("accesstoken")
 			.withMessage("Failed to get access token for config '%s' and token %s".formatted(configKey, token))
 			.throwError();
@@ -132,7 +119,7 @@ public class DocuWareAuthFeature implements Feature {
 		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);
 
 		if(!cfg.hasTokenEndpoint()) {
-			cfg.setTokenEndpoint(fetchEnpointUrl(context));
+			cfg.setTokenEndpoint(fetchEndpointUrl(context));
 		}
 
 		Ivy.log().debug("Fetching token from url ''{0}''", cfg.getTokenEndpoint());
@@ -165,6 +152,7 @@ public class DocuWareAuthFeature implements Feature {
 		var response = context.getClient()
 				.target(cfg.getTokenEndpoint())
 				.request()
+				.header(DocuWareService.X_REQUESTED_BY, DocuWareService.AXON_IVY_DOCUWARE_CONNECTOR)
 				.accept(MediaType.APPLICATION_JSON)
 				.property(SKIP_FILTER, Boolean.TRUE)
 				.property(DocuWareService.CONFIG_KEY_PROPERTY, configKey)
@@ -186,7 +174,7 @@ public class DocuWareAuthFeature implements Feature {
 		return token;
 	}
 
-	private String fetchEnpointUrl(ClientRequestContext context) {
+	private String fetchEndpointUrl(ClientRequestContext context) {
 		var configKey = getConfigKey(context);
 
 		var cfg = Configuration.getKnownConfigurationOrDefault(configKey);

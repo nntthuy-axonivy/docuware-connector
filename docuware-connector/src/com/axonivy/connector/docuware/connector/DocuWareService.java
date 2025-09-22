@@ -54,12 +54,11 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 
 public class DocuWareService {
-	/*
-	 * This is the format: /Date(1652285631000)/
-	 */
-	protected static UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
+	public static final UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
+	public static final String CLIENT_NAME = "DocuWare";
 	public static final String CONFIG_KEY_PROPERTY = "configKey";
-	public static final String APP_ATT_TOKEN_PREFIX = Token.class.getCanonicalName();
+	public static final String X_REQUESTED_BY = "X-Requested-By";
+	public static final String AXON_IVY_DOCUWARE_CONNECTOR = "AxonIvy Docuware Connector";
 
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
@@ -358,7 +357,7 @@ public class DocuWareService {
 		try (var sw = new StringWriter();
 				var pw = new PrintWriter(sw)) {
 			var cachedNames = IApplication.current().getAttributeNames().stream()
-					.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(APP_ATT_TOKEN_PREFIX))
+					.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(Configuration.APP_ATT_TOKEN_PREFIX))
 					.sorted()
 					.toList();
 
@@ -375,17 +374,28 @@ public class DocuWareService {
 	}
 
 	/**
-	 * Get the cached token from the grant-type specific store.
+	 * Get the cached token.
 	 * 
-	 * @param configKey
-	 * @param extra
+	 * @param cfg
 	 * @return
 	 */
-	public Token getCachedToken(String configKey, String extra) {
-		var key = createTokenCacheKey(configKey, extra);
+	public Token getCachedToken(Configuration cfg) {
+		return getCachedToken(cfg.tokenCacheKey());
+	}
+
+	/**
+	 * Get the cached token by the cache key.
+	 * 
+	 * Note: this function is probably only useful for testing. You should most likely use {@link #getCachedToken(Configuration)}.
+	 * 
+	 * 
+	 * @param cfg
+	 * @return
+	 */
+	public Token getCachedToken(String cacheKey) {
 		Token token = null;
 		try {
-			token = (Token)IApplication.current().getAttribute(key);
+			token = (Token)IApplication.current().getAttribute(cacheKey);
 		} catch (ClassCastException e) {
 			Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
 		}
@@ -395,21 +405,11 @@ public class DocuWareService {
 	/**
 	 * Set the cached token to the grant-type specific store.
 	 * 
-	 * @param config
-	 * @param extra 
+	 * @param cfg
 	 * @param token
 	 */
-	public void setCachedToken(String config, String extra, Token token) {
-		var key = createTokenCacheKey(config, extra);
-		IApplication.current().setAttribute(key, token);
-	}
-
-	protected String createTokenCacheKey(String configKey, String extra) {
-		var key = "%s:%s".formatted(APP_ATT_TOKEN_PREFIX, Configuration.knownOrDefaultKey(configKey));
-		if(extra != null) {
-			key = "%s:%s".formatted(key, extra);
-		}
-		return key;
+	public void setCachedToken(Configuration cfg, Token token) {
+		IApplication.current().setAttribute(cfg.tokenCacheKey(), token);
 	}
 
 	/**
@@ -631,7 +631,6 @@ public class DocuWareService {
 	 */
 	public WebTarget getClient(String configKey) {
 		return Ivy.rest().client(CLIENT_ID).property(CONFIG_KEY_PROPERTY, Configuration.knownOrDefaultKey(configKey));
-
 	}
 
 	/**

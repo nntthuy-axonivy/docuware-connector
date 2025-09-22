@@ -24,6 +24,7 @@ public abstract class Configuration {
 	 */
 	protected static final String DOCUWARE_DEFAULT_CONFIG = "defaultConfig";
 	public static final String APP_ATT_CONFIG_PREFIX = Configuration.class.getCanonicalName();
+	public static final String APP_ATT_TOKEN_PREFIX = Token.class.getCanonicalName();
 	protected static final String DOCUWARE_USERNAME = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwusername");
 	protected static final String DOCUWARE_TOKEN = "%s:%s".formatted(DocuWareService.class.getCanonicalName(), "dwtoken");
 	protected static final String CONFIG_ERROR = DocuWareService.DOCUWARE_ERROR + "configuration:";
@@ -55,13 +56,13 @@ public abstract class Configuration {
 
 	public static void putKnownConfiguration(Configuration configuration) {
 		var key = configuration.getConfigKey();
-		IApplication.current().setAttribute(createConfigurationCacheKey(key), configuration);
+		IApplication.current().setAttribute(configurationCacheKey(key), configuration);
 	}
 
 	public static Configuration getKnownConfiguration(String configKey) {
 		Configuration configuration = null;
 		try {
-			configuration = (Configuration)IApplication.current().getAttribute(createConfigurationCacheKey(configKey));
+			configuration = (Configuration)IApplication.current().getAttribute(configurationCacheKey(configKey));
 		} catch (ClassCastException e) {
 			Ivy.log().error("Cache contained an old version of the configuration class, ignoring it.");
 		}
@@ -97,8 +98,28 @@ public abstract class Configuration {
 		return StringUtils.isBlank(configKey) ? DOCUWARE_DEFAULT_CONFIG : configKey;
 	}
 
-	protected static String createConfigurationCacheKey(String configKey) {
+	protected static String configurationCacheKey(String configKey) {
 		return "%s:%s".formatted(APP_ATT_CONFIG_PREFIX, configKey);
+	}
+
+	/**
+	 * The token cache key is unique for a configuration, a grant type and a user or dw token.
+	 * 
+	 * @return
+	 */
+	public String tokenCacheKey() {
+		String extra = switch(getGrantType()) {
+		case PASSWORD -> getUsername();
+		case TRUSTED -> getImpersonateUserName();
+		case DW_TOKEN -> getDwToken();
+		default -> "";
+		};
+
+		return tokenCacheKey(getConfigKey(), getGrantType(), extra);
+	}
+
+	public static String tokenCacheKey(String configKey, GrantType grantType, String extra) {
+		return "%s:%s:%s:%s".formatted(APP_ATT_TOKEN_PREFIX, configKey, grantType, extra);
 	}
 
 	/**
@@ -363,10 +384,20 @@ public abstract class Configuration {
 		Ivy.session().setAttribute(docuWareTokenKey(), token);
 	}
 
+	/**
+	 * Session key for user to use in grant type trustedUser
+	 * 
+	 * @return
+	 */
 	public String docuWareUserKey() {
 		return "%s:%s".formatted(DOCUWARE_USERNAME, configKey);
 	}
 
+	/**
+	 * Session key for token to use in grant type dw token.
+	 * 
+	 * @return
+	 */
 	public String docuWareTokenKey() {
 		return "%s:%s".formatted(DOCUWARE_TOKEN, configKey);
 	}
