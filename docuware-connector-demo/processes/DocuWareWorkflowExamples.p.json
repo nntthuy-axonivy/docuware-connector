@@ -162,7 +162,7 @@
       "type" : "SubProcessCall",
       "name" : "Update Index Fields",
       "config" : {
-        "processCall" : "UpdateService:updateDocument(String,String,String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>)",
+        "processCall" : "UpdateService:updateDocument(String,List<com.axonivy.connector.docuware.connector.DocuWareProperty>,String,String)",
         "call" : {
           "map" : {
             "param.documentId" : "String.valueOf(in.document.id)",
