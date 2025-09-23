@@ -9,15 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.market.docuware.connector.UploadServiceData;
 
-import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
-import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.File;
-import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class UploadServiceTest extends DocuWareConnectorTest {
@@ -35,8 +32,7 @@ public class UploadServiceTest extends DocuWareConnectorTest {
 	}
 
 	@Test
-	public void uploadFile(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
+	public void uploadFile(BpmClient bpmClient) throws IOException {
 		var propertyList = prepareDocuWareProperties();
 
 		var pdf = exportFromCms(FILE_PATH);
@@ -53,8 +49,7 @@ public class UploadServiceTest extends DocuWareConnectorTest {
 	}
 
 	@Test
-	public void uploadStream(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
+	public void uploadStream(BpmClient bpmClient) throws IOException {
 		var propertyList = prepareDocuWareProperties();
 
 		var stream = Ivy.cms().get(FILE_PATH).get().value().get().read().inputStream();
@@ -73,8 +68,7 @@ public class UploadServiceTest extends DocuWareConnectorTest {
 	}
 
 	@Test
-	public void uploadStreamWithStoreDialog(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
+	public void uploadStreamWithStoreDialog(BpmClient bpmClient) throws IOException {
 		var propertyList = prepareDocuWareProperties();
 
 		var stream = Ivy.cms().get(FILE_PATH).get().value().get().read().inputStream();

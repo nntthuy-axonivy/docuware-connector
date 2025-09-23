@@ -8,13 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.market.docuware.connector.DownloadServiceData;
 
-import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
-import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class DownloadServiceTest extends DocuWareConnectorTest {
@@ -22,9 +19,7 @@ public class DownloadServiceTest extends DocuWareConnectorTest {
 	private static final BpmElement DOWNLOAD_SP = BpmProcess.path("DownloadService").elementName("downloadFile(String,String,String)");
 
 	@Test
-	public void downloadDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
-
+	public void downloadDocument(BpmClient bpmClient) throws IOException {
 		var result = bpmClient.start()
 				.subProcess(GET_DOCUMENT_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)
@@ -37,9 +32,7 @@ public class DownloadServiceTest extends DocuWareConnectorTest {
 	}
 
 	@Test
-	public void downloadFile(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
-
+	public void downloadFile(BpmClient bpmClient) throws IOException {
 		var result = bpmClient.start()
 				.subProcess(DOWNLOAD_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)

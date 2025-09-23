@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
@@ -20,18 +21,19 @@ import ch.ivyteam.ivy.environment.IvyTest;
 @IvyTest(enableWebServer = true)
 public class DocuWareAuthTest extends DocuWareConnectorTest {
 
+	@BeforeEach
+	public void clearCaches() {
+		DocuWareService.get().clearCaches();
+	}
+
 	@Test
 	public void testGrantTypePassword(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		var rand1 = assertTokenEchoCall("passwordtest", "password:testuser:::*");
 		assertTokenEchoCall("passwordtest", "password:testuser:::%s".formatted(rand1));
 	}
 
 	@Test
 	public void testGrantTypeTrustedConstant(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		fix.var("docuwareConnector.trustedtest1.impersonateUser", "constant");
 
 		// Get token for ANONYMOUS.
@@ -48,8 +50,6 @@ public class DocuWareAuthTest extends DocuWareConnectorTest {
 
 	@Test
 	public void testGrantTypeTrustedIvyFixed(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		fix.var("docuwareConnector.trustedtest1.impersonateUser", "^fixed:system=sysuser,anonymous=anonuser,user=ivyuser");
 
 		// Get token for ANONYMOUS.
@@ -71,8 +71,6 @@ public class DocuWareAuthTest extends DocuWareConnectorTest {
 
 	@Test
 	public void testGrantTypeTrustedIvy(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		fix.var("docuwareConnector.trustedtest1.impersonateUser", "^ivy:system=sysuser,anonymous=anonuser");
 
 		// Get token for ANONYMOUS.
@@ -94,8 +92,6 @@ public class DocuWareAuthTest extends DocuWareConnectorTest {
 
 	@Test
 	public void testGrantTypeTrustedUserFromSession(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		// Check error for unset session user.
 		assertThatExceptionOfType(ProcessingException.class)
 		.isThrownBy(() -> assertTokenEchoCall("trustedtest2", "trusted:testuser:::*"))
@@ -135,8 +131,6 @@ public class DocuWareAuthTest extends DocuWareConnectorTest {
 
 	@Test
 	public void testGrantTypeDwTokenFromSession(AppFixture fix) {
-		DocuWareService.get().clearCaches();
-
 		// Check error for unset session token.
 		assertThatExceptionOfType(ProcessingException.class)
 		.isThrownBy(() -> assertTokenEchoCall("dwtokentest1", "dwtoken::::*"))
@@ -190,7 +184,7 @@ public class DocuWareAuthTest extends DocuWareConnectorTest {
 		var expParts = expToken.split(":");
 		assertThat(expParts).hasSize(tokenParts);
 
-		var rsp = getClient(configKey).path("TokenEcho").request().get();
+		var rsp = DocuWareService.get().getClient(configKey).path("TokenEcho").request().get();
 		assertThat(rsp.getStatusInfo().getFamily()).isEqualTo(Family.SUCCESSFUL);
 		var token = rsp.readEntity(String.class);
 

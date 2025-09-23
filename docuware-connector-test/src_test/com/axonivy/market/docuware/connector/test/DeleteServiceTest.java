@@ -6,23 +6,18 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
-import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
 public class DeleteServiceTest extends DocuWareConnectorTest {
 	private static final BpmElement DELETE_SP = BpmProcess.path("DeleteService").elementName("deleteDocument(String, String, String)");
 
 	@Test
-	public void deleteDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
-
+	public void deleteDocument(BpmClient bpmClient) throws IOException {
 		bpmClient.start()
 		.subProcess(DELETE_SP)
 		.withParam("configKey", Constants.CONFIG_KEY)
@@ -32,9 +27,7 @@ public class DeleteServiceTest extends DocuWareConnectorTest {
 	}
 
 	@Test
-	public void deleteDocumentError(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		// prepareRestClient(app, fixture);
-
+	public void deleteDocumentError(BpmClient bpmClient) throws IOException {
 		assertThatExceptionOfType(BpmError.class).isThrownBy(() ->
 		bpmClient.start()
 		.subProcess(DELETE_SP)
