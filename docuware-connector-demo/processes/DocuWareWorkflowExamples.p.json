@@ -526,7 +526,7 @@
       "config" : {
         "signature" : "sections",
         "request" : {
-          "name" : "Example: Work with document sesions",
+          "name" : "Example: Work with document sections",
           "description" : "Watch the log-files to see results."
         }
       },
