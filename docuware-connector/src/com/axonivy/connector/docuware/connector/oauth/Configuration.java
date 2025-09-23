@@ -14,6 +14,7 @@ import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.ISecurityConstants;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 /**
  * Configuration of a DocuWare connection.
@@ -56,15 +57,27 @@ public abstract class Configuration {
 
 	public static void putKnownConfiguration(Configuration configuration) {
 		var key = configuration.getConfigKey();
-		IApplication.current().setAttribute(configurationCacheKey(key), configuration);
+		try {
+			Sudo.call(() -> IApplication.current().setAttribute(configurationCacheKey(key), configuration));
+		} catch (Exception e) {
+			BpmError.create(DocuWareService.DOCUWARE_ERROR + "putconfig")
+			.withMessage("Could not put configuration '%s'.".formatted(key))
+			.withCause(e)
+			.throwError();
+		}
 	}
 
 	public static Configuration getKnownConfiguration(String configKey) {
 		Configuration configuration = null;
 		try {
-			configuration = (Configuration)IApplication.current().getAttribute(configurationCacheKey(configKey));
+			configuration = Sudo.call(() -> (Configuration)IApplication.current().getAttribute(configurationCacheKey(configKey)));
 		} catch (ClassCastException e) {
 			Ivy.log().error("Cache contained an old version of the configuration class, ignoring it.");
+		} catch (Exception e) {
+			BpmError.create(DocuWareService.DOCUWARE_ERROR + "getconfig")
+			.withMessage("Could not get configuration '%s'.".formatted(configKey))
+			.withCause(e)
+			.throwError();
 		}
 		if(configuration == null) {
 			// Currently, new configurations can only be created from global variables.

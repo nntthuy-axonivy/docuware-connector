@@ -3,66 +3,22 @@ package com.axonivy.market.docuware.connector.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.io.IOException;
 import java.util.UUID;
 
-import javax.ws.rs.Priorities;
 import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response.Status.Family;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
 import com.axonivy.connector.docuware.connector.oauth.Configuration;
-import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.environment.IvyTest;
 
 @IvyTest(enableWebServer = true)
-public class TestDocuWareAuth {
-
-	protected BearerDisableFilter bearerDisableFilter = new BearerDisableFilter();
-
-	@BeforeEach
-	public void prepareConfigurations(AppFixture fix) {
-		fix.var("docuwareConnector.passwordtest.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.passwordtest.grantType", "password");
-		fix.var("docuwareConnector.passwordtest.username", "testuser");
-		fix.var("docuwareConnector.passwordtest.password", "testpassword");
-
-		fix.var("docuwareConnector.trustedtest1.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.trustedtest1.grantType", "trusted");
-		fix.var("docuwareConnector.trustedtest1.username", "testuser");
-		fix.var("docuwareConnector.trustedtest1.password", "testpassword");
-		fix.var("docuwareConnector.trustedtest1.impersonateUser", "^ivy:system=sysuser,anonymous=anonuser");
-
-		fix.var("docuwareConnector.trustedtest2.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.trustedtest2.grantType", "trusted");
-		fix.var("docuwareConnector.trustedtest2.username", "testuser");
-		fix.var("docuwareConnector.trustedtest2.password", "testpassword");
-		fix.var("docuwareConnector.trustedtest2.impersonateUser", "^session");
-
-		fix.var("docuwareConnector.trustedtest3.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.trustedtest3.grantType", "trusted");
-		fix.var("docuwareConnector.trustedtest3.username", "testuser");
-		fix.var("docuwareConnector.trustedtest3.password", "testpassword");
-		fix.var("docuwareConnector.trustedtest3.impersonateUser", "^session");
-
-		fix.var("docuwareConnector.dwtokentest1.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.dwtokentest1.grantType", "dwtoken");
-		fix.var("docuwareConnector.dwtokentest1.dwToken", "^session");
-
-		fix.var("docuwareConnector.dwtokentest2.url", "%s/api/docuWareMock".formatted(Ivy.html().applicationHomeLink().toAbsoluteUri().toString()));
-		fix.var("docuwareConnector.dwtokentest2.grantType", "dwtoken");
-		fix.var("docuwareConnector.dwtokentest2.dwToken", "^session");
-	}
+public class DocuWareAuthTest extends DocuWareConnectorTest {
 
 	@Test
 	public void testGrantTypePassword(AppFixture fix) {
@@ -269,33 +225,5 @@ public class TestDocuWareAuth {
 			}
 		}
 		return parts[4];
-	}
-
-
-	/**
-	 * Make the Bearer token unreadable by Ivy, otherwise it will throw an error because it is not really a bearer token.
-	 */
-	protected class BearerDisableFilter implements ClientRequestFilter {
-
-		@Override
-		public void filter(ClientRequestContext requestContext) throws IOException {
-			var headers = requestContext.getHeaders();
-			var authHeader = headers.get(DocuWareAuthFeature.AUTHORIZATION).toString();
-			if(authHeader != null && authHeader.contains(DocuWareAuthFeature.BEARER)) {
-				headers.putSingle(DocuWareAuthFeature.AUTHORIZATION, authHeader.replace(DocuWareAuthFeature.BEARER, "IgnoredBearer "));
-			}
-		}
-	}
-
-	/**
-	 * Get the client for a configuration.
-	 * 
-	 * @param configKey
-	 * @return
-	 */
-	protected WebTarget getClient(String configKey) {
-		return Ivy.rest().client(DocuWareService.CLIENT_NAME)
-				.property(DocuWareService.CONFIG_KEY_PROPERTY, Configuration.knownOrDefaultKey(configKey))
-				.register(bearerDisableFilter, Priorities.AUTHORIZATION + 1);
 	}
 }

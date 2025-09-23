@@ -17,13 +17,13 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
-public class TestDownloadService extends TestDocuWareConnector {
+public class DownloadServiceTest extends DocuWareConnectorTest {
 	private static final BpmElement GET_DOCUMENT_SP = BpmProcess.path("DownloadService").elementName("getDocument(String,String,String)");
 	private static final BpmElement DOWNLOAD_SP = BpmProcess.path("DownloadService").elementName("downloadFile(String,String,String)");
 
 	@Test
 	public void downloadDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 
 		var result = bpmClient.start()
 				.subProcess(GET_DOCUMENT_SP)
@@ -38,7 +38,7 @@ public class TestDownloadService extends TestDocuWareConnector {
 
 	@Test
 	public void downloadFile(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 
 		var result = bpmClient.start()
 				.subProcess(DOWNLOAD_SP)

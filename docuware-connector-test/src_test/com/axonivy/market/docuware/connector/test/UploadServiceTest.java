@@ -20,7 +20,7 @@ import ch.ivyteam.ivy.scripting.objects.File;
 import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
-public class TestUploadService extends TestDocuWareConnector {
+public class UploadServiceTest extends DocuWareConnectorTest {
 	private static final String FILE_PATH = "/Files/testfile";
 	private static final BpmElement UPDLOAD_FILE_SP = BpmProcess.path("UploadService").elementName("uploadFileWithIndexFields(String,String,File,List<DocuWareProperty>,String)");
 	private static final BpmElement UPLOAD_STREAM_SP = BpmProcess.path("UploadService").elementName("uploadFileWithIndexFields(String,String,InputStream,String,List<DocuWareProperty>,String)");
@@ -36,7 +36,7 @@ public class TestUploadService extends TestDocuWareConnector {
 
 	@Test
 	public void uploadFile(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 		var propertyList = prepareDocuWareProperties();
 
 		var pdf = exportFromCms(FILE_PATH);
@@ -54,7 +54,7 @@ public class TestUploadService extends TestDocuWareConnector {
 
 	@Test
 	public void uploadStream(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 		var propertyList = prepareDocuWareProperties();
 
 		var stream = Ivy.cms().get(FILE_PATH).get().value().get().read().inputStream();
@@ -74,7 +74,7 @@ public class TestUploadService extends TestDocuWareConnector {
 
 	@Test
 	public void uploadStreamWithStoreDialog(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 		var propertyList = prepareDocuWareProperties();
 
 		var stream = Ivy.cms().get(FILE_PATH).get().value().get().read().inputStream();

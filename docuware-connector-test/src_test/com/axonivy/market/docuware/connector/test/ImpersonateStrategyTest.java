@@ -1,4 +1,4 @@
-package com.axonivy.market.docuware.connector;
+package com.axonivy.market.docuware.connector.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -10,7 +10,7 @@ import com.axonivy.connector.docuware.connector.oauth.ImpersonateStrategy.Strate
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 
-public class TestImpersonateStrategy {
+public class ImpersonateStrategyTest {
 	@Test
 	public void testDirect() {
 		var s = ImpersonateStrategy.create("pst");

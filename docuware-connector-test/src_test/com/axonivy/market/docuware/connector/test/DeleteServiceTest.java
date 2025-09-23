@@ -16,12 +16,12 @@ import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
-public class TestDeleteService extends TestDocuWareConnector {
+public class DeleteServiceTest extends DocuWareConnectorTest {
 	private static final BpmElement DELETE_SP = BpmProcess.path("DeleteService").elementName("deleteDocument(String, String, String)");
 
 	@Test
 	public void deleteDocument(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 
 		bpmClient.start()
 		.subProcess(DELETE_SP)
@@ -33,7 +33,7 @@ public class TestDeleteService extends TestDocuWareConnector {
 
 	@Test
 	public void deleteDocumentError(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
+		// prepareRestClient(app, fixture);
 
 		assertThatExceptionOfType(BpmError.class).isThrownBy(() ->
 		bpmClient.start()

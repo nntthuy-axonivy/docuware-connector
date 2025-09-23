@@ -8,22 +8,17 @@ import org.junit.jupiter.api.Test;
 
 import com.axonivy.market.docuware.connector.UpdateServiceData;
 
-import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
 import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
 import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
-import ch.ivyteam.ivy.environment.AppFixture;
-import ch.ivyteam.ivy.security.ISession;
 
 @IvyProcessTest(enableWebServer = true)
-public class TestUpdateService extends TestDocuWareConnector {
+public class UpdateServiceTest extends DocuWareConnectorTest {
 	private static final BpmElement UPDATE_DOCUMENT_SP = BpmProcess.path("UpdateService").elementName("updateDocument(String, String, String, List<DocuWareProperty>)");
 
 	@Test
-	public void updateDocumentWithEndpointConfiguration(BpmClient bpmClient, ISession session, AppFixture fixture, IApplication app) throws IOException {
-		prepareRestClient(app, fixture);
-
+	public void updateDocumentWithEndpointConfiguration(BpmClient bpmClient) throws IOException {
 		var propertyList = prepareDocuWareProperties();
 		var result = bpmClient.start().subProcess(UPDATE_DOCUMENT_SP)
 				.withParam("configKey", Constants.CONFIG_KEY)

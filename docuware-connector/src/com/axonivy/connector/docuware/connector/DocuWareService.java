@@ -53,6 +53,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.security.exec.Sudo;
 
 public class DocuWareService {
 	public static final UUID CLIENT_ID = UUID.fromString("02d1eec1-32e9-4316-afc3-793448486203");
@@ -407,9 +408,14 @@ public class DocuWareService {
 	public Token getCachedToken(String cacheKey) {
 		Token token = null;
 		try {
-			token = (Token)IApplication.current().getAttribute(cacheKey);
+			token = Sudo.call(() -> (Token)IApplication.current().getAttribute(cacheKey));
 		} catch (ClassCastException e) {
 			Ivy.log().error("Cache contained an old version of the token class, ignoring it.");
+		} catch (Exception e) {
+			BpmError.create(DocuWareService.DOCUWARE_ERROR + "gettoken")
+			.withMessage("Could not get token '%s'.".formatted(cacheKey))
+			.withCause(e)
+			.throwError();
 		}
 		return token;
 	}
@@ -421,7 +427,14 @@ public class DocuWareService {
 	 * @param token
 	 */
 	public void setCachedToken(Configuration cfg, Token token) {
-		IApplication.current().setAttribute(cfg.tokenCacheKey(), token);
+		try {
+			Sudo.call(() -> IApplication.current().setAttribute(cfg.tokenCacheKey(), token));
+		} catch (Exception e) {
+			BpmError.create(DocuWareService.DOCUWARE_ERROR + "putconfig")
+			.withMessage("Could not set token '%s'.".formatted(cfg.tokenCacheKey()))
+			.withCause(e)
+			.throwError();		
+		}
 	}
 
 	/**

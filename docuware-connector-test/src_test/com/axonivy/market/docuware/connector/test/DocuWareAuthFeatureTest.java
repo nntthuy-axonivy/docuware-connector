@@ -1,4 +1,4 @@
-package com.axonivy.market.docuware.connector;
+package com.axonivy.market.docuware.connector.test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -14,8 +14,8 @@ import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 
-@IvyTest
-public class TestDocuWareAuthFeature {
+@IvyTest(enableWebServer = true)
+public class DocuWareAuthFeatureTest extends DocuWareConnectorTest {
 
 	@Test
 	void testRequiredForConnecting(AppFixture fix) {
