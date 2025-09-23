@@ -2,7 +2,6 @@ package com.axonivy.market.docuware.connector.test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -206,7 +205,7 @@ public class DocuWareServiceMock {
 	 * @return
 	 */
 	private String load(String path) {
-		try (InputStream is = DocuWareServiceMock.class.getResourceAsStream(path)) {
+		try (var is = DocuWareServiceMock.class.getResourceAsStream(path)) {
 			var content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 			var base = uriInfo.getBaseUri().toString();
 			while(base.endsWith("/")) {
