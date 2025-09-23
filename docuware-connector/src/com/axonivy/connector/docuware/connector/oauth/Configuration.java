@@ -119,7 +119,11 @@ public abstract class Configuration {
 	}
 
 	public static String tokenCacheKey(String configKey, GrantType grantType, String extra) {
-		return "%s:%s:%s:%s".formatted(APP_ATT_TOKEN_PREFIX, configKey, grantType, extra);
+		return "%s:%s:%s:%s".formatted(APP_ATT_TOKEN_PREFIX, configKey, grantType, emptyIfNull(extra));
+	}
+
+	protected static String emptyIfNull(String s) {
+		return s == null ? "" : s;
 	}
 
 	/**

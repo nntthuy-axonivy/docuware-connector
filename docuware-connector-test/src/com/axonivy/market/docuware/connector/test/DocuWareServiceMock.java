@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
 
-import ch.ivyteam.ivy.environment.Ivy;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Path("docuWareMock")
@@ -53,6 +52,23 @@ public class DocuWareServiceMock {
 		return Response.ok(load("json/openIdConfiguration.json")).type(MediaType.APPLICATION_JSON).build();
 	}
 
+
+	private String emptyIfNull(String s) {
+		return s == null ? "" : s;
+	}
+
+	/**
+	 * Generate a special test token (not a JWT) which can be used to check the token cache logic.
+	 * 
+	 * @param grantType
+	 * @param scope
+	 * @param clienttId
+	 * @param userName
+	 * @param password
+	 * @param token
+	 * @param impersonateName
+	 * @return
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -65,12 +81,27 @@ public class DocuWareServiceMock {
 			@FormParam("password") String password,
 			@FormParam("token") String token,
 			@FormParam("impersonateName") String impersonateName) {
-		Ivy.log().warn("grantType: ''{0}'', scope: ''{1}'', client_id: ''{2}'', username: ''{3}'', password: ''{4}'', token: ''{5}'', impersonateName: ''{6}''",
-				grantType, scope, clienttId, userName, password, token, impersonateName);
 		var newtoken = load("json/token.json");
-		newtoken = newtoken.replaceAll("<TOKEN>", "%s:%s:%s:%s.%s.%s".formatted(grantType, userName, impersonateName, token, UUID.randomUUID(), "test"));
+		newtoken = newtoken.replaceAll("<TOKEN>", "%s:%s:%s:%s:%s".formatted(
+				emptyIfNull(grantType), emptyIfNull(userName), emptyIfNull(impersonateName), emptyIfNull(token), UUID.randomUUID()));
 		return Response.ok(newtoken).type(MediaType.APPLICATION_JSON).build();
+	}
 
+	/**
+	 * Echo the authorization header.
+	 * 
+	 * This call does not exist in DocuWare but is here to support testing.
+	 * 
+	 * @param req
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("TokenEcho")
+	public Response tokenEcho(@Context HttpServletRequest req) {
+		var auth = req.getHeader(DocuWareAuthFeature.AUTHORIZATION);
+
+		return Response.ok(emptyIfNull(auth)).type(MediaType.TEXT_PLAIN).build();
 	}
 
 	@GET

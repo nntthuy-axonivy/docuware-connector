@@ -15,6 +15,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -371,6 +372,17 @@ public class DocuWareService {
 		} catch (IOException e) {
 			throw new RuntimeException("Error while removing caches.", e);
 		}
+	}
+
+	/**
+	 * Get all cached tokens and configurations.
+	 * 
+	 * @return
+	 */
+	public Map<String, Object> getCaches() {
+		return IApplication.current().getAttributeNames().stream()
+				.filter(n -> n.startsWith(Configuration.APP_ATT_CONFIG_PREFIX) || n.startsWith(Configuration.APP_ATT_TOKEN_PREFIX))
+				.collect(Collectors.toMap(n -> n, n -> IApplication.current().getAttribute(n)));
 	}
 
 	/**

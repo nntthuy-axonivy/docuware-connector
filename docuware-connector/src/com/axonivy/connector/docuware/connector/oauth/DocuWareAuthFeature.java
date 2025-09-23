@@ -139,10 +139,22 @@ public class DocuWareAuthFeature implements Feature {
 		case TRUSTED:
 			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_USERNAME, List.of(cfg.getUsername()));
 			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_PASSWORD, List.of(cfg.getPassword()));
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(cfg.getImpersonateUserName()));
+			var impersonateUserName = cfg.getImpersonateUserName();
+			if(StringUtils.isBlank(impersonateUserName)) {
+				authError("fetchtoken:missingimpersonateuser")
+				.withMessage("Cannot fetch access token for config '%s' and grant type '%s' because the impersonate user is not set.".formatted(configKey, grantType.code()))
+				.throwError();
+			}
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_IMPERSONATE_NAME, List.of(impersonateUserName));
 			break;
 		case DW_TOKEN:
-			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(cfg.getDwToken()));
+			String dwToken = cfg.getDwToken();
+			if(StringUtils.isBlank(dwToken)) {
+				authError("fetchtoken:missingdwtoken")
+				.withMessage("Cannot fetch access token for config '%s' and grant type '%s' because the dw token is not set.".formatted(configKey, grantType.code()))
+				.throwError();
+			}
+			payload.put(DocuWareService.ACCESS_TOKEN_REQUEST_TOKEN, List.of(dwToken));
 			break;
 		default:
 			break;
@@ -159,7 +171,7 @@ public class DocuWareAuthFeature implements Feature {
 				.post(Entity.form(payload));
 
 		if (Family.SUCCESSFUL != response.getStatusInfo().getFamily()) {
-			authError("fetchtoken").withMessage("Failed to get Token from '%s' for config '%s', response: %s".formatted(cfg.getTokenEndpoint(), configKey, response))
+			authError("fetchtoken").withMessage("Failed to fetch access token from '%s' for config '%s', response: %s.".formatted(cfg.getTokenEndpoint(), configKey, response))
 			.withAttribute("status", response.getStatus())
 			.withAttribute("payload", response.readEntity(String.class))
 			.throwError();
