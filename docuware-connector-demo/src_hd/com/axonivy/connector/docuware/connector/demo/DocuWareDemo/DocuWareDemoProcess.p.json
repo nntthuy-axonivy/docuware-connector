@@ -252,10 +252,10 @@
               "FacesMessage message;",
               "if (HttpStatus.SC_OK != response.getStatus()) {",
               "  message.severity = FacesMessage.SEVERITY_ERROR;",
-              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageFailed\");",
+              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/uploadMessageFailed\");",
               "} else {",
               "  message.severity = FacesMessage.SEVERITY_INFO;",
-              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/UploadMessageOK\");",
+              "  message.summary = ivy.cms.co(\"/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemo/uploadMessageOK\");",
               "}",
               "",
               "FacesContext.getCurrentInstance().addMessage(\"\", message);"
@@ -277,7 +277,7 @@
         "guid" : "1966876CCB3F55FE"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1848 }
+        "at" : { "x" : 96, "y" : 1664 }
       },
       "connect" : [
         { "id" : "f22", "to" : "f24" }
@@ -286,7 +286,7 @@
       "id" : "f21",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1848 },
+        "at" : { "x" : 352, "y" : 1664 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -299,7 +299,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1848 }
+        "at" : { "x" : 224, "y" : 1664 }
       },
       "connect" : [
         { "id" : "f25", "to" : "f21", "color" : "default" }
@@ -617,45 +617,6 @@
         { "id" : "f50", "to" : "f48" }
       ]
     }, {
-      "id" : "f51",
-      "type" : "HtmlDialogEventStart",
-      "name" : "buildViewerUrl",
-      "config" : {
-        "guid" : "1968103BE61A1213"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 1272 }
-      },
-      "connect" : [
-        { "id" : "f53", "to" : "f54" }
-      ]
-    }, {
-      "id" : "f52",
-      "type" : "HtmlDialogEnd",
-      "visual" : {
-        "at" : { "x" : 352, "y" : 1272 },
-        "labelOffset" : { "x" : 10, "y" : 30 }
-      }
-    }, {
-      "id" : "f54",
-      "type" : "Script",
-      "name" : "Build Url",
-      "config" : {
-        "output" : {
-          "code" : [
-            "in.ctrl.buildViewerUrl();",
-            "",
-            "in.ctrl.log(\"Viewer Url: {0}\", in.ctrl.getViewerUrl());"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 1272 }
-      },
-      "connect" : [
-        { "id" : "f55", "to" : "f52", "color" : "default" }
-      ]
-    }, {
       "id" : "f56",
       "type" : "HtmlDialogEventStart",
       "name" : "encrypt",
@@ -663,7 +624,7 @@
         "guid" : "19681AFD5603E937"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1656 }
+        "at" : { "x" : 96, "y" : 1472 }
       },
       "connect" : [
         { "id" : "f58", "to" : "f62" }
@@ -672,7 +633,7 @@
       "id" : "f57",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1656 },
+        "at" : { "x" : 352, "y" : 1472 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -683,7 +644,7 @@
         "guid" : "19681AFE017EFCB7"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1752 }
+        "at" : { "x" : 96, "y" : 1568 }
       },
       "connect" : [
         { "id" : "f61", "to" : "f64" }
@@ -692,7 +653,7 @@
       "id" : "f60",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1752 },
+        "at" : { "x" : 352, "y" : 1568 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -712,7 +673,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1656 }
+        "at" : { "x" : 224, "y" : 1472 }
       },
       "connect" : [
         { "id" : "f63", "to" : "f57", "color" : "default" }
@@ -734,7 +695,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1752 }
+        "at" : { "x" : 224, "y" : 1568 }
       },
       "connect" : [
         { "id" : "f65", "to" : "f60", "color" : "default" }
@@ -747,7 +708,7 @@
         "guid" : "19682690F6221D02"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1464 }
+        "at" : { "x" : 96, "y" : 1280 }
       },
       "connect" : [
         { "id" : "f68", "to" : "f69" }
@@ -756,7 +717,7 @@
       "id" : "f67",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 656, "y" : 1464 },
+        "at" : { "x" : 656, "y" : 1280 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -789,7 +750,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1464 }
+        "at" : { "x" : 224, "y" : 1280 }
       },
       "connect" : [
         { "id" : "f70", "to" : "f76", "color" : "default" }
@@ -883,7 +844,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 392, "y" : 1464 }
+        "at" : { "x" : 392, "y" : 1280 }
       },
       "connect" : [
         { "id" : "f84", "to" : "f83" }
@@ -916,49 +877,10 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 552, "y" : 1464 }
+        "at" : { "x" : 552, "y" : 1280 }
       },
       "connect" : [
         { "id" : "f85", "to" : "f67" }
-      ]
-    }, {
-      "id" : "f71",
-      "type" : "HtmlDialogEventStart",
-      "name" : "buildCabinetResultListAndViewerUrl",
-      "config" : {
-        "guid" : "196E9A088229F07E"
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 1368 }
-      },
-      "connect" : [
-        { "id" : "f73", "to" : "f74" }
-      ]
-    }, {
-      "id" : "f72",
-      "type" : "HtmlDialogEnd",
-      "visual" : {
-        "at" : { "x" : 352, "y" : 1368 },
-        "labelOffset" : { "x" : 10, "y" : 30 }
-      }
-    }, {
-      "id" : "f74",
-      "type" : "Script",
-      "name" : "Build Url",
-      "config" : {
-        "output" : {
-          "code" : [
-            "in.ctrl.buildCabinetResultListAndViewerUrl();",
-            "",
-            "in.ctrl.log(\"Viewer Url: {0}\", in.ctrl.getViewerUrl());"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 224, "y" : 1368 }
-      },
-      "connect" : [
-        { "id" : "f86", "to" : "f72", "color" : "default" }
       ]
     }, {
       "id" : "f87",
@@ -968,7 +890,7 @@
         "guid" : "19715A70B1A97447"
       },
       "visual" : {
-        "at" : { "x" : 96, "y" : 1560 }
+        "at" : { "x" : 96, "y" : 1376 }
       },
       "connect" : [
         { "id" : "f89", "to" : "f90" }
@@ -977,7 +899,7 @@
       "id" : "f88",
       "type" : "HtmlDialogEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 1560 },
+        "at" : { "x" : 352, "y" : 1376 },
         "labelOffset" : { "x" : 10, "y" : 30 }
       }
     }, {
@@ -1010,7 +932,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 224, "y" : 1560 }
+        "at" : { "x" : 224, "y" : 1376 }
       },
       "connect" : [
         { "id" : "f91", "to" : "f88", "color" : "default" }
