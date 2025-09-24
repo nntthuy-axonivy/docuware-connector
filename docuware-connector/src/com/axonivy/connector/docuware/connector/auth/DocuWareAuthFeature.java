@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.oauth;
+package com.axonivy.connector.docuware.connector.auth;
 
 import java.io.IOException;
 import java.net.URI;

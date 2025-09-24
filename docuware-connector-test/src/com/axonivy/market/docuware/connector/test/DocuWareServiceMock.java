@@ -24,7 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
+import com.axonivy.connector.docuware.connector.auth.DocuWareAuthFeature;
 
 import io.swagger.v3.oas.annotations.Hidden;
 

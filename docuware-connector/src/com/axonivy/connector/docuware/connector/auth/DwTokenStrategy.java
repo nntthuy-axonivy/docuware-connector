@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.oauth;
+package com.axonivy.connector.docuware.connector.auth;
 
 import java.util.regex.Pattern;
 
@@ -81,6 +81,11 @@ public class DwTokenStrategy {
 
 	public Strategy getStrategy() {
 		return strategy;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("DwTokenStrategy [strategy=%s]", strategy);
 	}
 
 	/**

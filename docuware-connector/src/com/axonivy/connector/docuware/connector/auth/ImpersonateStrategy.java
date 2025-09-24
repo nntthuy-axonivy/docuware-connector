@@ -1,4 +1,4 @@
-package com.axonivy.connector.docuware.connector.oauth;
+package com.axonivy.connector.docuware.connector.auth;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -140,6 +140,12 @@ public class ImpersonateStrategy {
 
 	public String getIvyUser() {
 		return ivyUser;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("ImpersonateStrategy [strategy=%s, systemUser=%s, anonymousUser=%s, ivyUser=%s]",
+				strategy, systemUser, anonymousUser, ivyUser);
 	}
 
 	/**

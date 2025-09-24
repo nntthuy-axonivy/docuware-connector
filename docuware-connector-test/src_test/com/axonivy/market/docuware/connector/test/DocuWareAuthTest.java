@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.axonivy.connector.docuware.connector.DocuWareService;
-import com.axonivy.connector.docuware.connector.oauth.Configuration;
+import com.axonivy.connector.docuware.connector.auth.Configuration;
 
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.AppFixture;

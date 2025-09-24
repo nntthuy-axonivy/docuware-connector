@@ -8,7 +8,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
-import com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature;
+import com.axonivy.connector.docuware.connector.auth.DocuWareAuthFeature;
 
 /**
  * Make the Bearer token unreadable by Ivy, otherwise it will throw an error because it is not really a bearer token.

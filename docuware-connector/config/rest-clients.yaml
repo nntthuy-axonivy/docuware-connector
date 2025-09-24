@@ -7,7 +7,7 @@ RestClients:
     Features:
     - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
     - org.glassfish.jersey.media.multipart.MultiPartFeature
-    - com.axonivy.connector.docuware.connector.oauth.DocuWareAuthFeature
+    - com.axonivy.connector.docuware.connector.auth.DocuWareAuthFeature
     Properties:
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
