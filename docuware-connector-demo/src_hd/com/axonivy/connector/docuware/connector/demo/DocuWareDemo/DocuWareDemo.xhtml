@@ -103,11 +103,11 @@
 										<div class="grid">
 											<div class="col-12 md:col-6 lg:col-2">
 												<p:commandButton icon="pi pi-eye" value="Embedded Viewer" actionListener="#{data.ctrl.buildViewerUrl()}"
-													oncomplete="PF('viewDocumentDialog').show()" update="@form" />
+													oncomplete="PF('viewDocumentDialog').show()" update=":form:viewDocumentDialog" />
 											</div>
 											<div class="col-12 md:col-6 lg:col-2">
 												<p:commandButton icon="pi pi-eye" value="Embedded Cabinet List And Viewer"
-													actionListener="#{data.ctrl.buildCabinetResultListAndViewerUrl()}" oncomplete="PF('viewResultListDialog').show()" update="@form" />
+													actionListener="#{data.ctrl.buildCabinetResultListAndViewerUrl()}" oncomplete="PF('viewResultListDialog').show()" update=":form:viewResultListDialog" />
 											</div>
 											<div class="col-12 md:col-6 lg:col-2">
 												<p:commandButton icon="pi pi-link" value="Create Link"
