@@ -110,7 +110,11 @@
 													actionListener="#{data.ctrl.buildCabinetResultListAndViewerUrl()}" oncomplete="PF('viewResultListDialog').show()" update="@form" />
 											</div>
 											<div class="col-12 md:col-6 lg:col-2">
-												<a href="#{data.ctrl.buildViewerUrl()}" target="_blank">Open document #{data.ctrl.documentId} in new tab</a>
+												<p:commandButton icon="pi pi-link" value="Create Link"
+													actionListener="#{data.ctrl.buildViewerUrl()}" update=":form:mainPage" rendered="#{empty data.ctrl.viewerUrl}"/>
+												<p:outputPanel rendered="#{not empty data.ctrl.viewerUrl}">
+													<a href="#{data.ctrl.viewerUrl}" target="_blank">Open document #{data.ctrl.documentId} in new tab</a>
+												</p:outputPanel>
 											</div>
 										</div>
 									</p:outputPanel>
@@ -279,8 +283,7 @@
 				<p:dialog id="viewDocumentDialog" widgetVar="viewDocumentDialog" modal="true" resizable="false" header="Viewer" width="90vw" height="80vh">
 					<iframe src="#{data.ctrl.viewerUrl}" width="100%" height="99%" class="document-viewer" />
 				</p:dialog>
-				<p:dialog id="viewResultListDialog" widgetVar="viewResultListDialog" modal="true" resizable="false" header="Result List Viewer" width="90vw"
-					height="80vh">
+				<p:dialog id="viewResultListDialog" widgetVar="viewResultListDialog" modal="true" resizable="false" header="Result List Viewer" width="90vw" height="80vh">
 					<iframe src="#{data.ctrl.resultListUrl}" width="100%" height="99%" class="document-viewer" />
 				</p:dialog>
 

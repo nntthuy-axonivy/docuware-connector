@@ -91,8 +91,7 @@ public class DocuWareDemoCtrl {
 	public void setConfigKey(String configKey) {
 		this.configKey = configKey;
 		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
-		organizationId = null;
-		fileCabinetId = null;
+		setOrganizationId(null);
 		loginToken = null;
 	}
 
@@ -167,6 +166,8 @@ public class DocuWareDemoCtrl {
 		if(document != null) {
 			documentId = "" + document.getId();
 		}
+		viewerUrl = null;
+		resultListUrl = null;
 	}
 
 	public boolean hasAccessToken() {
@@ -201,6 +202,7 @@ public class DocuWareDemoCtrl {
 
 	public void setOrganizationId(String organizationId) {
 		this.organizationId = organizationId;
+		setFileCabinetId(null);
 	}
 
 	public String getFileCabinetId() {
@@ -209,6 +211,7 @@ public class DocuWareDemoCtrl {
 
 	public void setFileCabinetId(String fileCabinetId) {
 		this.fileCabinetId = fileCabinetId;
+		setDocumentId(null);
 	}
 
 	public String getDocumentId() {
