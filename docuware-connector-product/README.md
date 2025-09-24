@@ -117,6 +117,11 @@ If you work with multiple instances, every call must know which instance to use.
 
 If you want to use REST calls of this connector directly, you can use the call's property `configKey` in the same way. Have a look at the instance-aware sub-processes to see how this is done!
 
+### Breaking changes in this version
+
+* Global variables configuration changed to support multiple instances.
+* It is no longer possible to define a file cabinet id or other defaults for DocuWare items in the global variables of a configuration. If needed, please move these global variables to your project.
+* Error handling was changed to standard AxonIvy error handling, i.e. sub-processes no longer return an error object, but rather throw exceptions in the case of errors.
 
 ### Missing something?
 
