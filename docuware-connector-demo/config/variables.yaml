@@ -45,5 +45,5 @@ Variables:
       dwToken: "^session"
   # Variables used by the demo.
   docuwareWorkflow:
-    fileCabinetId: "4b4be7af-629f-4340-82cb-126d249d2b95"
-    dialogId: "7156ccec-f3ea-464a-ad30-df1b9e841ec8"
+    fileCabinetId: ""
+    dialogId: ""
