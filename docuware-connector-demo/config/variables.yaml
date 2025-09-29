@@ -8,19 +8,10 @@
 #
 Variables:
   docuwareConnector:
-    # Default configuration.
+    # Default configuration for a single, technical user.
     defaultConfig:
       configId: "1"
-      url: "REMOVED"
-      grantType: "password"
-      username: "REMOVED"
-      #[password]
-      password: "REMOVED"
-    # Work with a single user.
-    techUser:
-      configId: "1"
-      inherit: defaultConfig
-      url: "REMOVED"
+      url: "https://put.here.your.url/DocuWare/Platform"
       grantType: "password"
       username: "REMOVED"
       #[password]
@@ -28,7 +19,7 @@ Variables:
       connectTimeout: "10000"
       readTimeout: "10000"
       integrationPassphrase: "REMOVED"
-    # Work with different users authenticated by a trusted user.
+    # Work with different users authenticated by a trusted user (remove this section if you do not have access to an instance supporting this).
     trustedUser:
       configId: "1"
       inherit: defaultConfig
@@ -37,10 +28,10 @@ Variables:
       #[password]
       password: "REMOVED"
       impersonateUser: ^ivy:system=admin,anonymous=admin
-    # Work with a DW Token.
+    # Work with a DW Token (remove this section if you do not have access to an instance supporting this).
     dwToken:
       configId: "1"
-      url: "REMOVED"
+      url: "https://put.here.your.url/DocuWare/Platform"
       grantType: "dwtoken"
       dwToken: "^session"
   # Variables used by the demo.
