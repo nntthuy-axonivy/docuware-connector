@@ -21,7 +21,7 @@ Variables:
       configId: "1"
       inherit: defaultConfig
       url: "REMOVED"
-      grantType: "REMOVED"
+      grantType: "password"
       username: "REMOVED"
       #[password]
       password: "REMOVED"
@@ -32,7 +32,7 @@ Variables:
     trustedUser:
       configId: "1"
       inherit: defaultConfig
-      grantType: trusted
+      grantType: "trusted"
       username: "REMOVED"
       #[password]
       password: "REMOVED"
@@ -41,7 +41,7 @@ Variables:
     dwToken:
       configId: "1"
       url: "REMOVED"
-      grantType: dwtoken
+      grantType: "dwtoken"
       dwToken: "^session"
   # Variables used by the demo.
   docuwareWorkflow:
