@@ -74,10 +74,6 @@ public class DocuWareService {
 	protected static ObjectMapper objectMapper;
 	public static final String DOCUWARE_ERROR = "docuware:connector:";
 
-	public static DocuWareService get() {
-		return INSTANCE;
-	}
-
 	public static final String ACCESS_TOKEN_REQUEST_GRANT_TYPE = "grant_type";
 	public static final String ACCESS_TOKEN_REQUEST_CLIENT_ID = "client_id";
 	public static final String ACCESS_TOKEN_REQUEST_SCOPE = "scope";
@@ -88,6 +84,9 @@ public class DocuWareService {
 	public static final String ACCESS_TOKEN_REQUEST_PASSWORD = "password";
 	public static final String RESPONSE_STATUS_CODE_ATTRIBUTE = "RestClientResponseStatusCode";
 
+	public static DocuWareService get() {
+		return INSTANCE;
+	}
 
 	/**
 	 * Get all available Docuware configurations.
