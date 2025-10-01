@@ -123,7 +123,7 @@ public class DocuWareDemoCtrl {
 		if(organizations != null) {
 			var orgs = organizations.getOrganization();
 
-			if(ObjectUtils.isEmpty(orgs)) {
+			if(ObjectUtils.isNotEmpty(orgs)) {
 				organizationId = orgs.get(0).getId();
 			}
 		}
@@ -137,7 +137,7 @@ public class DocuWareDemoCtrl {
 		this.fileCabinets = fileCabinets;
 		if(fileCabinets != null) {
 			var fcs = fileCabinets.getFileCabinet();
-			if(ObjectUtils.isEmpty(fcs)) {
+			if(ObjectUtils.isNotEmpty(fcs)) {
 				fileCabinetId = fcs.get(0).getId();
 			}
 		}
@@ -151,7 +151,7 @@ public class DocuWareDemoCtrl {
 		this.documents = documents;
 		if(documents != null && documents.getItems() != null) {
 			var docs = documents.getItems().getItem();
-			if(ObjectUtils.isEmpty(docs)) {
+			if(ObjectUtils.isNotEmpty(docs)) {
 				documentId = ""+docs.get(0).getId();
 			}
 		}
