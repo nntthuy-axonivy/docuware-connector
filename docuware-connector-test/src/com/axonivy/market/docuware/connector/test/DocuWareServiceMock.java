@@ -51,11 +51,6 @@ public class DocuWareServiceMock {
 		return Response.ok(load("json/openIdConfiguration.json")).type(MediaType.APPLICATION_JSON).build();
 	}
 
-
-	private String emptyIfNull(String s) {
-		return s == null ? "" : s;
-	}
-
 	/**
 	 * Generate a special test token (not a JWT) which can be used to check the token cache logic.
 	 * 
@@ -82,7 +77,7 @@ public class DocuWareServiceMock {
 			@FormParam("impersonateName") String impersonateName) {
 		var newtoken = load("json/token.json");
 		newtoken = newtoken.replaceAll("<TOKEN>", "%s:%s:%s:%s:%s".formatted(
-				emptyIfNull(grantType), emptyIfNull(userName), emptyIfNull(impersonateName), emptyIfNull(token), UUID.randomUUID()));
+				StringUtils.defaultIfEmpty(grantType, ""), StringUtils.defaultIfEmpty(userName, ""), StringUtils.defaultIfEmpty(impersonateName, ""), StringUtils.defaultIfEmpty(token, ""), UUID.randomUUID()));
 		return Response.ok(newtoken).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -100,7 +95,7 @@ public class DocuWareServiceMock {
 	public Response tokenEcho(@Context HttpServletRequest req) {
 		var auth = req.getHeader(DocuWareAuthFeature.AUTHORIZATION);
 
-		return Response.ok(emptyIfNull(auth)).type(MediaType.TEXT_PLAIN).build();
+		return Response.ok(StringUtils.defaultIfEmpty(auth, "")).type(MediaType.TEXT_PLAIN).build();
 	}
 
 	@GET
