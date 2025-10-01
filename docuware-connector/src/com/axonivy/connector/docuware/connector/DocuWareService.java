@@ -62,6 +62,8 @@ public class DocuWareService {
 	public static final String X_REQUESTED_BY = "X-Requested-By";
 	public static final String AXON_IVY_DOCUWARE_CONNECTOR = "AxonIvy Docuware Connector";
 
+	// Pattern of global variables defining a DocuWare connection. The config key will be in group 1.
+	protected static final Pattern CONFIG_PATTERN = Pattern.compile("%s[.]([^.]+)[.].+".formatted(GlobalVarConfiguration.DOCUWARE_CONNECTOR_VAR));
 	protected static final Pattern DATE_PATTERN = Pattern.compile("/Date\\(([0-9]+)\\)/");
 	protected static final String PROPERTIES_FILE_NAME = "document";
 	protected static final String PROPERTIES_FILE_EXTENSION = ".json";
@@ -95,10 +97,8 @@ public class DocuWareService {
 	 */
 	public Collection<String> getConfigs() {
 		// Search for all variables in our namespace containing at least one child variable.
-		var configPattern = Pattern.compile("%s[.]([^.]+)[.].+".formatted(GlobalVarConfiguration.DOCUWARE_CONNECTOR_VAR));
-
 		return Ivy.var().names().stream()
-				.map(n -> configPattern.matcher(n))
+				.map(n -> CONFIG_PATTERN.matcher(n))
 				.filter(m -> m.matches())
 				.map(m -> m.group(1))
 				.collect(Collectors.toSet());
