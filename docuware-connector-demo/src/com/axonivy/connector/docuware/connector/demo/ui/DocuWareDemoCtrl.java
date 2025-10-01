@@ -375,7 +375,7 @@ public class DocuWareDemoCtrl {
 	public void log(Organizations organizations) {
 		log("Organizations:");
 		if(organizations == null) {
-			log("null");
+			log("no organizations");
 		}
 		else {
 			var orgs = organizations.getOrganization();
@@ -391,7 +391,7 @@ public class DocuWareDemoCtrl {
 	public void log(FileCabinets fileCabinets) {
 		log("File Cabinets:");
 		if(fileCabinets == null) {
-			log("null");
+			log("no cabinets");
 		}
 		else {
 			var fcs = fileCabinets.getFileCabinet();
@@ -407,7 +407,7 @@ public class DocuWareDemoCtrl {
 	public void log(DocumentsQueryResult documents) {
 		log("Documents:");
 		if(documents == null || documents.getItems() == null) {
-			log("null");
+			log("no documents");
 		}
 		else {
 			var docs = documents.getItems().getItem();
@@ -422,7 +422,7 @@ public class DocuWareDemoCtrl {
 
 	public void log(Document document) {
 		if(document == null) {
-			log("Document: null");
+			log("Document is null");
 		}
 		else {
 			log("Document: Id: {0} - ''{1}'' Version: {2}.{3}", document.getId(), document.getTitle(), document.getVersion().getMajor(), document.getVersion().getMinor());
