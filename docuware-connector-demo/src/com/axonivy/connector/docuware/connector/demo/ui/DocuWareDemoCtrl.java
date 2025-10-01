@@ -16,6 +16,7 @@ import java.util.Random;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -121,7 +122,8 @@ public class DocuWareDemoCtrl {
 		this.organizations = organizations;
 		if(organizations != null) {
 			var orgs = organizations.getOrganization();
-			if(orgs != null && !orgs.isEmpty()) {
+
+			if(ObjectUtils.isEmpty(orgs)) {
 				organizationId = orgs.get(0).getId();
 			}
 		}
@@ -135,7 +137,7 @@ public class DocuWareDemoCtrl {
 		this.fileCabinets = fileCabinets;
 		if(fileCabinets != null) {
 			var fcs = fileCabinets.getFileCabinet();
-			if(fcs != null && !fcs.isEmpty()) {
+			if(ObjectUtils.isEmpty(fcs)) {
 				fileCabinetId = fcs.get(0).getId();
 			}
 		}
@@ -149,7 +151,7 @@ public class DocuWareDemoCtrl {
 		this.documents = documents;
 		if(documents != null && documents.getItems() != null) {
 			var docs = documents.getItems().getItem();
-			if(docs != null && !docs.isEmpty()) {
+			if(ObjectUtils.isEmpty(docs)) {
 				documentId = ""+docs.get(0).getId();
 			}
 		}
