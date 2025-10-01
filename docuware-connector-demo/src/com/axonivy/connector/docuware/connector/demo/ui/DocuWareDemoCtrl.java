@@ -175,7 +175,6 @@ public class DocuWareDemoCtrl {
 		try {
 			if(configuration != null) {
 				result = DocuWareService.get().getCachedToken(configuration) != null;
-
 			}
 		} catch (Exception e) {
 			log("Error while checking access token, assuming no token is available.", e);
