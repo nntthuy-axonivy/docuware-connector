@@ -567,9 +567,9 @@ public class DocuWareService {
 					.withAttribute(DocuWareService.RESPONSE_STATUS_CODE_ATTRIBUTE, response.getStatus());
 
 			try {
-				var isr = new ByteArrayInputStream(errXml.getBytes(StandardCharsets.UTF_8));
+				var inputStream = new ByteArrayInputStream(errXml.getBytes(StandardCharsets.UTF_8));
 				var db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				var doc = db.parse(isr);
+				var doc = db.parse(inputStream);
 				var element = doc.getDocumentElement();
 				if (element != null && element.getNodeName() != null && element.getNodeName().contains(RESPONSE_XML_ERROR_NODE)) {
 					var children = element.getChildNodes();
