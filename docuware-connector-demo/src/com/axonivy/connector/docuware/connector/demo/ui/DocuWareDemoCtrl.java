@@ -66,8 +66,6 @@ public class DocuWareDemoCtrl {
 		configs = DocuWareService.get().getConfigs().stream().sorted().toList();
 		dwTokenConfigs = configs.stream().filter(c -> Configuration.getKnownConfiguration(c).getGrantType() == GrantType.DW_TOKEN).toList();
 		configuration = Configuration.getKnownConfigurationOrDefault(configKey);
-		organizationId = Ivy.var().get("docuwareConnector.organization");
-		fileCabinetId = Ivy.var().get("docuwareConnector.filecabinetid");
 		fields = new ArrayList<>();
 		fields.add(Field.create("SUBJECT", "Ivy Test File %s".formatted(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))));
 		fields.add(Field.create("STATUS", "neu"));
