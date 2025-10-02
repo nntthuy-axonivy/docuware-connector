@@ -4,28 +4,31 @@
   "namespace" : "com.axonivy.market.docuware.connector",
   "isBusinessCaseData" : false,
   "fields" : [ {
-    "name" : "uploadFile",
-    "type" : "java.io.File"
-  }, {
-    "name" : "propertiesList",
-    "type" : "List<com.axonivy.connector.docuware.connector.DocuWareProperty>"
-  }, {
-    "name" : "error",
-    "type" : "ch.ivyteam.ivy.bpm.error.BpmError"
-  }, {
-    "name" : "document",
-    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+    "name" : "configKey",
+    "type" : "String"
   }, {
     "name" : "fileCabinetId",
     "type" : "String"
   }, {
-    "name" : "configuration",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
+    "name" : "storeDialogId",
+    "type" : "String"
+  }, {
+    "name" : "uploadFile",
+    "type" : "File"
+  }, {
+    "name" : "properties",
+    "type" : "com.axonivy.connector.docuware.connector.DocuWareProperties"
+  }, {
+    "name" : "document",
+    "type" : "com.docuware.dev.schema._public.services.platform.Document"
+  }, {
+    "name" : "fileStream",
+    "type" : "java.io.InputStream"
+  }, {
+    "name" : "fileName",
+    "type" : "String"
   }, {
     "name" : "file",
-    "type" : "List<Byte>"
-  }, {
-    "name" : "filename",
-    "type" : "String"
+    "type" : "List<java.lang.Byte>"
   } ]
 }

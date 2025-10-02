@@ -8,38 +8,47 @@
 #
 Variables:
   docuwareConnector:
-    # The default active host. Managed by the system, should not manually modify.
-    host: ""
-    # The default active connection timeout. Managed by the system, should not manually modify.
-    connectTimeout: "0"
-    # The default active instance, it should be match with one of the instances in the configured  instance
-    # [enum: primary]
-    defaultInstance: ""
-    instances:
-      primary:
-        # Your docuware instance: e.g. 'acme.docuware.cloud'
-        host: ""
-        # The type of authorization grant to provide.
-        # [enum: password, trusted, dwtoken]
-        grantType: password
-        # The username used for authenticating to DocuWare.
-        username: ""
-        # The password used for authenticating to DocuWare.
-        #[password]
-        password: ${decrypt:}
-        # The Trusted username used for authenticating to DocuWare when GrantType is trusted.
-        trustedUserName: ""
-        # The password used for authenticating to DocuWare  when GrantType is trusted.
-        #[password]
-        trustedUserPassword: ${decrypt:}
-        # Use for getting a new DocuWare token by GrantType is dwtoken
-        # Please start process startRequestALoginToken.ivp to generate a new LoginToken
-        #[password]
-        loginToken: ${decrypt:}
-        # Your organization name
-        organization: ""
-        # The file cabinet Id, it must belong to provided organization
-        filecabinetid: ""
-        # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
-        # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
-        connectTimeout: "0"
+    # The DocuWare default configuration.
+    defaultConfig:
+      # The Id of this configuration. It is only used to invalidate any cached connection based on this (and inherited) configuration.
+      configId: "1"
+      # The URL of the server, including the platform part (compare to Postman collection), eg. https://acme.docuware.cloud/DocuWare/Platform
+      url: ""
+      # The type of authorization grant to provide.
+      # [enum: password, trusted, dwtoken]
+      grantType: "password"
+      # The username used for authenticating to DocuWare.
+      username: ""
+      # The password used for authenticating to DocuWare.
+      #[password]
+      password: ${decrypt:}
+      # Impersonate a specific DocuWare user (only used for granttype trusted).
+      #
+      # DW name is constant
+      # <dwuser>
+      #
+      # DW names are fixed for system (developer), anonymous and user
+      # ^fixed:system=<dwuser>,anonymous=<dwuser>,user=<dwuser>
+      #
+      # DW names are fixed for system (developer) and anonymous but current ivy user name for other users
+      # ^ivy:system=<dwuser>,anonymous=<dwuser>
+      # 
+      # DW name is taken from an attribute of the current session (needs to be set by a service function)
+      # ^session
+      impersonateUser: ""
+      # Where to find the DW token (only used for granttype dwtoken).
+      #
+      # DW token is taken from an attribute of the current session (needs to be set by a service function)
+      # ^session
+      dwToken: ""
+      # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+      # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+      connectTimeout: "0"
+      # This property sets the maximum time (in milliseconds) that the client will wait when attempting to establish a connection with the server.
+      # The value MUST be an instance convertible to Integer. A value of zero (0) is equivalent to an interval of infinity.
+      readTimeout: "0"
+      # This property defines the maximum number of characters of an entity that will be logged.
+      loggingEntityMaxSize: "8192"
+      # The password used for encrypting parameters of embedded urls (set in Configurations/Organization Settings/Security)
+      #[password]
+      integrationPassphrase: ""

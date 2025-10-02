@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<userConfig/>
+<userConfig>
+    <user>
+        <username>testuser1</username>
+    </user>
+    <user>
+        <username>testuser2</username>
+    </user>
+</userConfig>

@@ -273,9 +273,11 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/FileCabinet"
+                
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/CheckOutToFileSystem:
     post:
       tags:
-        - Check-in check-out a document.
+        - check-out a document.
       summary: Check-out a particular document and download it
       description: >-
         **IMPORTANT:** Version management has to be activated for the file
@@ -311,15 +313,60 @@ paths:
           required: true
       responses:
         '200':
-          description: OK
-          
+          description: Successful response
           content:
-            text/plain:
+            "application/octet-stream":
               schema:
                 type: string
-              example: >-
-                {"Links":[{"rel":"content","href":"/DocuWare/Platform/FileCabinets/41537414-0df0-4d08-adb5-fa40564b80f9/Sections/18-0/Data?documentInfoInFileName=True"}]}
-  
+                format: binary
+
+  /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/CheckInFromFileSystem:
+    post:
+      tags:
+        - check-in a document.
+      summary: Check-in a particular document
+      description: >-
+        **IMPORTANT:** Version management has to be activated for the file
+        cabinet you are using.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                checkIn:
+                  type: string
+                  description: >-
+                    This is a JSON formatted file that provides the updated version and comment information for the document.
+                    See the documentation for an example of this file.
+                  format: binary
+                file[]:
+                  type: string
+                  description: >-
+                    This the file you are checking in from the file system. The name of this file must be specific in that it
+                    should be the same one it was downloaded as. If it is renamed, the check-in process will not work properly.
+                  format: binary
+      parameters:
+        - name: FileCabinetId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: DocumentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+
+
             
   /FileCabinets/{FileCabinetId}/Documents/{DocumentId}/FileDownload:
     get:

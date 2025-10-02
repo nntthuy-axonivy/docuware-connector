@@ -1,0 +1,39 @@
+package com.axonivy.market.docuware.connector.test;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
+import java.io.IOException;
+
+import org.junit.jupiter.api.Test;
+
+import ch.ivyteam.ivy.bpm.engine.client.BpmClient;
+import ch.ivyteam.ivy.bpm.engine.client.element.BpmElement;
+import ch.ivyteam.ivy.bpm.engine.client.element.BpmProcess;
+import ch.ivyteam.ivy.bpm.error.BpmError;
+import ch.ivyteam.ivy.bpm.exec.client.IvyProcessTest;
+
+@IvyProcessTest(enableWebServer = true)
+public class DeleteServiceTest extends DocuWareConnectorTest {
+	private static final BpmElement DELETE_SP = BpmProcess.path("DeleteService").elementName("deleteDocument(String, String, String)");
+
+	@Test
+	public void deleteDocument(BpmClient bpmClient) throws IOException {
+		bpmClient.start()
+		.subProcess(DELETE_SP)
+		.withParam("configKey", Constants.CONFIG_KEY)
+		.withParam("documentId", Constants.DOCUMENT_ID_OK)
+		.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)
+		.execute();
+	}
+
+	@Test
+	public void deleteDocumentError(BpmClient bpmClient) throws IOException {
+		assertThatExceptionOfType(BpmError.class).isThrownBy(() ->
+		bpmClient.start()
+		.subProcess(DELETE_SP)
+		.withParam("configKey", Constants.CONFIG_KEY)
+		.withParam("documentId", Constants.DOCUMENT_ID_ERROR)
+		.withParam("fileCabinetId", Constants.FILE_CABINET_ID_OK)
+		.execute()).extracting(BpmError::getErrorCode).isEqualTo("ivy:error:rest:client");
+	}
+}

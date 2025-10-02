@@ -14,6 +14,7 @@
 </cc:interface>
 
 <cc:implementation>
+	<c:set var="ctrl" value="#{cc.attrs.ctrl}" />
 	<c:set var="documentId" value="#{cc.attrs.documentId}" />
 	<c:set var="fileCabinetId" value="#{cc.attrs.fileCabinetId}" />
 	<c:set var="documentProperties" value="#{cc.attrs.documentProperties}" />
@@ -22,26 +23,25 @@
 		emptyMessage="#{ivy.cms.co('/Labels/NoRecordsFound')}"
 		rowIndexVar="rowIndex" lazy="false">
 		<p:column width="30"
-			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/IndexHeaderText')}">
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/component/UpdateDocumentFields/indexHeaderText')}">
 			<h:outputText value="#{rowIndex}" />
 		</p:column>
-
 		<p:column
-			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/FieldNameHeaderText')}">
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/component/UpdateDocumentFields/fieldNameHeaderText')}">
 			<h:outputText value="#{field.fieldName}" />
 		</p:column>
 
 		<p:column
-			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/DocuWareDemoUI/PropertyTable/UpdateValueHeaderText')}">
+			headerText="#{ivy.cms.co('/Dialogs/com/axonivy/connector/docuware/connector/demo/component/UpdateDocumentFields/updateValueHeaderText')}">
 			<h:panelGroup>
 				<p:inputNumber value="#{field.item}" minValue="0"
-					rendered="#{docuWareDemoBean.isFieldNameTypeNumber(field) and !field.isReadOnly()}">
+					rendered="#{ctrl.isFieldNameTypeNumber(field) and !field.isReadOnly()}">
 					<p:ajax event="change"
 						listener="#{logic.addToPropertiesUpdate(field)}" />
 				</p:inputNumber>
 
 				<p:inputText value="#{field.item}"
-					rendered="#{docuWareDemoBean.isFieldNameTypeString(field) and !field.isReadOnly()}">
+					rendered="#{ctrl.isFieldNameTypeString(field) and !field.isReadOnly()}">
 					<p:ajax event="change"
 						listener="#{logic.addToPropertiesUpdate(field)}" />
 				</p:inputText>
@@ -59,7 +59,7 @@
 			update="updateGrowlMessageForEditActionCommand" />
 	</div>
 	<p:remoteCommand id="updateGrowlMessageForEditActionCommand" name="updateGrowlMessageForEditAction"
-		actionListener="#{docuWareDemoBean.updateGrowlMessageForEditAction(data.isUpdateSuccess)}"
+		actionListener="#{ctrl.updateGrowlMessageForEditAction(data.isUpdateSuccess)}"
 		update=":form:growl" />
 </cc:implementation>
 

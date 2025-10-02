@@ -1,0 +1,4 @@
+{
+    "IdentityServiceUrl": "<MOCKBASE>/Identity",
+    "RefreshTokenSupported": true
+}

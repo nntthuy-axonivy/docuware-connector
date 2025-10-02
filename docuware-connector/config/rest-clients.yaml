@@ -2,15 +2,13 @@
 RestClients:
   DocuWare:
     UUID: 02d1eec1-32e9-4316-afc3-793448486203
-    Url: https://{host}/docuware/platform
+    Url: URI.PLACEHOLDER
     Icon: res:/webContent/icons/docuware.png
     Features:
     - ch.ivyteam.ivy.rest.client.mapper.JsonFeature
     - org.glassfish.jersey.media.multipart.MultiPartFeature
-    - com.axonivy.connector.docuware.connector.auth.OAuth2Feature
+    - com.axonivy.connector.docuware.connector.auth.DocuWareAuthFeature
     Properties:
-      PATH.host: ${ivy.var.docuwareConnector.host}
-      jersey.config.client.connectTimeout: ${ivy.var.docuwareConnector.connectTimeout}
       com.sun.jersey.impl.client.httpclient.handleCookies: 'true'
       http.protocol.handle-redirects: 'true'
       JSON.Serialization.PROPERTY_INCLUSION: NON_NULL

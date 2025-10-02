@@ -6,58 +6,11 @@
     "data" : "com.axonivy.market.docuware.connector.DeleteServiceData"
   },
   "elements" : [ {
-      "id" : "f0",
-      "type" : "CallSubStart",
-      "name" : "deleteDocument(String)",
-      "config" : {
-        "signature" : "deleteDocument",
-        "input" : {
-          "params" : [
-            { "name" : "documentId", "type" : "String", "desc" : "" }
-          ],
-          "map" : {
-            "out.documentId" : "param.#documentId"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
-          ],
-          "map" : {
-            "result.error" : "in.#error"
-          }
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 96, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "f4", "to" : "f3" }
-      ]
-    }, {
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 688, "y" : 64 }
+        "at" : { "x" : 368, "y" : 64 }
       }
-    }, {
-      "id" : "f3",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "in.configuration = DocuWareService.initializeDefaultConfiguration();"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 328, "y" : 64 }
-      },
-      "connect" : [
-        { "id" : "f6", "to" : "f5" }
-      ]
     }, {
       "id" : "f5",
       "type" : "RestClientCall",
@@ -68,105 +21,59 @@
           "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
           "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}",
           "templateParams" : {
-            "DocumentId" : "in.documentId",
-            "FileCabinetId" : "in.configuration.fileCabinetId"
+            "FileCabinetId" : "in.#fileCabinetId",
+            "DocumentId" : "in.#documentId"
+          },
+          "properties" : {
+            "configKey" : "in.#configKey"
           }
         },
         "response" : {
           "entity" : {
             "code" : [
-              "import com.axonivy.connector.docuware.connector.DocuWareConstants;",
-              "import ch.ivyteam.ivy.bpm.error.BpmError;",
-              "import com.axonivy.connector.docuware.connector.DocuWareException;",
               "import com.axonivy.connector.docuware.connector.DocuWareService;",
-              "import javax.ws.rs.core.Response.Status.Family;",
               "",
-              "if(response != null){",
-              "  if(response.getStatusInfo().getFamily() != Family.SUCCESSFUL){",
-              "     DocuWareException dex = DocuWareService.handleError(response);",
-              "     out.error = BpmError.create(DocuWareConstants.ERROR_BASE).withMessage(dex.getErrorMessage()).build();",
-              "     out.error.setAttribute(DocuWareConstants.RESPONSE_STATUS_CODE_ATTRIBUTE, dex.getHttpCode());",
-              "  }",
-              "}"
+              "DocuWareService.get().throwErrorIfUnsuccessful(response);"
             ]
           }
         }
       },
       "visual" : {
-        "at" : { "x" : 544, "y" : 64 },
+        "at" : { "x" : 224, "y" : 64 },
         "icon" : "res:/webContent/icons/docuware.png"
       },
-      "boundaries" : [ {
-          "id" : "f11",
-          "type" : "ErrorBoundaryEvent",
-          "config" : {
-            "output" : {
-              "map" : {
-                "out" : "in",
-                "out.error" : "error"
-              }
-            }
-          },
-          "visual" : {
-            "at" : { "x" : 576, "y" : 104 }
-          },
-          "connect" : [
-            { "id" : "f12", "to" : "f1" }
-          ]
-        } ],
       "connect" : [
         { "id" : "f2", "to" : "f1" }
       ]
     }, {
       "id" : "f7",
       "type" : "CallSubStart",
-      "name" : "deleteDocument(String, DocuWareEndpointConfiguration)",
+      "name" : "deleteDocument(String, String, String)",
       "config" : {
-        "signature" : "call",
+        "signature" : "deleteDocument",
         "input" : {
           "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
             { "name" : "documentId", "type" : "String", "desc" : "" },
-            { "name" : "configuration", "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration", "desc" : "" }
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" }
           ],
           "map" : {
-            "out.configuration" : "param.configuration",
-            "out.documentId" : "param.#documentId"
-          }
-        },
-        "result" : {
-          "params" : [
-            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
-          ],
-          "map" : {
-            "result.error" : "in.#error"
+            "out.configKey" : "param.#configKey",
+            "out.documentId" : "param.#documentId",
+            "out.fileCabinetId" : "param.#fileCabinetId"
           }
         }
       },
+      "tags" : [
+        "connector"
+      ],
       "visual" : {
-        "at" : { "x" : 96, "y" : 144 },
-        "labelOffset" : { "x" : 17, "y" : 33 }
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : 81, "y" : -31 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
       },
       "connect" : [
-        { "id" : "f9", "to" : "f8" }
-      ]
-    }, {
-      "id" : "f8",
-      "type" : "Script",
-      "name" : "initialize",
-      "config" : {
-        "output" : {
-          "code" : [
-            "import com.axonivy.connector.docuware.connector.DocuWareService;",
-            "",
-            "in.configuration = DocuWareService.initializeConfiguration(in.configuration);"
-          ]
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 328, "y" : 144 }
-      },
-      "connect" : [
-        { "id" : "f10", "to" : "f5", "via" : [ { "x" : 432, "y" : 144 }, { "x" : 432, "y" : 64 } ] }
+        { "id" : "f9", "to" : "f5" }
       ]
     } ]
 }

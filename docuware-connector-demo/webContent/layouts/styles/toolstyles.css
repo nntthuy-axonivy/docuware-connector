@@ -1,0 +1,83 @@
+.work {
+	background: var(--primary-lighter-color);
+	color: var(--secondary-text-color);
+}
+
+.messages {
+	background: var(--primary-light-color);
+}
+
+body .headline {
+	font-weight: bold;
+	font-size: larger;
+}
+
+body .input {
+	width: 100%;
+	font-family: monospace;
+	color: var(--text-color-secondary);
+}
+
+body .output {
+	width: 100%;
+	font-family: monospace;
+	color: var(--text-color);
+}
+
+body .note {
+	color: var(--primary-dark-color);
+	font-weigth: bold;
+	font-style: oblique;
+}
+
+body .hitext {
+	color: var(--warning-color);
+	background: var(--primary-dark-color);
+	font-weight: bold;
+	border-width: 1px;
+	border-style: solid;
+	padding: 1px;
+	margin: 10px;
+}
+
+body .ui-datatable.ui-datatable-striped .ui-datatable-data>tr.ui-datatable-odd {
+	color: var(--text-color-secondary);
+}
+
+body .ui-datatable.ui-datatable-striped .ui-datatable-data>tr.ui-datatable-even	{
+	color: var(--text-color);
+}
+
+body .ui-datatable .ui-datatable-data>tr>td {
+	padding: 0rem 1rem;
+}
+
+body .done {
+	color: var(--success-color);
+}
+
+body .error {
+	color: var(--error-color);
+}
+
+body .ui-growl .ui-growl-item-container.ui-growl-info .ui-growl-image::before {
+  content: "\e924";
+}
+
+body .ui-growl .ui-growl-item-container.ui-growl-warn .ui-growl-image::before {
+  content: "\e922";
+}
+
+body .ui-growl .ui-growl-item-container.ui-growl-error .ui-growl-image::before {
+  content: "\e922";
+}
+
+body .ui-growl .ui-growl-item-container.ui-growl-fatal .ui-growl-image::before {
+  content: "\e922";
+}
+
+.ui-button, .ui-inputfield {
+	width: 100%;
+}
+
+

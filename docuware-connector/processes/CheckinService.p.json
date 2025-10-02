@@ -1,0 +1,287 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
+  "id" : "196CADCFBAD6E9E9",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "com.axonivy.market.docuware.connector.CheckinServiceData"
+  },
+  "elements" : [ {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 112 },
+        "labelOffset" : { "x" : 13, "y" : 33 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 448, "y" : 416 },
+        "labelOffset" : { "x" : 13, "y" : 33 }
+      }
+    }, {
+      "id" : "f10",
+      "type" : "CallSubStart",
+      "name" : "checkOutToFileSystem(String,String,String)",
+      "config" : {
+        "signature" : "checkOutToFileSystem",
+        "input" : {
+          "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.checkOutAsStream" : "false",
+            "out.configKey" : "param.#configKey",
+            "out.documentId" : "param.#documentId",
+            "out.fileCabinetId" : "param.#fileCabinetId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "file", "type" : "File", "desc" : "" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
+          ],
+          "map" : {
+            "result.file" : "in.#file"
+          }
+        }
+      },
+      "tags" : [
+        "connector"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "labelOffset" : { "x" : 57, "y" : -23 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f73", "via" : [ { "x" : 144, "y" : 64 }, { "x" : 144, "y" : 112 } ] }
+      ]
+    }, {
+      "id" : "f15",
+      "type" : "CallSubStart",
+      "name" : "checkInFromFileSystem(String,String,DocuWareCheckInActionParameters,String,File)",
+      "config" : {
+        "signature" : "checkInFromFileSystem",
+        "input" : {
+          "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "checkInParameters", "type" : "com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters", "desc" : "" },
+            { "name" : "file", "type" : "File", "desc" : "" }
+          ],
+          "map" : {
+            "out.checkInParameters" : "param.#checkInParameters",
+            "out.configKey" : "param.#configKey",
+            "out.documentId" : "param.#documentId",
+            "out.file" : "param.#file",
+            "out.fileCabinetId" : "param.#fileCabinetId",
+            "out.fileName" : "param.#file.getName()",
+            "out.stream" : "new java.io.ByteArrayInputStream(param.#file.readBinary())"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
+          ],
+          "map" : {
+            "result.document" : "in.#document"
+          }
+        }
+      },
+      "tags" : [
+        "connector"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 352 },
+        "labelOffset" : { "x" : 169, "y" : -39 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
+      },
+      "connect" : [
+        { "id" : "f19", "to" : "f71", "via" : [ { "x" : 144, "y" : 352 }, { "x" : 144, "y" : 416 } ] }
+      ]
+    }, {
+      "id" : "f73",
+      "type" : "RestClientCall",
+      "name" : "Check out",
+      "config" : {
+        "method" : "POST",
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}/CheckOutToFileSystem",
+          "templateParams" : {
+            "FileCabinetId" : "in.#fileCabinetId",
+            "DocumentId" : "in.#documentId"
+          },
+          "properties" : {
+            "configKey" : "in.#configKey"
+          }
+        },
+        "body" : {
+          "type" : "RAW"
+        },
+        "response" : {
+          "entity" : {
+            "type" : "java.io.InputStream",
+            "code" : [
+              "import java.io.ByteArrayInputStream;",
+              "import com.axonivy.connector.docuware.connector.DocuWareService;",
+              "",
+              "String fileName = DocuWareService.get().getFilenameFromResponseHeader(response);",
+              "",
+              "if(in.checkOutAsStream) {",
+              "  in.fileName = fileName;",
+              "  in.stream = new ByteArrayInputStream(result.readAllBytes());",
+              "}",
+              "else {",
+              "  in.file = new File(fileName, true);",
+              "  in.file.createNewFile();",
+              "  in.file.writeBinary(result.readAllBytes());",
+              "}"
+            ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 112 }
+      },
+      "connect" : [
+        { "id" : "f20", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f71",
+      "type" : "RestClientCall",
+      "name" : "Check in",
+      "config" : {
+        "method" : "JAX_RS",
+        "target" : {
+          "clientId" : "02d1eec1-32e9-4316-afc3-793448486203",
+          "path" : "/FileCabinets/{FileCabinetId}/Documents/{DocumentId}/CheckInFromFileSystem",
+          "templateParams" : {
+            "FileCabinetId" : "in.#fileCabinetId",
+            "DocumentId" : "in.#documentId"
+          },
+          "properties" : {
+            "configKey" : "in.#configKey"
+          }
+        },
+        "body" : {
+          "type" : "FORM",
+          "mediaType" : "multipart/form-data",
+          "form" : {
+            "checkIn" : [ "" ],
+            "file[]" : [ "" ]
+          },
+          "entity" : {
+            "type" : "com.docuware.dev.schema._public.services.platform.DocumentIdCheckInFromFileSystemBody"
+          }
+        },
+        "code" : [
+          "import com.axonivy.connector.docuware.connector.DocuWareService;",
+          "",
+          "in.document = DocuWareService.get().checkInFromFileSystem(",
+          "  client,",
+          "  in.checkInParameters,",
+          "  in.fileName,",
+          "  in.stream);"
+        ]
+      },
+      "visual" : {
+        "at" : { "x" : 280, "y" : 416 }
+      },
+      "connect" : [
+        { "id" : "f22", "to" : "f4", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "CallSubStart",
+      "name" : "checkOutToFileSystemAsStream(String,String,String)",
+      "config" : {
+        "signature" : "checkOutToFileSystemAsStream",
+        "input" : {
+          "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "out.checkOutAsStream" : "true",
+            "out.configKey" : "param.#configKey",
+            "out.documentId" : "param.#documentId",
+            "out.fileCabinetId" : "param.#fileCabinetId"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "stream", "type" : "java.io.InputStream", "desc" : "" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" },
+            { "name" : "fileName", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.stream" : "in.#stream",
+            "result.fileName" : "in.#fileName"
+          }
+        }
+      },
+      "tags" : [
+        "connector"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 },
+        "labelOffset" : { "x" : 81, "y" : 41 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
+      },
+      "connect" : [
+        { "id" : "f0", "to" : "f73", "via" : [ { "x" : 144, "y" : 160 }, { "x" : 144, "y" : 112 } ] }
+      ]
+    }, {
+      "id" : "f2",
+      "type" : "CallSubStart",
+      "name" : "checkInFromFileSystem(String,String,String,String,InputStream,DocuWareCheckInActionParameters)",
+      "config" : {
+        "signature" : "checkInFromFileSystem",
+        "input" : {
+          "params" : [
+            { "name" : "configKey", "type" : "String", "desc" : "" },
+            { "name" : "documentId", "type" : "String", "desc" : "" },
+            { "name" : "fileCabinetId", "type" : "String", "desc" : "" },
+            { "name" : "fileName", "type" : "String", "desc" : "" },
+            { "name" : "stream", "type" : "java.io.InputStream", "desc" : "" },
+            { "name" : "checkInParameters", "type" : "com.axonivy.connector.docuware.connector.DocuWareCheckInActionParameters", "desc" : "" }
+          ],
+          "map" : {
+            "out.checkInParameters" : "param.#checkInParameters",
+            "out.configKey" : "param.#configKey",
+            "out.documentId" : "param.#documentId",
+            "out.fileCabinetId" : "param.#fileCabinetId",
+            "out.fileName" : "param.#fileName",
+            "out.stream" : "param.#stream"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "document", "type" : "com.docuware.dev.schema._public.services.platform.Document", "desc" : "" },
+            { "name" : "error", "type" : "ch.ivyteam.ivy.bpm.error.BpmError", "desc" : "" }
+          ],
+          "map" : {
+            "result.document" : "in.#document"
+          }
+        }
+      },
+      "tags" : [
+        "connector"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 480 },
+        "labelOffset" : { "x" : 209, "y" : 41 },
+        "icon" : "res:/webContent/icons/docuware.png?small"
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f71", "via" : [ { "x" : 144, "y" : 480 }, { "x" : 144, "y" : 416 } ] }
+      ]
+    } ]
+}

@@ -4,4 +4,4 @@
 
 DocuWare organizes you documents.
 
-Read our [documentation](docuware-connector-product/README.md).
+Read more about it in our [documentation](docuware-connector-product/README.md).

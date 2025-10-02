@@ -28,5 +28,9 @@
     "name" : "isUpdateSuccess",
     "type" : "Boolean",
     "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "ctrl",
+    "type" : "com.axonivy.connector.docuware.connector.demo.ui.DocumentTableCtrl",
+    "modifiers" : [ "PERSISTENT" ]
   } ]
 }

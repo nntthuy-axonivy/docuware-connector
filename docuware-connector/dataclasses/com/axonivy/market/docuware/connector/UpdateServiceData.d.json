@@ -4,7 +4,13 @@
   "namespace" : "com.axonivy.market.docuware.connector",
   "isBusinessCaseData" : false,
   "fields" : [ {
+    "name" : "configKey",
+    "type" : "String"
+  }, {
     "name" : "documentId",
+    "type" : "String"
+  }, {
+    "name" : "fileCabinetId",
     "type" : "String"
   }, {
     "name" : "indexFields",
@@ -18,9 +24,6 @@
   }, {
     "name" : "propertiesJson",
     "type" : "String"
-  }, {
-    "name" : "configuration",
-    "type" : "com.axonivy.connector.docuware.connector.DocuWareEndpointConfiguration"
   }, {
     "name" : "documentIndexFields",
     "type" : "com.docuware.dev.schema._public.services.platform.DocumentIndexFields"

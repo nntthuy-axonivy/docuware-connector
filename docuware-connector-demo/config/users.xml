@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<userConfig/>
+<userConfig>
+    <user>
+        <username>Brian.Ford</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Elizabeth.Cash</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Fred.Winner</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Peggy.Jenkins</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Peter.King</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Peter.Sanders</username>
+        <password>password</password>
+    </user>
+    <user>
+        <username>Simon.Stone</username>
+        <password>password</password>
+    </user>
+</userConfig>

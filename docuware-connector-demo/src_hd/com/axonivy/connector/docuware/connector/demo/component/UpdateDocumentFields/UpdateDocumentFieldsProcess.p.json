@@ -102,7 +102,6 @@
               "out.isUpdateSuccess = false;",
               "if (response != null) {",
               "  if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {",
-              "    ivy.log.info(\"in\");",
               "    out.isUpdateSuccess = true;",
               "  }",
               "}"
@@ -190,10 +189,10 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.connector.docuware.connector.utils.JsonUtils;",
+            "import com.axonivy.connector.docuware.connector.DocuWareService;",
             "import com.axonivy.connector.docuware.connector.DocuWarePropertiesUpdate;",
             "",
-            "in.propertiesJson = JsonUtils.serializeProperties(in.propertiesUpdate);"
+            "in.propertiesJson = DocuWareService.get().serializeProperties(in.propertiesUpdate);"
           ]
         }
       },

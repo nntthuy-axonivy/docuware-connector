@@ -1,53 +1,54 @@
 package com.axonivy.connector.docuware.connector.enums;
 
-import java.util.stream.Stream;
-
-import ch.ivyteam.ivy.environment.Ivy;
-
 public enum DocuWareVariable {
-  ROOT("docuwareConnector"),
-  HOST("host"),
-  PLATFORM("platform"),
-  USERNAME("username"),
-  PASSWORD("password"),
-  ACCESS_TOKEN("accessToken"),
-  GRANT_TYPE("grantType"),
-  TRUSTED_USERNAME("trustedUserName"),
-  TRUSTED_USER_PASSWORD("trustedUserPassword"),
-  LOGIN_TOKEN("loginToken"),
-  DEFAULT_INSTANCE("defaultInstance"),
-  FILE_CABINET_ID("fileCabinetId"),
-  STORE_DIALOG_ID("storedialogid"),
-  CONNECT_TIMEOUT("connectTimeout"),
-  @Deprecated
-  HOST_ID("hostid"),
-  @Deprecated
-  LOGON_URL("logonurl");
+	/**
+	 * Name of the property that will be used to determine whether a cached connection needs to be renewed.
+	 */
+	CONFIG_ID("configId"),
+	/**
+	 * Name of the property that contains the name of a config to inherit from in case a value is not set.
+	 */
+	INHERIT("inherit"),
+	URL("url"),
+	GRANT_TYPE("grantType"),
+	USERNAME("username"),
+	PASSWORD("password", true),
+	IMPERSONATE_USER("impersonateUser"),
+	DW_TOKEN("dwToken"),
+	INTEGRATION_PASSPHRASE("integrationPassphrase", true),
+	CONNECT_TIMEOUT("connectTimeout"),
+	READ_TIMEOUT("readTimeout"),
+	LOGGING_ENTITY_MAX_SIZE("loggingEntityMaxSize"),
+	;
 
-  public String variableKey;
-  public static final String SEPERATOR = ".";
+	private String varName;
+	private boolean secret = false;
+	private boolean obsolete = false;
 
-  private DocuWareVariable(String variableKey) {
-    this.variableKey = variableKey;
-  }
+	private DocuWareVariable(String varName) {
+		this.varName = varName;
+	}
 
-  public String getVariableName() {
-    return ROOT.variableKey + SEPERATOR + variableKey;
-  }
+	private DocuWareVariable(String varName, boolean secret) {
+		this.varName = varName;
+		this.secret = secret;
+	}
 
-  public String getValue() {
-    return Ivy.var().get(getVariableName());
-  }
-  
-  public String getValueForInstance(String instanceName) {
-    return Ivy.var().get(ROOT.variableKey + SEPERATOR + instanceName + SEPERATOR + variableKey);
-  }
+	private DocuWareVariable(String varName, boolean secret, boolean obsolete) {
+		this.varName = varName;
+		this.secret = secret;
+		this.obsolete = obsolete;
+	}
 
-  public String updateValue(String newValue) {
-    return Ivy.var().set(getVariableName(), newValue);
-  }
+	public String varName() {
+		return varName;
+	}
 
-  public static DocuWareVariable of(String variableName) {
-    return Stream.of(values()).filter(var -> var.variableKey.equals(variableName)).findAny().orElse(null);
-  }
+	public boolean isSecret() {
+		return secret;
+	}
+
+	public boolean isObsolete() {
+		return obsolete;
+	}
 }
